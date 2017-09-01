@@ -6,7 +6,6 @@ import advancedhud.api.HudItem;
 import advancedhud.client.ui.GuiAdvancedHUDConfiguration;
 import advancedhud.client.ui.GuiScreenHudItem;
 import advancedhud.client.ui.GuiScreenReposition;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -63,14 +62,13 @@ public class HudItemTooltips extends HudItem {
 
     @Override
     public void render(float partialTicks) {
-        Minecraft mc = Minecraft.getMinecraft();
 
-        if (mc.currentScreen instanceof GuiAdvancedHUDConfiguration || mc.currentScreen instanceof GuiScreenReposition) {
+        if (this.mc.currentScreen instanceof GuiAdvancedHUDConfiguration || this.mc.currentScreen instanceof GuiScreenReposition) {
             this.itemName = this.getButtonLabel();
         }
 
         if (this.itemName != null && !this.itemName.isEmpty()) {
-            FontRenderer fontrenderer = mc.fontRendererObj;
+            FontRenderer fontrenderer = this.mc.fontRendererObj;
             int posX;
             if (Alignment.isLeft(this.alignment)) {
                 posX = this.posX;
@@ -86,9 +84,8 @@ public class HudItemTooltips extends HudItem {
 
     @Override
     public void tick() {
-        Minecraft mc = Minecraft.getMinecraft();
-        if (mc.thePlayer != null) {
-            ItemStack currentItem = mc.thePlayer.inventory.getCurrentItem();
+        if (this.mc.thePlayer != null) {
+            ItemStack currentItem = this.mc.thePlayer.inventory.getCurrentItem();
             String currentName = currentItem == null ? "" : currentItem.getDisplayName();
 
             this.resetFadeTimer = !currentName.equals(this.itemName);
@@ -125,7 +122,7 @@ public class HudItemTooltips extends HudItem {
 
     @Override
     public GuiScreen getConfigScreen() {
-        return new GuiScreenHudItem(Minecraft.getMinecraft().currentScreen, this);
+        return new GuiScreenHudItem(this.mc.currentScreen, this);
     }
 
     @Override

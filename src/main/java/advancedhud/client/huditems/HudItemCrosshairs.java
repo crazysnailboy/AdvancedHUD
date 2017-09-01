@@ -7,7 +7,6 @@ import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
 import advancedhud.api.RenderAssist;
 import advancedhud.client.ui.GuiScreenHudItem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -126,7 +125,7 @@ public class HudItemCrosshairs extends HudItem {
 
     @Override
     public GuiScreen getConfigScreen() {
-        return new GuiScreenHudItem(Minecraft.getMinecraft().currentScreen, this);
+        return new GuiScreenHudItem(this.mc.currentScreen, this);
     }
 
     @Override

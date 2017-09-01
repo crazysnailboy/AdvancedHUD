@@ -7,7 +7,6 @@ import advancedhud.api.RenderAssist;
 import advancedhud.client.ui.GuiAdvancedHUDConfiguration;
 import advancedhud.client.ui.GuiScreenHudItem;
 import advancedhud.client.ui.GuiScreenReposition;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -60,11 +59,10 @@ public class HudItemHealthMount extends HudItem {
 
     @Override
     public void render(float partialTicks) {
-        Minecraft mc = Minecraft.getMinecraft();
-        Entity tmp = mc.thePlayer.ridingEntity;
+        Entity tmp = this.mc.thePlayer.ridingEntity;
         int right_height = 1;
-        if (tmp == null && (mc.currentScreen instanceof GuiAdvancedHUDConfiguration || mc.currentScreen instanceof GuiScreenReposition)) {
-            tmp = new EntityHorse(mc.theWorld);
+        if (tmp == null && (this.mc.currentScreen instanceof GuiAdvancedHUDConfiguration || this.mc.currentScreen instanceof GuiScreenReposition)) {
+            tmp = new EntityHorse(this.mc.theWorld);
         }
         if (!(tmp instanceof EntityLivingBase))
             return;
@@ -125,7 +123,7 @@ public class HudItemHealthMount extends HudItem {
 
     @Override
     public GuiScreen getConfigScreen() {
-        return new GuiScreenHudItem(Minecraft.getMinecraft().currentScreen, this);
+        return new GuiScreenHudItem(this.mc.currentScreen, this);
     }
 
 }

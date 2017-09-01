@@ -8,7 +8,6 @@ import advancedhud.api.RenderAssist;
 import advancedhud.client.ui.GuiAdvancedHUDConfiguration;
 import advancedhud.client.ui.GuiScreenHudItem;
 import advancedhud.client.ui.GuiScreenReposition;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -57,11 +56,10 @@ public class HudItemJumpBar extends HudItem {
 
     @Override
     public void render(float partialTicks) {
-        Minecraft mc = Minecraft.getMinecraft();
         RenderAssist.bindTexture(Gui.icons);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        float charge = mc.thePlayer.getHorseJumpPower();
+        float charge = this.mc.thePlayer.getHorseJumpPower();
         final int barWidth = 182;
         int x = this.posX;
         int filled = (int) (charge * (barWidth + 1));
@@ -69,7 +67,7 @@ public class HudItemJumpBar extends HudItem {
 
         RenderAssist.drawTexturedModalRect(x, top, 0, 84, barWidth, 5);
 
-        if ((mc.currentScreen instanceof GuiAdvancedHUDConfiguration || mc.currentScreen instanceof GuiScreenReposition) && filled == 0) {
+        if ((this.mc.currentScreen instanceof GuiAdvancedHUDConfiguration || this.mc.currentScreen instanceof GuiScreenReposition) && filled == 0) {
             filled = 182;
         }
 
@@ -91,7 +89,7 @@ public class HudItemJumpBar extends HudItem {
 
     @Override
     public GuiScreen getConfigScreen() {
-        return new GuiScreenHudItem(Minecraft.getMinecraft().currentScreen, this);
+        return new GuiScreenHudItem(this.mc.currentScreen, this);
     }
 
 }

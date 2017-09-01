@@ -8,7 +8,6 @@ import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
 import advancedhud.api.RenderAssist;
 import advancedhud.client.ui.GuiScreenHudItem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
@@ -68,14 +67,12 @@ public class HudItemHotbar extends HudItem {
 
     @Override
     public void render(float partialTicks) {
-        Minecraft mc = HUDRegistry.getMinecraftInstance();
-
         GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
         GL11.glPushMatrix();
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        InventoryPlayer inv = mc.thePlayer.inventory;
+        InventoryPlayer inv = this.mc.thePlayer.inventory;
         if (!this.rotated) {
             RenderAssist.bindTexture(WIDGETS);
             RenderAssist.drawTexturedModalRect(this.posX, this.posY, 0, 0, 182, 22);
@@ -94,7 +91,7 @@ public class HudItemHotbar extends HudItem {
             for (int i = 0; i < 9; ++i) {
                 int x = this.posX - 90 + i * 20 + 2;
                 int z = this.posY - 6 - 3;
-                RenderAssist.renderInventorySlot(i, x, z, partialTicks, mc);
+                RenderAssist.renderInventorySlot(i, x, z, partialTicks, this.mc);
             }
 
             RenderHelper.disableStandardItemLighting();
@@ -120,7 +117,7 @@ public class HudItemHotbar extends HudItem {
             for (int i = 0; i < 9; ++i) {
                 int x = this.posX - 88;
                 int z = this.posY - 11 + i * 20 + 2;
-                RenderAssist.renderInventorySlot(i, x, z, partialTicks, mc);
+                RenderAssist.renderInventorySlot(i, x, z, partialTicks, this.mc);
             }
 
             RenderHelper.disableStandardItemLighting();
@@ -145,7 +142,7 @@ public class HudItemHotbar extends HudItem {
 
     @Override
     public GuiScreen getConfigScreen() {
-        return new GuiScreenHudItem(Minecraft.getMinecraft().currentScreen, this);
+        return new GuiScreenHudItem(this.mc.currentScreen, this);
     }
 
     @Override

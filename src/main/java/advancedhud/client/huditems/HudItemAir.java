@@ -10,7 +10,6 @@ import advancedhud.client.ui.GuiScreenHudItem;
 import advancedhud.client.ui.GuiScreenReposition;
 import aurelienribon.tweenengine.Tween;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -80,24 +79,23 @@ public class HudItemAir extends HudItem {
     public void render(float partialTicks) {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        Minecraft mc = Minecraft.getMinecraft();
         RenderAssist.bindTexture(Gui.icons);
         int left = this.posX + 81;
         int top = this.posY;
 
-        if (mc.thePlayer.isInsideOfMaterial(Material.water) || mc.currentScreen instanceof GuiAdvancedHUDConfiguration || mc.currentScreen instanceof GuiScreenReposition) {
+        if (this.mc.thePlayer.isInsideOfMaterial(Material.water) || this.mc.currentScreen instanceof GuiAdvancedHUDConfiguration || this.mc.currentScreen instanceof GuiScreenReposition) {
             if (!this.wasInWater) {
                 Tween.to(this, Engine.OPACITY, 0.1f).target(1.0f).start(this.manager);
                 this.wasInWater = true;
             }
         }
-        if (!mc.thePlayer.isInsideOfMaterial(Material.water) && this.wasInWater) {
+        if (!this.mc.thePlayer.isInsideOfMaterial(Material.water) && this.wasInWater) {
             Tween.to(this, Engine.OPACITY, 1.0f).delay(1.0f).target(0.0f).start(this.manager);
             this.wasInWater = false;
         }
 
         GL11.glColor4f(1.0f, 1.0f, 1.0f, this.getOpacity());
-        int air = mc.thePlayer.getAir();
+        int air = this.mc.thePlayer.getAir();
         int full = MathHelper.ceiling_double_int((air - 2) * 10.0D / 300.0D);
         int partial = MathHelper.ceiling_double_int(air * 10.0D / 300.0D) - full;
 
@@ -121,7 +119,7 @@ public class HudItemAir extends HudItem {
 
     @Override
     public GuiScreen getConfigScreen() {
-        return new GuiScreenHudItem(Minecraft.getMinecraft().currentScreen, this);
+        return new GuiScreenHudItem(this.mc.currentScreen, this);
     }
 
     // This is the tweening engine's interface. Here we register any tween actions we might want to perform.

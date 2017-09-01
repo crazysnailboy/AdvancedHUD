@@ -8,7 +8,6 @@ import advancedhud.api.RenderAssist;
 import advancedhud.client.ui.GuiAdvancedHUDConfiguration;
 import advancedhud.client.ui.GuiScreenHudItem;
 import advancedhud.client.ui.GuiScreenReposition;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -65,7 +64,6 @@ public class HudItemExperienceBar extends HudItem {
 
     @Override
     public void render(float partialTicks) {
-        Minecraft mc = Minecraft.getMinecraft();
         RenderAssist.bindTexture(Gui.icons);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         int left = this.posX;
@@ -82,7 +80,7 @@ public class HudItemExperienceBar extends HudItem {
             }
             RenderAssist.drawTexturedModalRect(0, 0, 0, 64, barWidth, 5);
 
-            if ((mc.currentScreen instanceof GuiAdvancedHUDConfiguration || mc.currentScreen instanceof GuiScreenReposition) && filled == 0) {
+            if ((this.mc.currentScreen instanceof GuiAdvancedHUDConfiguration || this.mc.currentScreen instanceof GuiScreenReposition) && filled == 0) {
                 filled = 91;
             }
 
@@ -91,26 +89,25 @@ public class HudItemExperienceBar extends HudItem {
             }
         }
 
-        if (mc.playerController.isNotCreative() && this.current_level > 0) {
+        if (this.mc.playerController.isNotCreative() && this.current_level > 0) {
             int color = 0x80FF20;
             String text = "" + this.current_level;
-            int x = (this.getWidth() / 2) - mc.fontRendererObj.getStringWidth(text) / 2;
+            int x = (this.getWidth() / 2) - this.mc.fontRendererObj.getStringWidth(text) / 2;
             int y = -Math.round(this.getHeight() * 0.75f);
-            mc.fontRendererObj.drawString(text, x + 1, y, 0x000000);
-            mc.fontRendererObj.drawString(text, x - 1, y, 0x000000);
-            mc.fontRendererObj.drawString(text, x, y + 1, 0x000000);
-            mc.fontRendererObj.drawString(text, x, y - 1, 0x000000);
-            mc.fontRendererObj.drawString(text, x, y, color);
+            this.mc.fontRendererObj.drawString(text, x + 1, y, 0x000000);
+            this.mc.fontRendererObj.drawString(text, x - 1, y, 0x000000);
+            this.mc.fontRendererObj.drawString(text, x, y + 1, 0x000000);
+            this.mc.fontRendererObj.drawString(text, x, y - 1, 0x000000);
+            this.mc.fontRendererObj.drawString(text, x, y, color);
         }
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
     @Override
     public void tick() {
-        Minecraft mc = Minecraft.getMinecraft();
-        this.max_xp = mc.thePlayer.xpBarCap();
-        this.current_xp = mc.thePlayer.experience;
-        this.current_level = mc.thePlayer.experienceLevel;
+        this.max_xp = this.mc.thePlayer.xpBarCap();
+        this.current_xp = this.mc.thePlayer.experience;
+        this.current_level = this.mc.thePlayer.experienceLevel;
     }
 
     @Override
@@ -125,6 +122,6 @@ public class HudItemExperienceBar extends HudItem {
 
     @Override
     public GuiScreen getConfigScreen() {
-        return new GuiScreenHudItem(Minecraft.getMinecraft().currentScreen, this);
+        return new GuiScreenHudItem(this.mc.currentScreen, this);
     }
 }

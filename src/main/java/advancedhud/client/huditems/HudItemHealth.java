@@ -6,7 +6,6 @@ import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
 import advancedhud.api.RenderAssist;
 import advancedhud.client.ui.GuiScreenHudItem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -17,7 +16,6 @@ import net.minecraft.util.MathHelper;
 
 public class HudItemHealth extends HudItem {
 
-    Minecraft mc = null;
     Random rand = new Random();
 
     @Override
@@ -66,9 +64,6 @@ public class HudItemHealth extends HudItem {
 
     @Override
     public void render(float partialTicks) {
-        if (this.mc == null)
-            this.mc = Minecraft.getMinecraft();
-
         RenderAssist.bindTexture(Gui.icons);
         boolean highlight = this.mc.thePlayer.hurtResistantTime / 3 % 2 == 1;
 
@@ -192,6 +187,6 @@ public class HudItemHealth extends HudItem {
 
     @Override
     public GuiScreen getConfigScreen() {
-        return new GuiScreenHudItem(Minecraft.getMinecraft().currentScreen, this);
+        return new GuiScreenHudItem(this.mc.currentScreen, this);
     }
 }

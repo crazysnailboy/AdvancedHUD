@@ -8,8 +8,6 @@ import advancedhud.api.RenderAssist;
 import advancedhud.client.ui.GuiAdvancedHUDConfiguration;
 import advancedhud.client.ui.GuiScreenHudItem;
 import advancedhud.client.ui.GuiScreenReposition;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -59,14 +57,11 @@ public class HudItemBossBar extends HudItem {
 
     @Override
     public void render(float partialTicks) {
-        Minecraft mc = Minecraft.getMinecraft();
         RenderAssist.bindTexture("textures/gui/icons.png");
-        if (BossStatus.bossName != null && BossStatus.statusBarTime > 0 || mc.currentScreen instanceof GuiAdvancedHUDConfiguration || mc.currentScreen instanceof GuiScreenReposition) {
+        if (BossStatus.bossName != null && BossStatus.statusBarTime > 0 || this.mc.currentScreen instanceof GuiAdvancedHUDConfiguration || this.mc.currentScreen instanceof GuiScreenReposition) {
             if (BossStatus.bossName != null) {
                 --BossStatus.statusBarTime;
             }
-            FontRenderer fontrenderer = Minecraft.getMinecraft().fontRendererObj;
-
             short short1 = 182;
             int j = this.posX;
             int k = (int) (BossStatus.healthScale * (short1 + 1));
@@ -82,7 +77,7 @@ public class HudItemBossBar extends HudItem {
             }
 
             String s = BossStatus.bossName != null ? BossStatus.bossName : I18n.format("advancedhud.configuration.title");
-            fontrenderer.drawStringWithShadow(s, this.posX + 91 - fontrenderer.getStringWidth(s) / 2, b0 - 10, 0xFFFFFF);
+            this.mc.fontRendererObj.drawStringWithShadow(s, this.posX + 91 - this.mc.fontRendererObj.getStringWidth(s) / 2, b0 - 10, 0xFFFFFF);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             RenderAssist.bindTexture(Gui.icons);
         }
@@ -90,7 +85,7 @@ public class HudItemBossBar extends HudItem {
 
     @Override
     public GuiScreen getConfigScreen() {
-        return new GuiScreenHudItem(Minecraft.getMinecraft().currentScreen, this);
+        return new GuiScreenHudItem(this.mc.currentScreen, this);
     }
 
     @Override

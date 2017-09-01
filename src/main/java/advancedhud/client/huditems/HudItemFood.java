@@ -7,7 +7,6 @@ import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
 import advancedhud.api.RenderAssist;
 import advancedhud.client.ui.GuiScreenHudItem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -70,14 +69,13 @@ public class HudItemFood extends HudItem {
 
     @Override
     public void render(float partialTicks) {
-        Minecraft mc = Minecraft.getMinecraft();
         RenderAssist.bindTexture(Gui.icons);
         GL11.glColor4f(1.0f, 1.0f, 1.0f, this.getOpacity());
 
         int left = this.posX + 81;
         int top = this.posY;
 
-        FoodStats stats = mc.thePlayer.getFoodStats();
+        FoodStats stats = this.mc.thePlayer.getFoodStats();
         int level = stats.getFoodLevel();
 
         for (int i = 0; i < 10; ++i) {
@@ -94,12 +92,12 @@ public class HudItemFood extends HudItem {
             int icon = 16;
             byte backgound = 0;
 
-            if (mc.thePlayer.isPotionActive(Potion.hunger)) {
+            if (this.mc.thePlayer.isPotionActive(Potion.hunger)) {
                 icon += 36;
                 backgound = 13;
             }
 
-            if (mc.thePlayer.getFoodStats().getSaturationLevel() <= 0.0F && mc.ingameGUI.getUpdateCounter() % (level * 3 + 1) == 0) {
+            if (this.mc.thePlayer.getFoodStats().getSaturationLevel() <= 0.0F && this.mc.ingameGUI.getUpdateCounter() % (level * 3 + 1) == 0) {
                 y = top + this.rand.nextInt(3) - 1;
                 if (this.rotated) {
                     x = left - 81 + this.rand.nextInt(3) - 1;
@@ -124,7 +122,7 @@ public class HudItemFood extends HudItem {
 
     @Override
     public GuiScreen getConfigScreen() {
-        return new GuiScreenHudItem(Minecraft.getMinecraft().currentScreen, this);
+        return new GuiScreenHudItem(this.mc.currentScreen, this);
     }
 
 }

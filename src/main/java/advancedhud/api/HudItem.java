@@ -2,6 +2,7 @@ package advancedhud.api;
 
 import aurelienribon.tweenengine.TweenAccessor;
 import aurelienribon.tweenengine.TweenManager;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -18,6 +19,7 @@ public abstract class HudItem {
     private float opacity = 1.0f;
     public boolean rotated = false;
     protected TweenManager manager = null;
+    protected Minecraft mc;
 
     public HudItem() {
         this.alignment = this.getDefaultAlignment();
@@ -25,6 +27,7 @@ public abstract class HudItem {
         this.posY = this.getDefaultPosY();
         this.id = this.getDefaultID();
         this.manager = new TweenManager();
+        this.mc = Minecraft.getMinecraft();
     }
 
     /**

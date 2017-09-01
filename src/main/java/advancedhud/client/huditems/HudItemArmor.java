@@ -7,7 +7,6 @@ import advancedhud.api.RenderAssist;
 import advancedhud.client.ui.GuiAdvancedHUDConfiguration;
 import advancedhud.client.ui.GuiScreenHudItem;
 import advancedhud.client.ui.GuiScreenReposition;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -67,14 +66,13 @@ public class HudItemArmor extends HudItem {
 
     @Override
     public void render(float partialTicks) {
-        Minecraft mc = Minecraft.getMinecraft();
         RenderAssist.bindTexture(Gui.icons);
 
         int left = this.posX;
         int top = this.posY;
 
-        int level = ForgeHooks.getTotalArmorValue(mc.thePlayer);
-        if ((mc.currentScreen instanceof GuiAdvancedHUDConfiguration || mc.currentScreen instanceof GuiScreenReposition) && level == 0) {
+        int level = ForgeHooks.getTotalArmorValue(this.mc.thePlayer);
+        if ((this.mc.currentScreen instanceof GuiAdvancedHUDConfiguration || this.mc.currentScreen instanceof GuiScreenReposition) && level == 0) {
             level = 10;
         }
         for (int i = 1; level > 0 && i < 20; i += 2) {
@@ -100,7 +98,7 @@ public class HudItemArmor extends HudItem {
 
     @Override
     public GuiScreen getConfigScreen() {
-        return new GuiScreenHudItem(Minecraft.getMinecraft().currentScreen, this);
+        return new GuiScreenHudItem(this.mc.currentScreen, this);
     }
 
 }

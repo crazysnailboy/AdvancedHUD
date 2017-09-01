@@ -7,7 +7,6 @@ import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
 import advancedhud.client.GuiAdvancedHUD;
 import advancedhud.client.ui.GuiScreenHudItem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
@@ -59,12 +58,11 @@ public class HudItemRecordDisplay extends HudItem {
 
     @Override
     public GuiScreen getConfigScreen() {
-        return new GuiScreenHudItem(Minecraft.getMinecraft().currentScreen, this);
+        return new GuiScreenHudItem(this.mc.currentScreen, this);
     }
 
     @Override
     public void render(float partialTicks) {
-        Minecraft mc = Minecraft.getMinecraft();
         if (this.recordPlayingUpFor > 0) {
             float hue = this.recordPlayingUpFor - partialTicks;
             int opacity = (int) (hue * 256.0F / 20.0F);
@@ -77,7 +75,7 @@ public class HudItemRecordDisplay extends HudItem {
                 GL11.glEnable(GL11.GL_BLEND);
                 GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                 int color = this.recordIsPlaying ? Color.HSBtoRGB(hue / 50.0F, 0.7F, 0.6F) & 0xFFFFFF : 0xFFFFFF;
-                mc.fontRendererObj.drawString(this.recordPlaying, -mc.fontRendererObj.getStringWidth(this.recordPlaying) / 2, -4, color | opacity << 24);
+                this.mc.fontRendererObj.drawString(this.recordPlaying, -this.mc.fontRendererObj.getStringWidth(this.recordPlaying) / 2, -4, color | opacity << 24);
             }
         }
     }
@@ -89,8 +87,8 @@ public class HudItemRecordDisplay extends HudItem {
 
     @Override
     public void tick() {
-        if (Minecraft.getMinecraft().ingameGUI instanceof GuiAdvancedHUD) {
-            GuiAdvancedHUD ingame = (GuiAdvancedHUD) Minecraft.getMinecraft().ingameGUI;
+        if (this.mc.ingameGUI instanceof GuiAdvancedHUD) {
+            GuiAdvancedHUD ingame = (GuiAdvancedHUD) this.mc.ingameGUI;
             if (ingame.recordPlaying != null && !ingame.recordPlaying.equals(this.recordPlaying)) {
                 this.recordPlaying = ingame.recordPlaying;
                 this.recordIsPlaying = ingame.recordIsPlaying;

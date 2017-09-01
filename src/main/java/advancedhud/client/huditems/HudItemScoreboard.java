@@ -7,7 +7,6 @@ import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
 import advancedhud.api.RenderAssist;
 import advancedhud.client.ui.GuiScreenHudItem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.scoreboard.Score;
@@ -41,13 +40,12 @@ public class HudItemScoreboard extends HudItem {
     @SuppressWarnings("rawtypes")
     @Override
     public int getDefaultPosY() {
-        Minecraft mc = Minecraft.getMinecraft();
-        ScoreObjective objective = mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
+        ScoreObjective objective = this.mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
         if (objective != null) {
             Scoreboard scoreboard = objective.getScoreboard();
             Collection collection = scoreboard.getSortedScores(objective);
             if (collection.size() <= 15) {
-                int l = collection.size() * mc.fontRendererObj.FONT_HEIGHT;
+                int l = collection.size() * this.mc.fontRendererObj.FONT_HEIGHT;
                 return HUDRegistry.screenHeight / 2 + l / 3;
             }
         }
@@ -71,23 +69,22 @@ public class HudItemScoreboard extends HudItem {
 
     @Override
     public GuiScreen getConfigScreen() {
-        return new GuiScreenHudItem(Minecraft.getMinecraft().currentScreen, this);
+        return new GuiScreenHudItem(this.mc.currentScreen, this);
     }
 
     @SuppressWarnings("rawtypes")
     @Override
     public void render(float partialTicks) {
-        Minecraft mc = Minecraft.getMinecraft();
-        ScoreObjective objective = mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
+        ScoreObjective objective = this.mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
         if (objective != null) {
             Scoreboard scoreboard = objective.getScoreboard();
             Collection collection = scoreboard.getSortedScores(objective);
 
             if (collection.size() <= 15) {
-                int k = mc.fontRendererObj.getStringWidth(objective.getDisplayName());
+                int k = this.mc.fontRendererObj.getStringWidth(objective.getDisplayName());
                 String s;
 
-                for (Iterator iterator = collection.iterator(); iterator.hasNext(); k = Math.max(k, mc.fontRendererObj.getStringWidth(s))) {
+                for (Iterator iterator = collection.iterator(); iterator.hasNext(); k = Math.max(k, this.mc.fontRendererObj.getStringWidth(s))) {
                     Score score = (Score) iterator.next();
                     ScorePlayerTeam scoreplayerteam = scoreboard.getPlayersTeam(score.getPlayerName());
                     s = ScorePlayerTeam.formatPlayerName(scoreplayerteam, score.getPlayerName()) + ": " + EnumChatFormatting.RED + score.getScorePoints();
@@ -105,18 +102,18 @@ public class HudItemScoreboard extends HudItem {
                     ScorePlayerTeam scoreplayerteam1 = scoreboard.getPlayersTeam(score1.getPlayerName());
                     String s1 = ScorePlayerTeam.formatPlayerName(scoreplayerteam1, score1.getPlayerName());
                     String s2 = EnumChatFormatting.RED + "" + score1.getScorePoints();
-                    int l1 = i1 - k1 * mc.fontRendererObj.FONT_HEIGHT;
+                    int l1 = i1 - k1 * this.mc.fontRendererObj.FONT_HEIGHT;
                     int i2 = HUDRegistry.screenWidth - b0 + 2;
                     this.posX = j1;
-                    RenderAssist.drawRect(j1 - 2, l1, i2, l1 + mc.fontRendererObj.FONT_HEIGHT, 0x50000000);
-                    mc.fontRendererObj.drawString(s1, j1, l1, 0x20FFFFFF);
-                    mc.fontRendererObj.drawString(s2, i2 - mc.fontRendererObj.getStringWidth(s2), l1, 0x20FFFFFF);
+                    RenderAssist.drawRect(j1 - 2, l1, i2, l1 + this.mc.fontRendererObj.FONT_HEIGHT, 0x50000000);
+                    this.mc.fontRendererObj.drawString(s1, j1, l1, 0x20FFFFFF);
+                    this.mc.fontRendererObj.drawString(s2, i2 - this.mc.fontRendererObj.getStringWidth(s2), l1, 0x20FFFFFF);
 
                     if (k1 == collection.size()) {
                         String s3 = objective.getDisplayName();
-                        RenderAssist.drawRect(j1 - 2, l1 - mc.fontRendererObj.FONT_HEIGHT - 1, i2, l1 - 1, 0x60000000);
+                        RenderAssist.drawRect(j1 - 2, l1 - this.mc.fontRendererObj.FONT_HEIGHT - 1, i2, l1 - 1, 0x60000000);
                         RenderAssist.drawRect(j1 - 2, l1 - 1, i2, l1, 0x50000000);
-                        mc.fontRendererObj.drawString(s3, j1 + k / 2 - mc.fontRendererObj.getStringWidth(s3) / 2, l1 - mc.fontRendererObj.FONT_HEIGHT, 0x20FFFFFF);
+                        this.mc.fontRendererObj.drawString(s3, j1 + k / 2 - this.mc.fontRendererObj.getStringWidth(s3) / 2, l1 - this.mc.fontRendererObj.FONT_HEIGHT, 0x20FFFFFF);
                     }
                 }
             }
