@@ -82,7 +82,7 @@ public class HudItemHotbar extends HudItem {
         if (!this.rotated) {
             RenderAssist.bindTexture(WIDGETS);
             RenderAssist.drawTexturedModalRect(this.posX, this.posY, 0, 0, 182, 22);
-            RenderAssist.drawTexturedModalRect(this.posX - 1 + inv.currentItem * 20, this.posY - 1, 0, 0, 24, 24);
+            RenderAssist.drawTexturedModalRect(this.posX - 1 + inv.currentItem * 20, this.posY - 1, 0, 22, 24, 22);
 
             GL11.glDisable(GL11.GL_BLEND);
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
