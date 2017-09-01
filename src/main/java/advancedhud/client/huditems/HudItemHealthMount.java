@@ -58,7 +58,7 @@ public class HudItemHealthMount extends HudItem {
     }
 
     @Override
-    public void render(float paramFloat) {
+    public void render(float partialTicks) {
         Minecraft mc = Minecraft.getMinecraft();
         Entity tmp = mc.thePlayer.ridingEntity;
         int right_height = 1;
@@ -70,7 +70,7 @@ public class HudItemHealthMount extends HudItem {
 
         RenderAssist.bindTexture(Gui.icons);
 
-        int left_align = posX + 81;
+        int left_align = this.posX + 81;
 
         EntityLivingBase mount = (EntityLivingBase) tmp;
         int health = (int) Math.ceil(mount.getHealth());
@@ -87,7 +87,7 @@ public class HudItemHealthMount extends HudItem {
         final int FULL = MARGIN + 36;
 
         for (int heart = 0; hearts > 0; heart += 20) {
-            int top = posY + 1 - right_height;
+            int top = this.posY + 1 - right_height;
 
             int rowCount = Math.min(hearts, 10);
             hearts -= rowCount;

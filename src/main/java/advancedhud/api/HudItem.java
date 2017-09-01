@@ -6,12 +6,9 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
- * 
- * Extend this to create your own elements which render on the GUI.<br>
- * Don't worry about saves, they are all done by the non-api part of the mod.
- * 
+ * Extend this to create your own elements which render on the GUI.<br>Don't worry about saves, they are all done by the non-api part of the mod.
  * @author maxpowa
- * 
+ *
  */
 public abstract class HudItem {
     public Alignment alignment;
@@ -23,33 +20,27 @@ public abstract class HudItem {
     protected TweenManager manager = null;
 
     public HudItem() {
-        alignment = getDefaultAlignment();
-        posX = getDefaultPosX();
-        posY = getDefaultPosY();
-        id = getDefaultID();
-        manager = new TweenManager();
+        this.alignment = this.getDefaultAlignment();
+        this.posX = this.getDefaultPosX();
+        this.posY = this.getDefaultPosY();
+        this.id = this.getDefaultID();
+        this.manager = new TweenManager();
     }
 
     /**
      * Unique name for the HudItem, only used for NBT saving/loading
-     * 
      * @return String value for unique identifier of the {@link HudItem}
      */
     public abstract String getName();
 
     /**
      * Display name for the HudItem in config screen
-     * 
      * @return String value for display name of the {@link HudItem}
      */
     public abstract String getButtonLabel();
 
     /**
-     * Default {@link Alignment} of the HudItem instance.
-     * <p>
-     * For resolution-based movement, alignment values allow shifting along the
-     * alignment axis.
-     * 
+     * Default {@link Alignment} of the HudItem instance.<br>For resolution-based movement, alignment values allow shifting along the alignment axis.
      * @return {@link Alignment}
      */
     public abstract Alignment getDefaultAlignment();
@@ -75,34 +66,31 @@ public abstract class HudItem {
     public abstract void render(float partialTicks);
 
     /**
-     * 
-     * If you don't want any rotation, you can <br>simply make this method return.
-     *
+     * If you don't want any rotation, you can simply make this method return.
      */
     public void rotate() {
-        rotated = !rotated;
+        this.rotated = !this.rotated;
     }
 
     /**
-     * Called upon .updateTick(). If you use this, make sure you set<br>
-     * {@link HudItem}.needsTick() to true.
+     * Called upon .updateTick(). If you use this, make sure you set {@link HudItem#needsTick()} to true.
      */
     public void tick() {
-
     }
 
     /**
-     *
      * @param delta Delta time (in seconds) since this method was last called
      */
     public void update(float delta) {
-        manager.update(delta); // Tween manager expects delta to be in seconds.
+        this.manager.update(delta); // Tween manager expects delta to be in seconds.
     }
 
-    public boolean needsTween() { return false; }
+    public boolean needsTween() {
+        return false;
+    }
 
     /**
-     * Set this to true if you require the {@link HudItem}.tick() method to run<br>
+     * Set this to true if you require the {@link HudItem#tick()} method to run
      */
     public boolean needsTick() {
         return false;
@@ -124,44 +112,44 @@ public abstract class HudItem {
      * Ensures that the HudItem will never be off the screen
      */
     public void fixBounds() {
-        posX = Math.max(0, Math.min(HUDRegistry.screenWidth - getWidth(), posX));
-        posY = Math.max(0, Math.min(HUDRegistry.screenHeight - getHeight(), posY));
+        this.posX = Math.max(0, Math.min(HUDRegistry.screenWidth - this.getWidth(), this.posX));
+        this.posY = Math.max(0, Math.min(HUDRegistry.screenHeight - this.getHeight(), this.posY));
     }
 
-    public void loadFromNBT(NBTTagCompound nbt) {
-        if (nbt.hasKey("posX")) {
-            posX = nbt.getInteger("posX");
+    public void loadFromNBT(NBTTagCompound compound) {
+        if (compound.hasKey("posX")) {
+            this.posX = compound.getInteger("posX");
         } else {
-            posX = getDefaultPosX();
+            this.posX = this.getDefaultPosX();
         }
-        if (nbt.hasKey("posY")) {
-            posY = nbt.getInteger("posY");
+        if (compound.hasKey("posY")) {
+            this.posY = compound.getInteger("posY");
         } else {
-            posY = getDefaultPosY();
+            this.posY = this.getDefaultPosY();
         }
-        if (nbt.hasKey("alignment")) {
-            alignment = Alignment.fromString(nbt.getString("alignment"));
+        if (compound.hasKey("alignment")) {
+            this.alignment = Alignment.fromString(compound.getString("alignment"));
         } else {
-            alignment = getDefaultAlignment();
+            this.alignment = this.getDefaultAlignment();
         }
-        if (nbt.hasKey("id")) {
-            id = nbt.getInteger("id");
+        if (compound.hasKey("id")) {
+            this.id = compound.getInteger("id");
         } else {
-            id = getDefaultID();
+            this.id = this.getDefaultID();
         }
-        if (nbt.hasKey("rotated")) {
-            rotated = nbt.getBoolean("rotated");
+        if (compound.hasKey("rotated")) {
+            this.rotated = compound.getBoolean("rotated");
         } else {
-            rotated = false;
+            this.rotated = false;
         }
     }
 
-    public void saveToNBT(NBTTagCompound nbt) {
-        nbt.setInteger("posX", posX);
-        nbt.setInteger("posY", posY);
-        nbt.setString("alignment", alignment.toString());
-        nbt.setInteger("id", id);
-        nbt.setBoolean("rotated", rotated);
+    public void saveToNBT(NBTTagCompound compound) {
+        compound.setInteger("posX", this.posX);
+        compound.setInteger("posY", this.posY);
+        compound.setString("alignment", this.alignment.toString());
+        compound.setInteger("id", this.id);
+        compound.setBoolean("rotated", this.rotated);
     }
 
     public boolean shouldDrawOnMount() {
@@ -184,5 +172,6 @@ public abstract class HudItem {
         return this.opacity;
     }
 
-    public interface TweenEngine<T extends HudItem> extends TweenAccessor<T> {}
+    public interface TweenEngine<T extends HudItem> extends TweenAccessor<T> {
+    }
 }

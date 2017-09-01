@@ -1,5 +1,6 @@
 package advancedhud.client.huditems;
 
+import org.lwjgl.opengl.GL11;
 import advancedhud.api.Alignment;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
@@ -10,7 +11,6 @@ import advancedhud.client.ui.GuiScreenReposition;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
-import org.lwjgl.opengl.GL11;
 
 public class HudItemJumpBar extends HudItem {
 
@@ -55,16 +55,16 @@ public class HudItemJumpBar extends HudItem {
     }
 
     @Override
-    public void render(float paramFloat) {
+    public void render(float partialTicks) {
         Minecraft mc = Minecraft.getMinecraft();
         RenderAssist.bindTexture(Gui.icons);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         float charge = mc.thePlayer.getHorseJumpPower();
         final int barWidth = 182;
-        int x = posX;
+        int x = this.posX;
         int filled = (int) (charge * (barWidth + 1));
-        int top = posY;
+        int top = this.posY;
 
         RenderAssist.drawTexturedModalRect(x, top, 0, 84, barWidth, 5);
 

@@ -1,5 +1,6 @@
 package advancedhud.client.huditems;
 
+import org.lwjgl.opengl.GL11;
 import advancedhud.api.Alignment;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
@@ -10,7 +11,6 @@ import advancedhud.client.ui.GuiScreenReposition;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
-import org.lwjgl.opengl.GL11;
 
 public class HudItemExperienceBar extends HudItem {
 
@@ -30,31 +30,31 @@ public class HudItemExperienceBar extends HudItem {
 
     @Override
     public Alignment getDefaultAlignment() {
-        return rotated? Alignment.CENTERRIGHT : Alignment.BOTTOMCENTER;
+        return this.rotated ? Alignment.CENTERRIGHT : Alignment.BOTTOMCENTER;
     }
 
     @Override
     public int getDefaultPosX() {
-        if (rotated)
+        if (this.rotated)
             return HUDRegistry.screenWidth - 29;
         return HUDRegistry.screenWidth / 2 - 91;
     }
 
     @Override
     public int getDefaultPosY() {
-        if (rotated)
+        if (this.rotated)
             return HUDRegistry.screenHeight / 2 - 91;
         return HUDRegistry.screenHeight - 29;
     }
 
     @Override
     public int getWidth() {
-        return rotated ? 5 : 182;
+        return this.rotated ? 5 : 182;
     }
 
     @Override
     public int getHeight() {
-        return rotated ? 182 : 5;
+        return this.rotated ? 182 : 5;
     }
 
     @Override
@@ -63,18 +63,18 @@ public class HudItemExperienceBar extends HudItem {
     }
 
     @Override
-    public void render(float paramFloat) {
+    public void render(float partialTicks) {
         Minecraft mc = Minecraft.getMinecraft();
         RenderAssist.bindTexture(Gui.icons);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        int left = posX;
+        int left = this.posX;
 
         if (this.max_xp > 0) {
             short barWidth = 182;
             int filled = (int) (this.current_xp * (barWidth + 1));
-            int top = posY;
-            if (rotated) {
-                GL11.glTranslatef(left+5, top, 0.0F);
+            int top = this.posY;
+            if (this.rotated) {
+                GL11.glTranslatef(left + 5, top, 0.0F);
                 GL11.glRotatef(90F, 0.0F, 0.0F, 1.0F);
             } else {
                 GL11.glTranslatef(left, top, 0.0F);
@@ -91,15 +91,15 @@ public class HudItemExperienceBar extends HudItem {
         }
 
         if (mc.playerController.isNotCreative() && this.current_level > 0) {
-            int color = 8453920;
+            int color = 0x80FF20;
             String text = "" + this.current_level;
-            int x = (this.getWidth() / 2) - mc.fontRenderer.getStringWidth(text) / 2;
+            int x = (this.getWidth() / 2) - mc.fontRendererObj.getStringWidth(text) / 2;
             int y = -Math.round(this.getHeight() * 0.75f);
-            mc.fontRenderer.drawString(text, x + 1, y, 0);
-            mc.fontRenderer.drawString(text, x - 1, y, 0);
-            mc.fontRenderer.drawString(text, x, y + 1, 0);
-            mc.fontRenderer.drawString(text, x, y - 1, 0);
-            mc.fontRenderer.drawString(text, x, y, color);
+            mc.fontRendererObj.drawString(text, x + 1, y, 0x000000);
+            mc.fontRendererObj.drawString(text, x - 1, y, 0x000000);
+            mc.fontRendererObj.drawString(text, x, y + 1, 0x000000);
+            mc.fontRendererObj.drawString(text, x, y - 1, 0x000000);
+            mc.fontRendererObj.drawString(text, x, y, color);
         }
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
     }

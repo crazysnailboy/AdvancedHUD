@@ -26,35 +26,35 @@ public class HudItemArmor extends HudItem {
 
     @Override
     public Alignment getDefaultAlignment() {
-        if (rotated)
+        if (this.rotated)
             return Alignment.CENTERRIGHT;
         return Alignment.BOTTOMCENTER;
     }
 
     @Override
     public int getDefaultPosX() {
-        if (rotated)
+        if (this.rotated)
             return HUDRegistry.screenWidth - 49;
         return HUDRegistry.screenWidth / 2 - 91;
     }
 
     @Override
     public int getDefaultPosY() {
-        if (rotated)
+        if (this.rotated)
             return HUDRegistry.screenHeight / 2 - 91;
         return HUDRegistry.screenHeight - 49;
     }
 
     @Override
     public int getWidth() {
-        if (rotated)
+        if (this.rotated)
             return 9;
         return 81;
     }
 
     @Override
     public int getHeight() {
-        if (rotated)
+        if (this.rotated)
             return 81;
         return 9;
     }
@@ -65,12 +65,12 @@ public class HudItemArmor extends HudItem {
     }
 
     @Override
-    public void render(float paramFloat) {
+    public void render(float partialTicks) {
         Minecraft mc = Minecraft.getMinecraft();
         RenderAssist.bindTexture(Gui.icons);
 
-        int left = posX;
-        int top = posY;
+        int left = this.posX;
+        int top = this.posY;
 
         int level = ForgeHooks.getTotalArmorValue(mc.thePlayer);
         if ((mc.currentScreen instanceof GuiAdvancedHUDConfiguration || mc.currentScreen instanceof GuiScreenReposition) && level == 0) {
@@ -84,7 +84,7 @@ public class HudItemArmor extends HudItem {
             } else if (i > level) {
                 RenderAssist.drawTexturedModalRect(left, top, 16, 9, 9, 9);
             }
-            if (!rotated) {
+            if (!this.rotated) {
                 left += 8;
             } else {
                 top += 8;

@@ -1,10 +1,13 @@
 package advancedhud.client;
 
-import advancedhud.AdvancedHUD;
+import java.util.ArrayList;
+import java.util.List;
+import org.lwjgl.opengl.GL11;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
 import advancedhud.api.RenderAssist;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiPlayerInfo;
@@ -23,10 +26,6 @@ import net.minecraft.util.StringUtils;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.GuiIngameForge;
-import org.lwjgl.opengl.GL11;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GuiAdvancedHUD extends GuiIngameForge {
 
@@ -44,41 +43,41 @@ public class GuiAdvancedHUD extends GuiIngameForge {
 
     @Override
     public void renderGameOverlay(float partialTicks, boolean hasScreen, int mouseX, int mouseY) {
-        mc.mcProfiler.startSection("Advanced Hud");
-        
+        this.mc.mcProfiler.startSection("Advanced Hud");
+
         GuiAdvancedHUD.partialTicks = partialTicks;
 
         HUDRegistry.checkForResize();
 
-        mc.entityRenderer.setupOverlayRendering();
-        GL11.glEnable(3042);
+        this.mc.entityRenderer.setupOverlayRendering();
+        GL11.glEnable(GL11.GL_BLEND);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        GL11.glBlendFunc(770, 771);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-        res = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+        this.res = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);
 
-        float delta = (System.currentTimeMillis() - lastTick) / 1000F;
-        lastTick = System.currentTimeMillis();
+        float delta = (System.currentTimeMillis() - this.lastTick) / 1000F;
+        this.lastTick = System.currentTimeMillis();
 
-        mc.mcProfiler.startSection("modules");
+        this.mc.mcProfiler.startSection("modules");
         for (HudItem huditem : HUDRegistry.getHudItemList()) {
-            mc.mcProfiler.startSection(huditem.getName());
+            this.mc.mcProfiler.startSection(huditem.getName());
 
             if (huditem.needsTween()) {
-                mc.mcProfiler.startSection("tween");
+                this.mc.mcProfiler.startSection("tween");
                 huditem.update(delta);
-                mc.mcProfiler.endSection();
+                this.mc.mcProfiler.endSection();
             }
 
-            if (mc.playerController.isInCreativeMode() && !huditem.isRenderedInCreative()) {
-                mc.mcProfiler.endSection();
+            if (this.mc.playerController.isInCreativeMode() && !huditem.isRenderedInCreative()) {
+                this.mc.mcProfiler.endSection();
                 continue;
             }
 
             GL11.glPushMatrix();
             GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
             GL11.glDisable(GL11.GL_BLEND);
-            if (mc.thePlayer.ridingEntity instanceof EntityLivingBase) {
+            if (this.mc.thePlayer.ridingEntity instanceof EntityLivingBase) {
                 if (huditem.shouldDrawOnMount()) {
                     huditem.fixBounds();
                     huditem.render(partialTicks);
@@ -91,11 +90,11 @@ public class GuiAdvancedHUD extends GuiIngameForge {
             }
             GL11.glPopAttrib();
             GL11.glPopMatrix();
-            mc.mcProfiler.endSection();
+            this.mc.mcProfiler.endSection();
         }
-        mc.mcProfiler.endSection();
-        
-        renderHUDText(HUDRegistry.screenWidth, HUDRegistry.screenHeight);
+        this.mc.mcProfiler.endSection();
+
+        this.renderHUDText(HUDRegistry.screenWidth, HUDRegistry.screenHeight);
 
         int width = HUDRegistry.screenWidth;
         int height = HUDRegistry.screenHeight;
@@ -112,18 +111,18 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glEnable(GL11.GL_ALPHA_TEST);
 
-        mc.mcProfiler.endSection();
+        this.mc.mcProfiler.endSection();
     }
 
     @Override
     protected void renderHUDText(int width, int height) {
-        mc.mcProfiler.startSection("forgeHudText");
+        this.mc.mcProfiler.startSection("forgeHudText");
         OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
         ArrayList<String> left = new ArrayList<String>();
         ArrayList<String> right = new ArrayList<String>();
 
-        if (mc.isDemo()) {
-            long time = mc.theWorld.getTotalWorldTime();
+        if (this.mc.isDemo()) {
+            long time = this.mc.theWorld.getTotalWorldTime();
             if (time >= 120500L) {
                 right.add(I18n.format("demo.demoExpired"));
             } else {
@@ -131,13 +130,13 @@ public class GuiAdvancedHUD extends GuiIngameForge {
             }
         }
 
-        if (mc.gameSettings.showDebugInfo) {
+        if (this.mc.gameSettings.showDebugInfo) {
             GL11.glPushMatrix();
-            left.add("Minecraft " + AdvancedHUD.MC_VERSION + " (" + mc.debug + ")");
-            left.add(mc.debugInfoRenders());
-            left.add(mc.getEntityDebug());
-            left.add(mc.debugInfoEntities());
-            left.add(mc.getWorldProviderName());
+            left.add("Minecraft " + Loader.MC_VERSION + " (" + this.mc.debug + ")");
+            left.add(this.mc.debugInfoRenders());
+            left.add(this.mc.getEntityDebug());
+            left.add(this.mc.debugInfoEntities());
+            left.add(this.mc.getWorldProviderName());
             left.add(null); // Spacer
 
             long max = Runtime.getRuntime().maxMemory();
@@ -148,27 +147,27 @@ public class GuiAdvancedHUD extends GuiIngameForge {
             right.add("Used memory: " + used * 100L / max + "% (" + used / 1024L / 1024L + "MB) of " + max / 1024L / 1024L + "MB");
             right.add("Allocated memory: " + total * 100L / max + "% (" + total / 1024L / 1024L + "MB)");
 
-            int x = MathHelper.floor_double(mc.thePlayer.posX);
-            int y = MathHelper.floor_double(mc.thePlayer.posY);
-            int z = MathHelper.floor_double(mc.thePlayer.posZ);
-            float yaw = mc.thePlayer.rotationYaw;
-            int heading = MathHelper.floor_double(mc.thePlayer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
+            int x = MathHelper.floor_double(this.mc.thePlayer.posX);
+            int y = MathHelper.floor_double(this.mc.thePlayer.posY);
+            int z = MathHelper.floor_double(this.mc.thePlayer.posZ);
+            float yaw = this.mc.thePlayer.rotationYaw;
+            int heading = MathHelper.floor_double(this.mc.thePlayer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
 
-            left.add(String.format("x: %.5f (%d) // c: %d (%d)", mc.thePlayer.posX, x, x >> 4, x & 15));
-            left.add(String.format("y: %.3f (feet pos, %.3f eyes pos)", mc.thePlayer.boundingBox.minY, mc.thePlayer.posY));
-            left.add(String.format("z: %.5f (%d) // c: %d (%d)", mc.thePlayer.posZ, z, z >> 4, z & 15));
+            left.add(String.format("x: %.5f (%d) // c: %d (%d)", this.mc.thePlayer.posX, x, x >> 4, x & 15));
+            left.add(String.format("y: %.3f (feet pos, %.3f eyes pos)", this.mc.thePlayer.boundingBox.minY, this.mc.thePlayer.posY));
+            left.add(String.format("z: %.5f (%d) // c: %d (%d)", this.mc.thePlayer.posZ, z, z >> 4, z & 15));
             left.add(String.format("f: %d (%s) / %f", heading, Direction.directions[heading], MathHelper.wrapAngleTo180_float(yaw)));
 
-            if (mc.theWorld != null && mc.theWorld.blockExists(x, y, z)) {
-                Chunk chunk = mc.theWorld.getChunkFromBlockCoords(x, z);
-                left.add(String.format("lc: %d b: %s bl: %d sl: %d rl: %d", chunk.getTopFilledSegment() + 15, chunk.getBiomeGenForWorldCoords(x & 15, z & 15, mc.theWorld.getWorldChunkManager()).biomeName, chunk.getSavedLightValue(EnumSkyBlock.Block, x & 15, y, z & 15), chunk.getSavedLightValue(EnumSkyBlock.Sky, x & 15, y, z & 15), chunk.getBlockLightValue(x & 15, y, z & 15, 0)));
+            if (this.mc.theWorld != null && this.mc.theWorld.blockExists(x, y, z)) {
+                Chunk chunk = this.mc.theWorld.getChunkFromBlockCoords(x, z);
+                left.add(String.format("lc: %d b: %s bl: %d sl: %d rl: %d", chunk.getTopFilledSegment() + 15, chunk.getBiomeGenForWorldCoords(x & 15, z & 15, this.mc.theWorld.getWorldChunkManager()).biomeName, chunk.getSavedLightValue(EnumSkyBlock.Block, x & 15, y, z & 15), chunk.getSavedLightValue(EnumSkyBlock.Sky, x & 15, y, z & 15), chunk.getBlockLightValue(x & 15, y, z & 15, 0)));
             } else {
                 left.add(null);
             }
 
-            left.add(String.format("ws: %.3f, fs: %.3f, g: %b, fl: %d", mc.thePlayer.capabilities.getWalkSpeed(), mc.thePlayer.capabilities.getFlySpeed(), mc.thePlayer.onGround, mc.theWorld.getHeightValue(x, z)));
-            if (mc.entityRenderer != null && mc.entityRenderer.isShaderActive()) {
-                left.add(String.format("shader: %s", mc.entityRenderer.getShaderGroup().getShaderGroupName()));
+            left.add(String.format("ws: %.3f, fs: %.3f, g: %b, fl: %d", this.mc.thePlayer.capabilities.getWalkSpeed(), this.mc.thePlayer.capabilities.getFlySpeed(), this.mc.thePlayer.onGround, this.mc.theWorld.getHeightValue(x, z)));
+            if (this.mc.entityRenderer != null && this.mc.entityRenderer.isShaderActive()) {
+                left.add(String.format("shader: %s", this.mc.entityRenderer.getShaderGroup().getShaderGroupName()));
             }
 
             right.add(null);
@@ -183,7 +182,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
             if (msg == null) {
                 continue;
             }
-            mc.fontRenderer.drawStringWithShadow(msg, 2, 2 + x * 10, 0xFFFFFF);
+            this.mc.fontRendererObj.drawStringWithShadow(msg, 2, 2 + x * 10, 0xFFFFFF);
         }
 
         for (int x = 0; x < right.size(); x++) {
@@ -191,20 +190,20 @@ public class GuiAdvancedHUD extends GuiIngameForge {
             if (msg == null) {
                 continue;
             }
-            int w = mc.fontRenderer.getStringWidth(msg);
-            mc.fontRenderer.drawStringWithShadow(msg, width - w - 10, 2 + x * 10, 0xFFFFFF);
+            int w = this.mc.fontRendererObj.getStringWidth(msg);
+            this.mc.fontRendererObj.drawStringWithShadow(msg, width - w - 10, 2 + x * 10, 0xFFFFFF);
         }
 
-        mc.mcProfiler.endSection();
+        this.mc.mcProfiler.endSection();
     }
 
     @Override
     protected void renderPlayerList(int width, int height) {
-        mc.mcProfiler.startSection("playerList");
-        ScoreObjective scoreobjective = mc.theWorld.getScoreboard().func_96539_a(0);
-        NetHandlerPlayClient handler = mc.thePlayer.sendQueue;
+        this.mc.mcProfiler.startSection("playerList");
+        ScoreObjective scoreobjective = this.mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(0);
+        NetHandlerPlayClient handler = this.mc.thePlayer.sendQueue;
 
-        if (mc.gameSettings.keyBindPlayerList.isPressed() && (!mc.isIntegratedServerRunning() || handler.playerInfoList.size() > 1 || scoreobjective != null)) {
+        if (this.mc.gameSettings.keyBindPlayerList.isPressed() && (!this.mc.isIntegratedServerRunning() || handler.playerInfoList.size() > 1 || scoreobjective != null)) {
             List<?> players = handler.playerInfoList;
             int maxPlayers = handler.currentServerMaxPlayers;
             int rows = maxPlayers;
@@ -227,24 +226,24 @@ public class GuiAdvancedHUD extends GuiIngameForge {
             for (int i = 0; i < maxPlayers; i++) {
                 int xPos = left + i % columns * columnWidth;
                 int yPos = border + i / columns * 9;
-                drawRect(xPos, yPos, xPos + columnWidth - 1, yPos + 8, 553648127);
+                drawRect(xPos, yPos, xPos + columnWidth - 1, yPos + 8, 0x20FFFFFF);
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                 GL11.glEnable(GL11.GL_ALPHA_TEST);
 
                 if (i < players.size()) {
                     GuiPlayerInfo player = (GuiPlayerInfo) players.get(i);
-                    ScorePlayerTeam team = mc.theWorld.getScoreboard().getPlayersTeam(player.name);
+                    ScorePlayerTeam team = this.mc.theWorld.getScoreboard().getPlayersTeam(player.name);
                     String displayName = ScorePlayerTeam.formatPlayerName(team, player.name);
-                    mc.fontRenderer.drawStringWithShadow(displayName, xPos, yPos, 16777215);
+                    this.mc.fontRendererObj.drawStringWithShadow(displayName, xPos, yPos, 0xFFFFFF);
 
                     if (scoreobjective != null) {
-                        int endX = xPos + mc.fontRenderer.getStringWidth(displayName) + 5;
+                        int endX = xPos + this.mc.fontRendererObj.getStringWidth(displayName) + 5;
                         int maxX = xPos + columnWidth - 12 - 5;
 
                         if (maxX - endX > 5) {
-                            Score score = scoreobjective.getScoreboard().func_96529_a(player.name, scoreobjective);
+                            Score score = scoreobjective.getScoreboard().getValueFromObjective(player.name, scoreobjective);
                             String scoreDisplay = EnumChatFormatting.YELLOW + "" + score.getScorePoints();
-                            mc.fontRenderer.drawStringWithShadow(scoreDisplay, maxX - mc.fontRenderer.getStringWidth(scoreDisplay), yPos, 16777215);
+                            this.mc.fontRendererObj.drawStringWithShadow(scoreDisplay, maxX - this.mc.fontRendererObj.getStringWidth(scoreDisplay), yPos, 0xFFFFFF);
                         }
                     }
 
@@ -265,60 +264,58 @@ public class GuiAdvancedHUD extends GuiIngameForge {
                         pingIndex = 3;
                     }
 
-                    zLevel += 100.0F;
-                    drawTexturedModalRect(xPos + columnWidth - 12, yPos, 0, 176 + pingIndex * 8, 10, 8);
-                    zLevel -= 100.0F;
+                    this.zLevel += 100.0F;
+                    this.drawTexturedModalRect(xPos + columnWidth - 12, yPos, 0, 176 + pingIndex * 8, 10, 8);
+                    this.zLevel -= 100.0F;
                 }
             }
         }
-        mc.mcProfiler.endSection();
+        this.mc.mcProfiler.endSection();
     }
 
     @Override
     protected void renderChat(int width, int height) {
-        mc.mcProfiler.startSection("chat");
+        this.mc.mcProfiler.startSection("chat");
 
         GL11.glPushMatrix();
-        GL11.glTranslatef(0.0F, mc.displayHeight / 2 - 40F, 0.0F);
-        persistantChatGUI.drawChat(updateCounter);
+        GL11.glTranslatef(0.0F, this.mc.displayHeight / 2 - 40F, 0.0F);
+        this.persistantChatGUI.drawChat(this.updateCounter);
         GL11.glPopMatrix();
 
-        mc.mcProfiler.endSection();
+        this.mc.mcProfiler.endSection();
     }
 
     @Override
     public ScaledResolution getResolution() {
-        return res;
+        return this.res;
     }
 
     @Override
     public void updateTick() {
-        mc.mcProfiler.startSection("Advanced HUD - UpdateTick");
+        this.mc.mcProfiler.startSection("Advanced HUD - UpdateTick");
 
-        if (mc.theWorld != null) {
+        if (this.mc.theWorld != null) {
             for (HudItem huditem : HUDRegistry.getHudItemList()) {
-                mc.mcProfiler.startSection(huditem.getName());
-                if (mc.playerController.isInCreativeMode() && !huditem.isRenderedInCreative()) {
-                    mc.mcProfiler.endSection();
+                this.mc.mcProfiler.startSection(huditem.getName());
+                if (this.mc.playerController.isInCreativeMode() && !huditem.isRenderedInCreative()) {
+                    this.mc.mcProfiler.endSection();
                     continue;
                 }
                 if (huditem.needsTick()) {
                     huditem.tick();
                 }
-                mc.mcProfiler.endSection();
+                this.mc.mcProfiler.endSection();
             }
         }
 
-        updateCounter++;
-        HUDRegistry.updateCounter = updateCounter;
+        this.updateCounter++;
+        HUDRegistry.updateCounter = this.updateCounter;
 
-        mc.mcProfiler.endSection();
+        this.mc.mcProfiler.endSection();
     }
 
-    // setRecordPlaying
     @Override
-    public void func_110326_a(String recordName, boolean isPlaying)
-    {
+    public void setRecordPlaying(String recordName, boolean isPlaying) {
         this.recordPlaying = recordName;
         this.recordPlayingUpFor = 60;
         this.recordIsPlaying = isPlaying;

@@ -1,5 +1,6 @@
 package advancedhud.client.ui;
 
+import org.lwjgl.input.Keyboard;
 import advancedhud.SaveController;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
@@ -8,7 +9,6 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.input.Keyboard;
 
 public class GuiAdvancedHUDConfiguration extends GuiScreen {
 
@@ -18,81 +18,80 @@ public class GuiAdvancedHUDConfiguration extends GuiScreen {
     @Override
     public void initGui() {
         super.initGui();
-        addButtons();
+        this.addButtons();
     }
 
     @SuppressWarnings("unchecked")
     private void addButtons() {
-        buttonList.clear();
-        buttonList.add(new GuiButton(-1, HUDRegistry.screenWidth - 30, 10, 20, 20, "X"));
+        this.buttonList.clear();
+        this.buttonList.add(new GuiButton(-1, HUDRegistry.screenWidth - 30, 10, 20, 20, "X"));
         for (HudItem huditem : HUDRegistry.getHudItemList()) {
             if (asMount && huditem.shouldDrawOnMount()) {
-                buttonList.add(new GuiHudItemButton(huditem.getDefaultID(), huditem.posX, huditem.posY, huditem.getWidth(), huditem.getHeight(), huditem.getButtonLabel()));
+                this.buttonList.add(new GuiHudItemButton(huditem.getDefaultID(), huditem.posX, huditem.posY, huditem.getWidth(), huditem.getHeight(), huditem.getButtonLabel()));
             } else if (!asMount && huditem.shouldDrawAsPlayer()) {
-                buttonList.add(new GuiHudItemButton(huditem.getDefaultID(), huditem.posX, huditem.posY, huditem.getWidth(), huditem.getHeight(), huditem.getButtonLabel()));
+                this.buttonList.add(new GuiHudItemButton(huditem.getDefaultID(), huditem.posX, huditem.posY, huditem.getWidth(), huditem.getHeight(), huditem.getButtonLabel()));
             }
         }
     }
 
     @Override
-    public void drawScreen(int par1, int par2, float par3) {
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
 
         if (!HUDRegistry.checkForResize()) {
-            initGui();
+            this.initGui();
         }
 
         if (help) {
-            drawCenteredString(mc.fontRenderer, "LEFT CLICK to reposition, RIGHT CLICK to change settings", width / 2, 17, 0xFFFFFF);
-            drawCenteredString(mc.fontRenderer, "ESCAPE to cancel, R to reset all", width / 2, 27, 0xFFFFFF);
-            drawCenteredString(mc.fontRenderer, "M to change to" + (asMount ? " player " : " mount ") + "HUD", width / 2, 37, 0xFFFFFF);
+            this.drawCenteredString(this.mc.fontRendererObj, "LEFT CLICK to reposition, RIGHT CLICK to change settings", this.width / 2, 17, 0xFFFFFF);
+            this.drawCenteredString(this.mc.fontRendererObj, "ESCAPE to cancel, R to reset all", this.width / 2, 27, 0xFFFFFF);
+            this.drawCenteredString(this.mc.fontRendererObj, "M to change to" + (asMount ? " player " : " mount ") + "HUD", this.width / 2, 37, 0xFFFFFF);
         }
 
-        super.drawScreen(par1, par2, par3);
+        super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
     /**
-     * Fired when a key is typed. This is the equivalent of
-     * KeyListener.keyTyped(KeyEvent e).
+     * Fired when a key is typed. This is the equivalent of KeyListener.keyTyped(KeyEvent e).
      */
     @Override
-    protected void keyTyped(char par1, int par2) {
-        if (par2 == 19) {
+    protected void keyTyped(char typedChar, int keyCode) {
+        if (keyCode == 19) {
             HUDRegistry.resetAllDefaults();
-            initGui();
-        } else if (par2 == Keyboard.KEY_M) {
+            this.initGui();
+        } else if (keyCode == Keyboard.KEY_M) {
             asMount = !asMount;
-            initGui();
-        } else if (par2 == Keyboard.KEY_F1) {
+            this.initGui();
+        } else if (keyCode == Keyboard.KEY_F1) {
             help = !help;
         }
         SaveController.saveConfig("config");
-        super.keyTyped(par1, par2);
+        super.keyTyped(typedChar, keyCode);
     }
 
     @Override
-    protected void actionPerformed(GuiButton par1GuiButton) {
-        if (par1GuiButton.id == -1) {
-            mc.displayGuiScreen(null);
+    protected void actionPerformed(GuiButton button) {
+        if (button.id == -1) {
+            this.mc.displayGuiScreen(null);
             SaveController.saveConfig("config");
         }
-        if (par1GuiButton instanceof GuiHudItemButton) {
-            HudItem hudItem = HUDRegistry.getHudItemByID(par1GuiButton.id);
+        if (button instanceof GuiHudItemButton) {
+            HudItem hudItem = HUDRegistry.getHudItemByID(button.id);
             if (hudItem != null && hudItem.isMoveable()) {
                 Minecraft.getMinecraft().displayGuiScreen(new GuiScreenReposition(this, hudItem));
             }
         }
-        super.actionPerformed(par1GuiButton);
+        super.actionPerformed(button);
     }
 
     @Override
-    public void mouseClicked(int i, int j, int mouseButton) {
+    public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         if (mouseButton == 1) {
-            for (Object button : buttonList) {
+            for (Object button : this.buttonList) {
                 GuiButton guibutton = (GuiButton) button;
 
-                if (guibutton.mousePressed(mc, i, j)) {
-                    mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
+                if (guibutton.mousePressed(this.mc, mouseX, mouseY)) {
+                    this.mc.getSoundHandler().playSound(PositionedSoundRecord.createPositionedSoundRecord(new ResourceLocation("gui.button.press"), 1.0F));
                     HudItem hudItem = HUDRegistry.getHudItemByID(guibutton.id);
                     if (hudItem != null) {
                         Minecraft.getMinecraft().displayGuiScreen(hudItem.getConfigScreen());
@@ -100,7 +99,7 @@ public class GuiAdvancedHUDConfiguration extends GuiScreen {
                 }
             }
         }
-        super.mouseClicked(i, j, mouseButton);
+        super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
 }

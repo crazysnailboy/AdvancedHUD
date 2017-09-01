@@ -1,50 +1,46 @@
 buildscript {
-    repositories {
-        mavenCentral()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-    }
+	repositories {
+		mavenCentral()
+		maven {
+			name = "forge"
+			url = "http://files.minecraftforge.net/maven"
+		}
+		maven {
+			name = "sonatype"
+			url = "https://oss.sonatype.org/content/repositories/snapshots/"
+		}
+	}
+	dependencies {
+		classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+	}
 }
-
 apply plugin: 'forge'
 
-version = "1.0"
-group= "com.maxpowa" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "advancedhud"
 
-idea { module { inheritOutputDirs = true } }
+version = "0.1.8"
+group = "com.maxpowa.advancedhud"
+archivesBaseName = "AdvancedHUD-1.7.10"
 
 minecraft {
-    version = "1.7.10-10.13.4.1448-1.7.10"
-    runDir = "run"
+	version = "1.7.10-10.13.4.1614-1.7.10"
+	runDir = "run"
+	mappings = "stable_12"
+	
+	replace "\${version}", project.version
+	replaceIn "AdvancedHUD.java"
+}
+
+dependencies {
 }
 
 processResources {
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-        
-    // copy everything else, thats not the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-    
-    from {configurations.packageLibs.collect {zipTree(it)}} {
-         exclude "icons/**"
-         exclude "help/**"
-    }
+	inputs.property "version", project.version
+	inputs.property "mcversion", project.minecraft.version
+	from(sourceSets.main.resources.srcDirs) {
+		include 'mcmod.info'
+		expand 'version':project.version, 'mcversion':project.minecraft.version
+	}
+	from(sourceSets.main.resources.srcDirs) {
+		exclude 'mcmod.info'
+	}
 }
-

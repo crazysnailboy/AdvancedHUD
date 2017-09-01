@@ -1,12 +1,12 @@
 package advancedhud.client.ui;
 
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import advancedhud.SaveController;
 import advancedhud.api.Alignment;
 import advancedhud.api.HudItem;
 import advancedhud.client.GuiAdvancedHUD;
 import net.minecraft.client.gui.GuiScreen;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
 public class GuiScreenReposition extends GuiScreen {
     protected GuiScreen parentScreen;
@@ -19,57 +19,57 @@ public class GuiScreenReposition extends GuiScreen {
     public GuiScreenReposition(GuiScreen parentScreen, HudItem hudItem) {
         this.parentScreen = parentScreen;
         this.hudItem = hudItem;
-        oldPosX = hudItem.posX;
-        oldPosY = hudItem.posY;
+        this.oldPosX = hudItem.posX;
+        this.oldPosY = hudItem.posY;
     }
 
     @Override
     public void handleMouseInput() {
-        int mouseX = Mouse.getEventX() * width / mc.displayWidth;
-        int mouseY = height - Mouse.getEventY() * height / mc.displayHeight - 1;
+        int mouseX = Mouse.getEventX() * this.width / this.mc.displayWidth;
+        int mouseY = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
 
-        hudItem.posX = mouseX - hudItem.getWidth() / 2;
-        hudItem.posY = mouseY - hudItem.getHeight() / 2;
+        this.hudItem.posX = mouseX - this.hudItem.getWidth() / 2;
+        this.hudItem.posY = mouseY - this.hudItem.getHeight() / 2;
 
-        if (axisAlign) {
-            if (hudItem.posX > oldPosX - 5 && hudItem.posX < oldPosX + 5) {
-                hudItem.posX = oldPosX;
+        if (this.axisAlign) {
+            if (this.hudItem.posX > this.oldPosX - 5 && this.hudItem.posX < this.oldPosX + 5) {
+                this.hudItem.posX = this.oldPosX;
             }
-            if (hudItem.posY > oldPosY - 5 && hudItem.posY < oldPosY + 5) {
-                hudItem.posY = oldPosY;
+            if (this.hudItem.posY > this.oldPosY - 5 && this.hudItem.posY < this.oldPosY + 5) {
+                this.hudItem.posY = this.oldPosY;
             }
         }
 
-        hudItem.fixBounds();
+        this.hudItem.fixBounds();
 
         super.handleMouseInput();
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float f) {
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
 
         if (help) {
-            drawCenteredString(mc.fontRenderer, "CLICK to confirm, ESCAPE to cancel, R to reset, CTRL to align", width / 2, 16, 16777215);
-            drawCenteredString(mc.fontRenderer, "Alignment: " + Alignment.calculateAlignment(mouseX, mouseY), width / 2, 26, 16777215);
+            this.drawCenteredString(this.mc.fontRendererObj, "CLICK to confirm, ESCAPE to cancel, R to reset, CTRL to align", this.width / 2, 16, 0xFFFFFF);
+            this.drawCenteredString(this.mc.fontRendererObj, "Alignment: " + Alignment.calculateAlignment(mouseX, mouseY), this.width / 2, 26, 0xFFFFFF);
         }
 
-        drawRect(hudItem.posX, hudItem.posY, hudItem.posX + hudItem.getWidth(), hudItem.posY + hudItem.getHeight(), 0x22FFFFFF);
-        hudItem.render(GuiAdvancedHUD.partialTicks);
+        drawRect(this.hudItem.posX, this.hudItem.posY, this.hudItem.posX + this.hudItem.getWidth(), this.hudItem.posY + this.hudItem.getHeight(), 0x22FFFFFF);
+        this.hudItem.render(GuiAdvancedHUD.partialTicks);
 
-        if (axisAlign) {
-            int x = oldPosX + hudItem.getWidth() / 2;
-            int y = oldPosY + hudItem.getHeight() / 2;
-            drawRect(x - 1, 0, x + 1, height, 1073741824);
-            drawRect(0, y - 1, width, y + 1, 1073741824);
+        if (this.axisAlign) {
+            int x = this.oldPosX + this.hudItem.getWidth() / 2;
+            int y = this.oldPosY + this.hudItem.getHeight() / 2;
+            drawRect(x - 1, 0, x + 1, this.height, 0x40000000);
+            drawRect(0, y - 1, this.width, y + 1, 0x40000000);
         }
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseState) {
-        if (mouseState == 0) {
-            hudItem.alignment = Alignment.calculateAlignment(mouseX, mouseY);
-            mc.displayGuiScreen(parentScreen);
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+        if (mouseButton == 0) {
+            this.hudItem.alignment = Alignment.calculateAlignment(mouseX, mouseY);
+            this.mc.displayGuiScreen(this.parentScreen);
             SaveController.saveConfig("config");
         }
     }
@@ -79,24 +79,24 @@ public class GuiScreenReposition extends GuiScreen {
         super.handleKeyboardInput();
 
         if (Keyboard.getEventKey() == 29) {
-            axisAlign = Keyboard.getEventKeyState();
+            this.axisAlign = Keyboard.getEventKeyState();
         }
     }
 
     @Override
-    protected void keyTyped(char keyChar, int keyCode) {
+    protected void keyTyped(char typedChar, int keyCode) {
         if (keyCode == 1) {
-            hudItem.posX = oldPosX;
-            hudItem.posY = oldPosY;
-            mc.displayGuiScreen(parentScreen);
+            this.hudItem.posX = this.oldPosX;
+            this.hudItem.posY = this.oldPosY;
+            this.mc.displayGuiScreen(this.parentScreen);
             SaveController.saveConfig("config");
         } else if (keyCode == 19) {
             //hudItem.rotated = false;
-            hudItem.posX = hudItem.getDefaultPosX();
-            hudItem.posY = hudItem.getDefaultPosY();
-            hudItem.alignment = hudItem.getDefaultAlignment();
-            hudItem.fixBounds();
-            mc.displayGuiScreen(parentScreen);
+            this.hudItem.posX = this.hudItem.getDefaultPosX();
+            this.hudItem.posY = this.hudItem.getDefaultPosY();
+            this.hudItem.alignment = this.hudItem.getDefaultAlignment();
+            this.hudItem.fixBounds();
+            this.mc.displayGuiScreen(this.parentScreen);
             SaveController.saveConfig("config");
         }
     }

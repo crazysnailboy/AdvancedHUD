@@ -1,23 +1,17 @@
 package advancedhud.api;
 
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.nbt.NBTTagCompound;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * 
- * Register your HUD elements with this.
- * <p>
- * You can register them at init, postinit, world load, really where ever you
- * feel the need to.
- * 
+ * Register your HUD elements with this. You can register them at init, postinit, world load, really where ever you feel the need to.
  * @author maxpowa
- * 
+ *
  */
 public class HUDRegistry {
     protected static List<HudItem> hudItemList = new ArrayList<HudItem>();
@@ -123,30 +117,30 @@ public class HUDRegistry {
         }
     }
 
-    public static void readFromNBT(NBTTagCompound nbt) {
-        screenWidth = nbt.getInteger("screenWidth");
-        screenHeight = nbt.getInteger("screenHeight");
+    public static void readFromNBT(NBTTagCompound compound) {
+        screenWidth = compound.getInteger("screenWidth");
+        screenHeight = compound.getInteger("screenHeight");
 
         hudItemListActive = new ArrayList<HudItem>(hudItemList);
         for (HudItem hudItem : hudItemList) {
-            if (!nbt.hasKey(hudItem.getName())) {
+            if (!compound.hasKey(hudItem.getName())) {
                 disableHudItem(hudItem);
             }
         }
     }
 
-    public static void writeToNBT(NBTTagCompound nbt) {
-        nbt.setInteger("screenWidth", screenWidth);
-        nbt.setInteger("screenHeight", screenHeight);
+    public static void writeToNBT(NBTTagCompound compound) {
+        compound.setInteger("screenWidth", screenWidth);
+        compound.setInteger("screenHeight", screenHeight);
 
         for (Object hudItem_ : hudItemListActive) {
             HudItem hudItem = (HudItem) hudItem_;
-            nbt.setBoolean(hudItem.getName(), true);
+            compound.setBoolean(hudItem.getName(), true);
         }
 
     }
 
-    public static void setInitialLoadComplete(boolean b) {
-        initialLoadComplete = b;
+    public static void setInitialLoadComplete(boolean value) {
+        initialLoadComplete = value;
     }
 }

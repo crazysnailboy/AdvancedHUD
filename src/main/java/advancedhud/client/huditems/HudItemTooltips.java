@@ -37,7 +37,7 @@ public class HudItemTooltips extends HudItem {
 
     @Override
     public int getDefaultPosX() {
-        return (HUDRegistry.screenWidth - getWidth()) / 2;
+        return (HUDRegistry.screenWidth - this.getWidth()) / 2;
     }
 
     @Override
@@ -61,25 +61,25 @@ public class HudItemTooltips extends HudItem {
     }
 
     @Override
-    public void render(float paramFloat) {
+    public void render(float partialTicks) {
         Minecraft mc = Minecraft.getMinecraft();
 
         if (mc.currentScreen instanceof GuiAdvancedHUDConfiguration || mc.currentScreen instanceof GuiScreenReposition) {
-            itemName = "TOOLTIP";
+            this.itemName = "TOOLTIP";
         }
 
-        if (itemName != null && !itemName.isEmpty()) {
-            FontRenderer fontrenderer = mc.fontRenderer;
+        if (this.itemName != null && !this.itemName.isEmpty()) {
+            FontRenderer fontrenderer = mc.fontRendererObj;
             int posX;
-            if (Alignment.isLeft(alignment)) {
+            if (Alignment.isLeft(this.alignment)) {
                 posX = this.posX;
-            } else if (Alignment.isHorizontalCenter(alignment)) {
-                posX = this.posX + (getWidth() - fontrenderer.getStringWidth(itemName)) / 2;
+            } else if (Alignment.isHorizontalCenter(this.alignment)) {
+                posX = this.posX + (this.getWidth() - fontrenderer.getStringWidth(this.itemName)) / 2;
             } else {
-                posX = this.posX + getWidth() - fontrenderer.getStringWidth(itemName);
+                posX = this.posX + this.getWidth() - fontrenderer.getStringWidth(this.itemName);
             }
 
-            fontrenderer.drawStringWithShadow(itemRarityColorCode + itemName, posX, posY, stringColor);
+            fontrenderer.drawStringWithShadow(this.itemRarityColorCode + this.itemName, posX, this.posY, this.stringColor);
         }
     }
 
@@ -90,25 +90,25 @@ public class HudItemTooltips extends HudItem {
             ItemStack currentItem = mc.thePlayer.inventory.getCurrentItem();
             String currentName = currentItem == null ? "" : currentItem.getDisplayName();
 
-            resetFadeTimer = !currentName.equals(itemName);
-            itemName = currentName;
+            this.resetFadeTimer = !currentName.equals(this.itemName);
+            this.itemName = currentName;
 
             if (currentItem != null) {
-                itemRarityColorCode = currentItem.getRarity().rarityColor.toString();
-                stringColor = 16777215;
+                this.itemRarityColorCode = currentItem.getRarity().rarityColor.toString();
+                this.stringColor = 0xFFFFFF;
             }
         }
 
-        if (resetFadeTimer) {
-            alpha = 1.0F;
+        if (this.resetFadeTimer) {
+            this.alpha = 1.0F;
 
             int fadeSpeed = 8 * 20;
 
-            updateCounter = HUDRegistry.updateCounter + fadeSpeed;
-            resetFadeTimer = false;
+            this.updateCounter = HUDRegistry.updateCounter + fadeSpeed;
+            this.resetFadeTimer = false;
         } else {
-            alpha = (updateCounter - HUDRegistry.updateCounter) / 20.0F;
-            alpha = Math.min(Math.max(alpha, 0.0F), 1.0F);
+            this.alpha = (this.updateCounter - HUDRegistry.updateCounter) / 20.0F;
+            this.alpha = Math.min(Math.max(this.alpha, 0.0F), 1.0F);
         }
     }
 

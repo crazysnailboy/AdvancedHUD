@@ -20,45 +20,45 @@ public class GuiScreenHudItem extends GuiScreen {
     @SuppressWarnings("unchecked")
     @Override
     public void initGui() {
-        buttonList.clear();
-        buttonList.add(new GuiButton(-1, HUDRegistry.screenWidth - 30, 10, 20, 20, "X"));
-        if (hudItem.canRotate()) {
-            buttonList.add(new GuiButton(100, HUDRegistry.screenWidth / 2 - 50, HUDRegistry.screenHeight / 2 - 10, 100, 20, "Rotate?"));
-        } 
-        if (hudItem instanceof HudItemCrosshairs) {
-            HudItemCrosshairs cross = (HudItemCrosshairs) hudItem;
-            buttonList.add(new GuiButtonIconGrid(3320, HUDRegistry.screenWidth / 2 - 128, 40, cross, "Crosshair Selector"));
+        this.buttonList.clear();
+        this.buttonList.add(new GuiButton(-1, HUDRegistry.screenWidth - 30, 10, 20, 20, "X"));
+        if (this.hudItem.canRotate()) {
+            this.buttonList.add(new GuiButton(100, HUDRegistry.screenWidth / 2 - 50, HUDRegistry.screenHeight / 2 - 10, 100, 20, "Rotate?"));
+        }
+        if (this.hudItem instanceof HudItemCrosshairs) {
+            HudItemCrosshairs cross = (HudItemCrosshairs) this.hudItem;
+            this.buttonList.add(new GuiButtonIconGrid(3320, HUDRegistry.screenWidth / 2 - 128, 40, cross, "Crosshair Selector"));
         }
     }
 
     @Override
-    public void drawScreen(int par1, int par2, float par3) {
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
 
         if (!HUDRegistry.checkForResize()) {
-            initGui();
+            this.initGui();
         }
 
-        this.drawCenteredString(mc.fontRenderer, hudItem.getButtonLabel(), HUDRegistry.screenWidth / 2, 10, 0xFFFFFF);
-        super.drawScreen(par1, par2, par3);
+        this.drawCenteredString(this.mc.fontRendererObj, this.hudItem.getButtonLabel(), HUDRegistry.screenWidth / 2, 10, 0xFFFFFF);
+        super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
     @Override
-    protected void keyTyped(char keyChar, int keyCode) {
+    protected void keyTyped(char typedChar, int keyCode) {
         if (keyCode == 1) {
-            mc.displayGuiScreen(parentScreen);
+            this.mc.displayGuiScreen(this.parentScreen);
         }
     }
 
     @Override
-    protected void actionPerformed(GuiButton par1GuiButton) {
-        if (par1GuiButton.id == -1) {
-            mc.displayGuiScreen(parentScreen);
-        } else if (par1GuiButton.id == 100) {
-            hudItem.rotate();
+    protected void actionPerformed(GuiButton button) {
+        if (button.id == -1) {
+            this.mc.displayGuiScreen(this.parentScreen);
+        } else if (button.id == 100) {
+            this.hudItem.rotate();
         }
-        AdvancedHUD.log.info("Clicked button " + par1GuiButton.id);
-        super.actionPerformed(par1GuiButton);
+        AdvancedHUD.log.info("Clicked button " + button.id);
+        super.actionPerformed(button);
     }
 
 }

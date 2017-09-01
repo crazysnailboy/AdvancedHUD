@@ -5,14 +5,13 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-
+import advancedhud.api.HUDRegistry;
+import advancedhud.api.HudItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ReportedException;
-import advancedhud.api.HUDRegistry;
-import advancedhud.api.HudItem;
 
 public class SaveController {
     protected static final String dirName = Minecraft.getMinecraft().mcDataDir + File.separator + "config" + File.separator + "AdvancedHud";
@@ -38,12 +37,12 @@ public class SaveController {
             AdvancedHUD.log.info("Config load successful.");
         }
         try {
-            NBTTagCompound nbt = CompressedStreamTools.readCompressed(new FileInputStream(file));
+            NBTTagCompound compound = CompressedStreamTools.readCompressed(new FileInputStream(file));
 
-            HUDRegistry.readFromNBT(nbt.getCompoundTag("global"));
+            HUDRegistry.readFromNBT(compound.getCompoundTag("global"));
 
             for (HudItem item : HUDRegistry.getHudItemList()) {
-                NBTTagCompound itemNBT = nbt.getCompoundTag(item.getName());
+                NBTTagCompound itemNBT = compound.getCompoundTag(item.getName());
                 item.loadFromNBT(itemNBT);
             }
         } catch (IOException e) {
@@ -71,20 +70,20 @@ public class SaveController {
         File file = new File(dir, fileName);
 
         try {
-            NBTTagCompound nbt = new NBTTagCompound();
+            NBTTagCompound compound = new NBTTagCompound();
             FileOutputStream fileOutputStream = new FileOutputStream(file);
 
             NBTTagCompound globalNBT = new NBTTagCompound();
             HUDRegistry.writeToNBT(globalNBT);
-            nbt.setTag("global", globalNBT);
+            compound.setTag("global", globalNBT);
 
             for (HudItem item : HUDRegistry.getHudItemList()) {
                 NBTTagCompound itemNBT = new NBTTagCompound();
                 item.saveToNBT(itemNBT);
-                nbt.setTag(item.getName(), itemNBT);
+                compound.setTag(item.getName(), itemNBT);
             }
 
-            CompressedStreamTools.writeCompressed(nbt, fileOutputStream);
+            CompressedStreamTools.writeCompressed(compound, fileOutputStream);
             fileOutputStream.close();
         } catch (IOException e) {
             throw new ReportedException(new CrashReport("An error occured while saving", new Throwable()));

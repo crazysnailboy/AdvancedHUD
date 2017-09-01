@@ -1,17 +1,14 @@
-[
-{
-"modid": "advancedhud",
-"name": "Advanced HUD",
-"description": "A continuation of Advanced HUD by TurboSlow",
-"version": "Version [@VERSION@] for @MCVERSION@",
-"credits": "Created by TurboSlow, Maintained by maxpowa",
-"logoFile": "",
-"mcversion": "@MCVERSION@",
-"url": "",
-"updateUrl": "",
-"authors": [ "maxpowa", "TurboSlow" ],
-"parent":"",
-"screenshots": [],
-"dependencies": []
-}
-]
+[{
+	"modid": "advancedhud",
+	"name": "Advanced HUD",
+	"description": "A continuation of Advanced HUD by TurboSlow",
+	"version": "${version}",
+	"mcversion": "${mcversion}",
+	"url": "",
+	"updateUrl": "",
+	"authorList": ["csb987", "maxpowa", "TurboSlow"],
+	"credits": "Created by TurboSlow, Maintained by maxpowa, Forked by csb987",
+	"logoFile": "",
+	"screenshots": [],
+	"dependencies": []
+}]

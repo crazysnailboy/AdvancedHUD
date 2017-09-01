@@ -1,5 +1,6 @@
 package advancedhud.client.huditems;
 
+import org.lwjgl.opengl.GL11;
 import advancedhud.api.Alignment;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
@@ -12,7 +13,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.boss.BossStatus;
-import org.lwjgl.opengl.GL11;
 
 public class HudItemBossBar extends HudItem {
 
@@ -57,19 +57,19 @@ public class HudItemBossBar extends HudItem {
     }
 
     @Override
-    public void render(float paramFloat) {
+    public void render(float partialTicks) {
         Minecraft mc = Minecraft.getMinecraft();
         RenderAssist.bindTexture("textures/gui/icons.png");
         if (BossStatus.bossName != null && BossStatus.statusBarTime > 0 || mc.currentScreen instanceof GuiAdvancedHUDConfiguration || mc.currentScreen instanceof GuiScreenReposition) {
             if (BossStatus.bossName != null) {
                 --BossStatus.statusBarTime;
             }
-            FontRenderer fontrenderer = Minecraft.getMinecraft().fontRenderer;
+            FontRenderer fontrenderer = Minecraft.getMinecraft().fontRendererObj;
 
             short short1 = 182;
-            int j = posX;
+            int j = this.posX;
             int k = (int) (BossStatus.healthScale * (short1 + 1));
-            int b0 = posY + 11;
+            int b0 = this.posY + 11;
             RenderAssist.drawTexturedModalRect(j, b0, 0, 74, short1, 5);
             RenderAssist.drawTexturedModalRect(j, b0, 0, 74, short1, 5);
 
@@ -81,7 +81,7 @@ public class HudItemBossBar extends HudItem {
             }
 
             String s = BossStatus.bossName != null ? BossStatus.bossName : "AdvancedHUD Config";
-            fontrenderer.drawStringWithShadow(s, posX + 91 - fontrenderer.getStringWidth(s) / 2, b0 - 10, 16777215);
+            fontrenderer.drawStringWithShadow(s, this.posX + 91 - fontrenderer.getStringWidth(s) / 2, b0 - 10, 0xFFFFFF);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             RenderAssist.bindTexture(Gui.icons);
         }

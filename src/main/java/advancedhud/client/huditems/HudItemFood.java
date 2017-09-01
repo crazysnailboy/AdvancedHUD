@@ -1,5 +1,7 @@
 package advancedhud.client.huditems;
 
+import java.util.Random;
+import org.lwjgl.opengl.GL11;
 import advancedhud.api.Alignment;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
@@ -10,9 +12,6 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.FoodStats;
-import org.lwjgl.opengl.GL11;
-
-import java.util.Random;
 
 public class HudItemFood extends HudItem {
 
@@ -30,35 +29,35 @@ public class HudItemFood extends HudItem {
 
     @Override
     public Alignment getDefaultAlignment() {
-        if (rotated)
+        if (this.rotated)
             return Alignment.CENTERRIGHT;
         return Alignment.BOTTOMCENTER;
     }
 
     @Override
     public int getDefaultPosX() {
-        if (rotated)
+        if (this.rotated)
             return HUDRegistry.screenWidth - 39;
         return HUDRegistry.screenWidth / 2 + 10;
     }
 
     @Override
     public int getDefaultPosY() {
-        if (rotated)
+        if (this.rotated)
             return HUDRegistry.screenHeight / 2 + 10;
         return HUDRegistry.screenHeight - 39;
     }
 
     @Override
     public int getWidth() {
-        if (rotated)
+        if (this.rotated)
             return 9;
         return 81;
     }
 
     @Override
     public int getHeight() {
-        if (rotated)
+        if (this.rotated)
             return 81;
         return 9;
     }
@@ -69,13 +68,13 @@ public class HudItemFood extends HudItem {
     }
 
     @Override
-    public void render(float paramFloat) {
+    public void render(float partialTicks) {
         Minecraft mc = Minecraft.getMinecraft();
         RenderAssist.bindTexture(Gui.icons);
         GL11.glColor4f(1.0f, 1.0f, 1.0f, this.getOpacity());
 
-        int left = posX + 81;
-        int top = posY;
+        int left = this.posX + 81;
+        int top = this.posY;
 
         FoodStats stats = mc.thePlayer.getFoodStats();
         int level = stats.getFoodLevel();
@@ -85,12 +84,12 @@ public class HudItemFood extends HudItem {
             int idx = i * 2 + 1;
             int x = left - i * 8 - 9;
             int y = top;
-            
-            if (rotated){
+
+            if (this.rotated) {
                 x = left - 81;
-                y = top + 82 - i*8 -9;
+                y = top + 82 - i * 8 - 9;
             }
-            
+
             int icon = 16;
             byte backgound = 0;
 
@@ -100,10 +99,10 @@ public class HudItemFood extends HudItem {
             }
 
             if (mc.thePlayer.getFoodStats().getSaturationLevel() <= 0.0F && mc.ingameGUI.getUpdateCounter() % (level * 3 + 1) == 0) {
-                y = top + rand.nextInt(3) - 1;
-                if (rotated) {
-                    x = left-81+rand.nextInt(3)-1;
-                    y = top + 82 - i*8 -9;
+                y = top + this.rand.nextInt(3) - 1;
+                if (this.rotated) {
+                    x = left - 81 + this.rand.nextInt(3) - 1;
+                    y = top + 82 - i * 8 - 9;
                 }
             }
 

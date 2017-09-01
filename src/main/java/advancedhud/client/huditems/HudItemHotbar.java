@@ -1,5 +1,7 @@
 package advancedhud.client.huditems;
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 import advancedhud.AdvancedHUD;
 import advancedhud.api.Alignment;
 import advancedhud.api.HUDRegistry;
@@ -12,13 +14,11 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 public class HudItemHotbar extends HudItem {
 
     private static final ResourceLocation WIDGETS = new ResourceLocation("textures/gui/widgets.png");
-    private static final ResourceLocation ROTATE_WIDGETS = new ResourceLocation(AdvancedHUD.MOD_ID, "textures/gui/rotateWidgets.png");
+    private static final ResourceLocation ROTATE_WIDGETS = new ResourceLocation(AdvancedHUD.MODID, "textures/gui/rotateWidgets.png");
 
     public HudItemHotbar() {
         super();
@@ -36,35 +36,35 @@ public class HudItemHotbar extends HudItem {
 
     @Override
     public Alignment getDefaultAlignment() {
-        if (rotated)
+        if (this.rotated)
             return Alignment.CENTERRIGHT;
         return Alignment.BOTTOMCENTER;
     }
 
     @Override
     public int getDefaultPosX() {
-        if (rotated)
-            return HUDRegistry.screenWidth - getWidth();
-        return (HUDRegistry.screenWidth - getWidth()) / 2;
+        if (this.rotated)
+            return HUDRegistry.screenWidth - this.getWidth();
+        return (HUDRegistry.screenWidth - this.getWidth()) / 2;
     }
 
     @Override
     public int getDefaultPosY() {
-        if (rotated)
-            return (HUDRegistry.screenHeight - getHeight()) / 2;
-        return HUDRegistry.screenHeight - getHeight();
+        if (this.rotated)
+            return (HUDRegistry.screenHeight - this.getHeight()) / 2;
+        return HUDRegistry.screenHeight - this.getHeight();
     }
 
     @Override
     public int getWidth() {
-        if (rotated)
+        if (this.rotated)
             return 22;
         return 182;
     }
 
     @Override
     public int getHeight() {
-        if (rotated)
+        if (this.rotated)
             return 182;
         return 22;
     }
@@ -79,10 +79,10 @@ public class HudItemHotbar extends HudItem {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         InventoryPlayer inv = mc.thePlayer.inventory;
-        if (!rotated) {
+        if (!this.rotated) {
             RenderAssist.bindTexture(WIDGETS);
-            RenderAssist.drawTexturedModalRect(posX, posY, 0, 0, 182, 22);
-            RenderAssist.drawTexturedModalRect(posX - 1 + inv.currentItem * 20, posY - 1, 0, 0, 24, 24);
+            RenderAssist.drawTexturedModalRect(this.posX, this.posY, 0, 0, 182, 22);
+            RenderAssist.drawTexturedModalRect(this.posX - 1 + inv.currentItem * 20, this.posY - 1, 0, 0, 24, 24);
 
             GL11.glDisable(GL11.GL_BLEND);
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
@@ -95,15 +95,15 @@ public class HudItemHotbar extends HudItem {
             RenderHelper.enableGUIStandardItemLighting();
 
             for (int i = 0; i < 9; ++i) {
-                int x = posX - 90 + i * 20 + 2;
-                int z = posY - 6 - 3;
+                int x = this.posX - 90 + i * 20 + 2;
+                int z = this.posY - 6 - 3;
                 RenderAssist.renderInventorySlot(i, x, z, partialTicks, mc);
             }
 
             RenderHelper.disableStandardItemLighting();
             GL11.glDisable(GL12.GL_RESCALE_NORMAL);
         } else {
-            GL11.glTranslatef((float) posX + getWidth(), posY, 0.0F);
+            GL11.glTranslatef((float) this.posX + this.getWidth(), this.posY, 0.0F);
             GL11.glRotatef(90F, 0.0F, 0.0F, 1.0F);
             RenderAssist.bindTexture(WIDGETS);
             RenderAssist.drawTexturedModalRect(0, 0, 0, 0, 182, 22);
@@ -121,8 +121,8 @@ public class HudItemHotbar extends HudItem {
             RenderHelper.enableGUIStandardItemLighting();
 
             for (int i = 0; i < 9; ++i) {
-                int x = posX - 88;
-                int z = posY - 11 + i * 20 + 2;
+                int x = this.posX - 88;
+                int z = this.posY - 11 + i * 20 + 2;
                 RenderAssist.renderInventorySlot(i, x, z, partialTicks, mc);
             }
 
@@ -152,13 +152,13 @@ public class HudItemHotbar extends HudItem {
     }
 
     @Override
-    public void loadFromNBT(NBTTagCompound nbt) {
-        super.loadFromNBT(nbt);
+    public void loadFromNBT(NBTTagCompound compound) {
+        super.loadFromNBT(compound);
     }
 
     @Override
-    public void saveToNBT(NBTTagCompound nbt) {
-        super.saveToNBT(nbt);
+    public void saveToNBT(NBTTagCompound compound) {
+        super.saveToNBT(compound);
     }
 
     @Override
