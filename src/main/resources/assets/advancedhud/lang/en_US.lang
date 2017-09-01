@@ -1,0 +1,28 @@
+advancedhud.item.air.name=AIR
+advancedhud.item.armor.name=ARMOR
+advancedhud.item.bossbar.name=BOSSBAR
+advancedhud.item.crosshair.name=CROSSHAIRS
+advancedhud.item.experiencebar.name=EXPERIENCEBAR
+advancedhud.item.food.name=FOOD
+advancedhud.item.health.name=HEALTH
+advancedhud.item.healthmount.name=HEATH (MOUNT)
+advancedhud.item.hotbar.name=HOTBAR
+advancedhud.item.jumpbar.name=JUMPBAR
+advancedhud.item.record.name=RECORDDISPLAY
+advancedhud.item.scoreboard.name=SCOREBOARD
+advancedhud.item.tooltip.name=TOOLTIP
+
+advancedhud.configuration.title=AdvancedHUD Config
+advancedhud.configuration.help.1=LEFT CLICK to reposition, RIGHT CLICK to change settings
+advancedhud.configuration.help.2=ESCAPE to cancel, R to reset all
+advancedhud.configuration.help.3=M to change to %1$s HUD
+advancedhud.configuration.player=player
+advancedhud.configuration.mount=mount
+
+advancedhud.reposition.controls=CLICK to confirm, ESCAPE to cancel, R to reset, CTRL to align
+advancedhud.reposition.alignment=Alignment: %1$s
+
+advancedhud.huditems.crosshairselector=Crosshair Selector
+advancedhud.huditems.rotate=Rotate?
+
+advancedhud.key.config=§aAdvancedHUD Config

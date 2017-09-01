@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiAdvancedHUDConfiguration extends GuiScreen {
@@ -43,9 +44,9 @@ public class GuiAdvancedHUDConfiguration extends GuiScreen {
         }
 
         if (help) {
-            this.drawCenteredString(this.mc.fontRendererObj, "LEFT CLICK to reposition, RIGHT CLICK to change settings", this.width / 2, 17, 0xFFFFFF);
-            this.drawCenteredString(this.mc.fontRendererObj, "ESCAPE to cancel, R to reset all", this.width / 2, 27, 0xFFFFFF);
-            this.drawCenteredString(this.mc.fontRendererObj, "M to change to" + (asMount ? " player " : " mount ") + "HUD", this.width / 2, 37, 0xFFFFFF);
+            this.drawCenteredString(this.mc.fontRendererObj, I18n.format("advancedhud.configuration.help.1"), this.width / 2, 17, 0xFFFFFF);
+            this.drawCenteredString(this.mc.fontRendererObj, I18n.format("advancedhud.configuration.help.2"), this.width / 2, 27, 0xFFFFFF);
+            this.drawCenteredString(this.mc.fontRendererObj, I18n.format("advancedhud.configuration.help.3", I18n.format("advancedhud.configuration.", (asMount ? "player" : "mount"))), this.width / 2, 37, 0xFFFFFF);
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);

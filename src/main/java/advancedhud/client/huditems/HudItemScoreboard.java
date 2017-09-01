@@ -9,6 +9,7 @@ import advancedhud.api.RenderAssist;
 import advancedhud.client.ui.GuiScreenHudItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
@@ -24,7 +25,7 @@ public class HudItemScoreboard extends HudItem {
 
     @Override
     public String getButtonLabel() {
-        return "SCOREBOARD";
+        return I18n.format("advancedhud.item.scoreboard.name");
     }
 
     @Override

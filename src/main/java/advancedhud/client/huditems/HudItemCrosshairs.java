@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
@@ -28,7 +29,7 @@ public class HudItemCrosshairs extends HudItem {
 
     @Override
     public String getButtonLabel() {
-        return "CROSSHAIRS";
+        return I18n.format("advancedhud.item.crosshair.name");
     }
 
     @Override

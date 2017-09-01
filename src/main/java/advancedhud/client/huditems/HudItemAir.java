@@ -13,6 +13,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.MathHelper;
 
 public class HudItemAir extends HudItem {
@@ -32,7 +33,7 @@ public class HudItemAir extends HudItem {
 
     @Override
     public String getButtonLabel() {
-        return "AIR";
+        return I18n.format("advancedhud.item.air.name");
     }
 
     @Override

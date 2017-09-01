@@ -9,6 +9,7 @@ import advancedhud.client.ui.GuiScreenReposition;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 
 public class HudItemTooltips extends HudItem {
@@ -21,13 +22,13 @@ public class HudItemTooltips extends HudItem {
     private boolean resetFadeTimer;
 
     @Override
-    public String getButtonLabel() {
-        return "TOOLTIP";
+    public String getName() {
+        return "itemtooltip";
     }
 
     @Override
-    public String getName() {
-        return "itemtooltip";
+    public String getButtonLabel() {
+        return I18n.format("advancedhud.item.itemtooltip.name");
     }
 
     @Override
@@ -65,7 +66,7 @@ public class HudItemTooltips extends HudItem {
         Minecraft mc = Minecraft.getMinecraft();
 
         if (mc.currentScreen instanceof GuiAdvancedHUDConfiguration || mc.currentScreen instanceof GuiScreenReposition) {
-            this.itemName = "TOOLTIP";
+            this.itemName = this.getButtonLabel();
         }
 
         if (this.itemName != null && !this.itemName.isEmpty()) {

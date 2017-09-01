@@ -11,6 +11,7 @@ import advancedhud.client.ui.GuiScreenHudItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -20,10 +21,6 @@ public class HudItemHotbar extends HudItem {
     private static final ResourceLocation WIDGETS = new ResourceLocation("textures/gui/widgets.png");
     private static final ResourceLocation ROTATE_WIDGETS = new ResourceLocation(AdvancedHUD.MODID, "textures/gui/rotateWidgets.png");
 
-    public HudItemHotbar() {
-        super();
-    }
-
     @Override
     public String getName() {
         return "hotbar";
@@ -31,7 +28,7 @@ public class HudItemHotbar extends HudItem {
 
     @Override
     public String getButtonLabel() {
-        return "HOTBAR";
+        return I18n.format("advancedhud.item.hotbar.name");
     }
 
     @Override

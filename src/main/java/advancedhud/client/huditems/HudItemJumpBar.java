@@ -11,6 +11,7 @@ import advancedhud.client.ui.GuiScreenReposition;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 
 public class HudItemJumpBar extends HudItem {
 
@@ -21,7 +22,7 @@ public class HudItemJumpBar extends HudItem {
 
     @Override
     public String getButtonLabel() {
-        return "JUMPBAR";
+        return I18n.format("advancedhud.item.jumpbar.name");
     }
 
     @Override

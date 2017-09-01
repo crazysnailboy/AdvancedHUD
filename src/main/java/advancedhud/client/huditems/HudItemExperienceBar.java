@@ -11,6 +11,7 @@ import advancedhud.client.ui.GuiScreenReposition;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 
 public class HudItemExperienceBar extends HudItem {
 
@@ -25,7 +26,7 @@ public class HudItemExperienceBar extends HudItem {
 
     @Override
     public String getButtonLabel() {
-        return "EXPERIENCEBAR";
+        return I18n.format("advancedhud.item.experiencebar.name");
     }
 
     @Override

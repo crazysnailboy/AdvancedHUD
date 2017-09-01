@@ -7,6 +7,7 @@ import advancedhud.api.Alignment;
 import advancedhud.api.HudItem;
 import advancedhud.client.GuiAdvancedHUD;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 
 public class GuiScreenReposition extends GuiScreen {
     protected GuiScreen parentScreen;
@@ -50,8 +51,8 @@ public class GuiScreenReposition extends GuiScreen {
         this.drawDefaultBackground();
 
         if (help) {
-            this.drawCenteredString(this.mc.fontRendererObj, "CLICK to confirm, ESCAPE to cancel, R to reset, CTRL to align", this.width / 2, 16, 0xFFFFFF);
-            this.drawCenteredString(this.mc.fontRendererObj, "Alignment: " + Alignment.calculateAlignment(mouseX, mouseY), this.width / 2, 26, 0xFFFFFF);
+            this.drawCenteredString(this.mc.fontRendererObj, I18n.format("advancedhud.reposition.controls"), this.width / 2, 16, 0xFFFFFF);
+            this.drawCenteredString(this.mc.fontRendererObj, I18n.format("advancedhud.reposition.alignment", Alignment.calculateAlignment(mouseX, mouseY)), this.width / 2, 26, 0xFFFFFF);
         }
 
         drawRect(this.hudItem.posX, this.hudItem.posY, this.hudItem.posX + this.hudItem.getWidth(), this.hudItem.posY + this.hudItem.getHeight(), 0x22FFFFFF);

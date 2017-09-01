@@ -10,6 +10,7 @@ import advancedhud.client.ui.GuiScreenReposition;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.ForgeHooks;
 
 public class HudItemArmor extends HudItem {
@@ -21,7 +22,7 @@ public class HudItemArmor extends HudItem {
 
     @Override
     public String getButtonLabel() {
-        return "ARMOR";
+        return I18n.format("advancedhud.item.armor.name");
     }
 
     @Override

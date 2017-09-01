@@ -9,6 +9,7 @@ import advancedhud.client.GuiAdvancedHUD;
 import advancedhud.client.ui.GuiScreenHudItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 
 public class HudItemRecordDisplay extends HudItem {
 
@@ -23,7 +24,7 @@ public class HudItemRecordDisplay extends HudItem {
 
     @Override
     public String getButtonLabel() {
-        return "RECORDDISPLAY";
+        return I18n.format("advancedhud.item.record.name");
     }
 
     @Override

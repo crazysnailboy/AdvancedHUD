@@ -10,6 +10,7 @@ import advancedhud.client.ui.GuiScreenHudItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.FoodStats;
 
@@ -24,7 +25,7 @@ public class HudItemFood extends HudItem {
 
     @Override
     public String getButtonLabel() {
-        return "FOOD";
+        return I18n.format("advancedhud.item.food.name");
     }
 
     @Override

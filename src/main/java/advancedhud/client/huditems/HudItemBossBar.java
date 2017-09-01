@@ -12,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.boss.BossStatus;
 
 public class HudItemBossBar extends HudItem {
@@ -23,7 +24,7 @@ public class HudItemBossBar extends HudItem {
 
     @Override
     public String getButtonLabel() {
-        return "BOSSBAR";
+        return I18n.format("advancedhud.item.bossbar.name");
     }
 
     @Override
@@ -80,7 +81,7 @@ public class HudItemBossBar extends HudItem {
                 RenderAssist.drawTexturedModalRect(j, b0, 0, 79, k, 5);
             }
 
-            String s = BossStatus.bossName != null ? BossStatus.bossName : "AdvancedHUD Config";
+            String s = BossStatus.bossName != null ? BossStatus.bossName : I18n.format("advancedhud.configuration.title");
             fontrenderer.drawStringWithShadow(s, this.posX + 91 - fontrenderer.getStringWidth(s) / 2, b0 - 10, 0xFFFFFF);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             RenderAssist.bindTexture(Gui.icons);

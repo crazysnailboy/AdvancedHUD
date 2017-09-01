@@ -6,6 +6,7 @@ import advancedhud.api.HudItem;
 import advancedhud.client.huditems.HudItemCrosshairs;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 
 public class GuiScreenHudItem extends GuiScreen {
 
@@ -23,11 +24,11 @@ public class GuiScreenHudItem extends GuiScreen {
         this.buttonList.clear();
         this.buttonList.add(new GuiButton(-1, HUDRegistry.screenWidth - 30, 10, 20, 20, "X"));
         if (this.hudItem.canRotate()) {
-            this.buttonList.add(new GuiButton(100, HUDRegistry.screenWidth / 2 - 50, HUDRegistry.screenHeight / 2 - 10, 100, 20, "Rotate?"));
+            this.buttonList.add(new GuiButton(100, HUDRegistry.screenWidth / 2 - 50, HUDRegistry.screenHeight / 2 - 10, 100, 20, I18n.format("advancedhud.huditems.rotate")));
         }
         if (this.hudItem instanceof HudItemCrosshairs) {
             HudItemCrosshairs cross = (HudItemCrosshairs) this.hudItem;
-            this.buttonList.add(new GuiButtonIconGrid(3320, HUDRegistry.screenWidth / 2 - 128, 40, cross, "Crosshair Selector"));
+            this.buttonList.add(new GuiButtonIconGrid(3320, HUDRegistry.screenWidth / 2 - 128, 40, cross, I18n.format("advancedhud.huditems.crosshairselector")));
         }
     }
 

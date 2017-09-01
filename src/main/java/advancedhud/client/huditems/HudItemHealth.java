@@ -9,6 +9,7 @@ import advancedhud.client.ui.GuiScreenHudItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.potion.Potion;
@@ -26,7 +27,7 @@ public class HudItemHealth extends HudItem {
 
     @Override
     public String getButtonLabel() {
-        return "HEALTH";
+        return I18n.format("advancedhud.item.health.name");
     }
 
     @Override
