@@ -5,7 +5,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 
 /**
  * Some methods which are usually in GuiIngame, but since we don't have direct access when rendering in HudItem, you may need to use these.
@@ -147,19 +146,6 @@ public class RenderAssist {
         tessellator.draw();
     }
 
-    public static void bindTexture(ResourceLocation resource) {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(resource);
-    }
-
-    /**
-     * Binds a texture, similar to the way renderEngine.bindTexture(String str) used to work.
-     * @param textureLocation - Path to location, you should know how to format this.
-     */
-    public static void bindTexture(String textureLocation) {
-        ResourceLocation res = new ResourceLocation(textureLocation);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(res);
-    }
-
     /**
      * Draws a solid color rectangle with the specified coordinates and color.
      * @param x1
@@ -183,15 +169,15 @@ public class RenderAssist {
             y2 = j1;
         }
 
-        float f = (color >> 24 & 255) / 255.0F;
-        float f1 = (color >> 16 & 255) / 255.0F;
-        float f2 = (color >> 8 & 255) / 255.0F;
-        float f3 = (color & 255) / 255.0F;
+        float a = (color >> 24 & 255) / 255.0F;
+        float r = (color >> 16 & 255) / 255.0F;
+        float g = (color >> 8 & 255) / 255.0F;
+        float b = (color & 255) / 255.0F;
         Tessellator tessellator = Tessellator.instance;
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glColor4f(f1, f2, f3, f);
+        GL11.glColor4f(r, g, b, a);
         tessellator.startDrawingQuads();
         tessellator.addVertex(x1, y2, 0.0D);
         tessellator.addVertex(x2, y2, 0.0D);

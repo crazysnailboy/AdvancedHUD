@@ -97,7 +97,7 @@ public class HudItemHotbar extends HudItem {
             RenderHelper.disableStandardItemLighting();
             GL11.glDisable(GL12.GL_RESCALE_NORMAL);
         } else {
-            GL11.glTranslatef((float) this.posX + this.getWidth(), this.posY, 0.0F);
+            GL11.glTranslatef((float)this.posX + this.getWidth(), this.posY, 0.0F);
             GL11.glRotatef(90F, 0.0F, 0.0F, 1.0F);
             this.mc.renderEngine.bindTexture(WIDGETS);
             RenderAssist.drawTexturedModalRect(0, 0, 0, 0, 182, 22);

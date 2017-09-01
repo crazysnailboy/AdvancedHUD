@@ -64,7 +64,7 @@ public class HudItemBossBar extends HudItem {
             }
             short short1 = 182;
             int j = this.posX;
-            int k = (int) (BossStatus.healthScale * (short1 + 1));
+            int k = (int)(BossStatus.healthScale * (short1 + 1));
             int b0 = this.posY + 11;
             RenderAssist.drawTexturedModalRect(j, b0, 0, 74, short1, 5);
             RenderAssist.drawTexturedModalRect(j, b0, 0, 74, short1, 5);

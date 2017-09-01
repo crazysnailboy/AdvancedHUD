@@ -57,14 +57,6 @@ public class HUDRegistry {
         return getActiveHudItemList().contains(hudItem);
     }
 
-    public static Minecraft getMinecraftInstance() {
-        return Minecraft.getMinecraft();
-    }
-
-    public static String getMinecraftVersion() {
-        return "@MCVERSION@";
-    }
-
     public static HudItem getHudItemByID(int id) {
         for (HudItem huditem : getHudItemList()) {
             if (id == huditem.getDefaultID())
@@ -83,7 +75,7 @@ public class HUDRegistry {
     }
 
     public static boolean checkForResize() {
-        Minecraft mc = getMinecraftInstance();
+        Minecraft mc = Minecraft.getMinecraft();
 
         ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
         if (scaledresolution.getScaledWidth() != screenWidth || scaledresolution.getScaledHeight() != screenHeight) {
@@ -134,7 +126,7 @@ public class HUDRegistry {
         compound.setInteger("screenHeight", screenHeight);
 
         for (Object hudItem_ : hudItemListActive) {
-            HudItem hudItem = (HudItem) hudItem_;
+            HudItem hudItem = (HudItem)hudItem_;
             compound.setBoolean(hudItem.getName(), true);
         }
 

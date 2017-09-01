@@ -125,7 +125,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
             if (time >= 120500L) {
                 right.add(I18n.format("demo.demoExpired"));
             } else {
-                right.add(I18n.format("demo.remainingTime", StringUtils.ticksToElapsedTime((int) (120500L - time))));
+                right.add(I18n.format("demo.remainingTime", StringUtils.ticksToElapsedTime((int)(120500L - time))));
             }
         }
 
@@ -230,7 +230,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
                 GL11.glEnable(GL11.GL_ALPHA_TEST);
 
                 if (i < players.size()) {
-                    GuiPlayerInfo player = (GuiPlayerInfo) players.get(i);
+                    GuiPlayerInfo player = (GuiPlayerInfo)players.get(i);
                     ScorePlayerTeam team = this.mc.theWorld.getScoreboard().getPlayersTeam(player.name);
                     String displayName = ScorePlayerTeam.formatPlayerName(team, player.name);
                     this.mc.fontRendererObj.drawStringWithShadow(displayName, xPos, yPos, 0xFFFFFF);

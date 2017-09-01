@@ -65,7 +65,7 @@ public class HudItemRecordDisplay extends HudItem {
     public void render(float partialTicks) {
         if (this.recordPlayingUpFor > 0) {
             float hue = this.recordPlayingUpFor - partialTicks;
-            int opacity = (int) (hue * 256.0F / 20.0F);
+            int opacity = (int)(hue * 256.0F / 20.0F);
             if (opacity > 255) {
                 opacity = 255;
             }
@@ -88,7 +88,7 @@ public class HudItemRecordDisplay extends HudItem {
     @Override
     public void tick() {
         if (this.mc.ingameGUI instanceof GuiAdvancedHUD) {
-            GuiAdvancedHUD ingame = (GuiAdvancedHUD) this.mc.ingameGUI;
+            GuiAdvancedHUD ingame = (GuiAdvancedHUD)this.mc.ingameGUI;
             if (ingame.recordPlaying != null && !ingame.recordPlaying.equals(this.recordPlaying)) {
                 this.recordPlaying = ingame.recordPlaying;
                 this.recordIsPlaying = ingame.recordIsPlaying;

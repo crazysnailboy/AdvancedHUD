@@ -120,31 +120,11 @@ public abstract class HudItem {
     }
 
     public void loadFromNBT(NBTTagCompound compound) {
-        if (compound.hasKey("posX")) {
-            this.posX = compound.getInteger("posX");
-        } else {
-            this.posX = this.getDefaultPosX();
-        }
-        if (compound.hasKey("posY")) {
-            this.posY = compound.getInteger("posY");
-        } else {
-            this.posY = this.getDefaultPosY();
-        }
-        if (compound.hasKey("alignment")) {
-            this.alignment = Alignment.fromString(compound.getString("alignment"));
-        } else {
-            this.alignment = this.getDefaultAlignment();
-        }
-        if (compound.hasKey("id")) {
-            this.id = compound.getInteger("id");
-        } else {
-            this.id = this.getDefaultID();
-        }
-        if (compound.hasKey("rotated")) {
-            this.rotated = compound.getBoolean("rotated");
-        } else {
-            this.rotated = false;
-        }
+        this.posX = (compound.hasKey("posX") ? compound.getInteger("posX") : this.getDefaultPosX());
+        this.posY = (compound.hasKey("posY") ? compound.getInteger("posY") : this.getDefaultPosY());
+        this.alignment = (compound.hasKey("alignment") ? Alignment.fromString(compound.getString("alignment")) : this.getDefaultAlignment());
+        this.id = (compound.hasKey("id") ? compound.getInteger("id") : this.getDefaultID());
+        this.rotated = (compound.hasKey("rotated") ? compound.getBoolean("rotated") : false);
     }
 
     public void saveToNBT(NBTTagCompound compound) {

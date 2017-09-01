@@ -27,7 +27,7 @@ public class GuiScreenHudItem extends GuiScreen {
             this.buttonList.add(new GuiButton(100, HUDRegistry.screenWidth / 2 - 50, HUDRegistry.screenHeight / 2 - 10, 100, 20, I18n.format("advancedhud.huditems.rotate")));
         }
         if (this.hudItem instanceof HudItemCrosshairs) {
-            HudItemCrosshairs cross = (HudItemCrosshairs) this.hudItem;
+            HudItemCrosshairs cross = (HudItemCrosshairs)this.hudItem;
             this.buttonList.add(new GuiButtonIconGrid(3320, HUDRegistry.screenWidth / 2 - 128, 40, cross, I18n.format("advancedhud.huditems.crosshairselector")));
         }
     }

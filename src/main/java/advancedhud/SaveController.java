@@ -23,7 +23,6 @@ public class SaveController {
 
     public static boolean loadConfig(String name, String dirName) {
         if (dirName != null) {
-            HUDRegistry.getMinecraftInstance();
             dir = new File(Minecraft.getMinecraft().mcDataDir + File.separator + dirName);
         }
 
@@ -59,7 +58,6 @@ public class SaveController {
         AdvancedHUD.log.info("Saving...");
 
         if (dirName != null) {
-            HUDRegistry.getMinecraftInstance();
             dir = new File(Minecraft.getMinecraft().mcDataDir + File.separator + dirName);
         }
 
@@ -97,9 +95,5 @@ public class SaveController {
                 return filename.endsWith(".dat");
             }
         });
-    }
-
-    static {
-        HUDRegistry.getMinecraftInstance();
     }
 }

@@ -8,26 +8,12 @@ package advancedhud.api;
 public enum Alignment {
     TOPLEFT, TOPCENTER, TOPRIGHT, CENTERLEFT, CENTERCENTER, CENTERRIGHT, BOTTOMLEFT, BOTTOMCENTER, BOTTOMRIGHT;
 
-    public static Alignment fromString(String string) {
-        if (string.equals("TOPLEFT"))
-            return TOPLEFT;
-        if (string.equals("TOPCENTER"))
-            return TOPCENTER;
-        if (string.equals("TOPRIGHT"))
-            return TOPRIGHT;
-        if (string.equals("CENTERLEFT"))
-            return CENTERLEFT;
-        if (string.equals("CENTERCENTER"))
-            return CENTERCENTER;
-        if (string.equals("CENTERRIGHT"))
-            return CENTERRIGHT;
-        if (string.equals("BOTTOMLEFT"))
-            return BOTTOMLEFT;
-        if (string.equals("BOTTOMCENTER"))
-            return BOTTOMCENTER;
-        if (string.equals("BOTTOMRIGHT"))
-            return BOTTOMRIGHT;
-
+    public static Alignment fromString(String name) {
+        for (Alignment value : values()) {
+            if (value.name().equals(name)) {
+                return value;
+            }
+        }
         return CENTERCENTER;
     }
 
@@ -36,8 +22,8 @@ public enum Alignment {
     }
 
     public static Alignment calculateAlignment(int x, int y, int screenWidth, int screenHeight) {
-        x = (int) (3.0F / screenWidth * x);
-        y = (int) (3.0F / screenHeight * y);
+        x = (int)(3.0F / screenWidth * x);
+        y = (int)(3.0F / screenHeight * y);
 
         if (x == 0 && y == 0)
             return TOPLEFT;

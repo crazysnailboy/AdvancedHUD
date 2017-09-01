@@ -85,7 +85,7 @@ public class HudItemScoreboard extends HudItem {
                 String s;
 
                 for (Iterator iterator = collection.iterator(); iterator.hasNext(); k = Math.max(k, this.mc.fontRendererObj.getStringWidth(s))) {
-                    Score score = (Score) iterator.next();
+                    Score score = (Score)iterator.next();
                     ScorePlayerTeam scoreplayerteam = scoreboard.getPlayersTeam(score.getPlayerName());
                     s = ScorePlayerTeam.formatPlayerName(scoreplayerteam, score.getPlayerName()) + ": " + EnumChatFormatting.RED + score.getScorePoints();
                 }
@@ -97,7 +97,7 @@ public class HudItemScoreboard extends HudItem {
                 Iterator iterator1 = collection.iterator();
 
                 while (iterator1.hasNext()) {
-                    Score score1 = (Score) iterator1.next();
+                    Score score1 = (Score)iterator1.next();
                     ++k1;
                     ScorePlayerTeam scoreplayerteam1 = scoreboard.getPlayersTeam(score1.getPlayerName());
                     String s1 = ScorePlayerTeam.formatPlayerName(scoreplayerteam1, score1.getPlayerName());

@@ -66,7 +66,7 @@ public class HudItemCrosshairs extends HudItem {
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         OpenGlHelper.glBlendFunc(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR, 1, 0);
         if (this.selectedIconX >= 0 && this.selectedIconY >= 0) {
-            this.mc.renderEngine.bindTexture(HudItemCrosshairs.CROSSHAIR_ICONS);
+            this.mc.renderEngine.bindTexture(CROSSHAIR_ICONS);
             RenderAssist.drawTexturedModalRect(this.posX, this.posY, this.selectedIconX, this.selectedIconY, 16, 16);
         } else {
             this.mc.renderEngine.bindTexture(Gui.icons);

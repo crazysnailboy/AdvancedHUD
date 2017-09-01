@@ -52,9 +52,6 @@ public class GuiAdvancedHUDConfiguration extends GuiScreen {
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
-    /**
-     * Fired when a key is typed. This is the equivalent of KeyListener.keyTyped(KeyEvent e).
-     */
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
         if (keyCode == 19) {
@@ -89,7 +86,7 @@ public class GuiAdvancedHUDConfiguration extends GuiScreen {
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         if (mouseButton == 1) {
             for (Object button : this.buttonList) {
-                GuiButton guibutton = (GuiButton) button;
+                GuiButton guibutton = (GuiButton)button;
 
                 if (guibutton.mousePressed(this.mc, mouseX, mouseY)) {
                     this.mc.getSoundHandler().playSound(PositionedSoundRecord.createPositionedSoundRecord(new ResourceLocation("gui.button.press"), 1.0F));

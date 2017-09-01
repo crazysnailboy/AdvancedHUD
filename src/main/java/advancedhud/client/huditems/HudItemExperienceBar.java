@@ -70,7 +70,7 @@ public class HudItemExperienceBar extends HudItem {
 
         if (this.max_xp > 0) {
             short barWidth = 182;
-            int filled = (int) (this.current_xp * (barWidth + 1));
+            int filled = (int)(this.current_xp * (barWidth + 1));
             int top = this.posY;
             if (this.rotated) {
                 GL11.glTranslatef(left + 5, top, 0.0F);

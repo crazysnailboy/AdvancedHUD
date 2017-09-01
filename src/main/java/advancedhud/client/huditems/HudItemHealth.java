@@ -74,13 +74,13 @@ public class HudItemHealth extends HudItem {
         IAttributeInstance attrMaxHealth = this.mc.thePlayer.getEntityAttribute(SharedMonsterAttributes.maxHealth);
         int health = MathHelper.ceiling_float_int(this.mc.thePlayer.getHealth());
         int healthLast = MathHelper.ceiling_float_int(this.mc.thePlayer.prevHealth);
-        float healthMax = (float) attrMaxHealth.getAttributeValue();
+        float healthMax = (float)attrMaxHealth.getAttributeValue();
         float absorb = this.mc.thePlayer.getAbsorptionAmount();
 
         int healthRows = MathHelper.ceiling_float_int((healthMax + absorb) / 2.0F / 10.0F);
         int rowHeight = Math.max(10 - (healthRows - 2), 3);
 
-        this.rand.setSeed((long) (this.mc.ingameGUI.getUpdateCounter() * 312871));
+        this.rand.setSeed((long)(this.mc.ingameGUI.getUpdateCounter() * 312871));
 
         int left = this.posX;
         int top = this.posY;
@@ -101,7 +101,7 @@ public class HudItemHealth extends HudItem {
         if (!this.rotated) {
             for (int i = MathHelper.ceiling_float_int((healthMax + absorb) / 2.0F) - 1; i >= 0; --i) {
                 //int b0 = (highlight ? 1 : 0);
-                int row = MathHelper.ceiling_float_int((float) (i + 1) / 10.0F) - 1;
+                int row = MathHelper.ceiling_float_int((float)(i + 1) / 10.0F) - 1;
                 int x = left + i % 10 * 8;
                 int y = top - row * rowHeight;
 
@@ -135,7 +135,7 @@ public class HudItemHealth extends HudItem {
         } else {
             for (int i = MathHelper.ceiling_float_int((healthMax + absorb) / 2.0F) - 1; i >= 0; --i) {
                 //int b0 = (highlight ? 1 : 0);
-                int row = MathHelper.ceiling_float_int((float) (i + 1) / 10.0F) - 1;
+                int row = MathHelper.ceiling_float_int((float)(i + 1) / 10.0F) - 1;
                 int x = left - row * rowHeight;
                 int y = top + i % 10 * 8;
 

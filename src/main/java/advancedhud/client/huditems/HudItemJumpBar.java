@@ -62,7 +62,7 @@ public class HudItemJumpBar extends HudItem {
         float charge = this.mc.thePlayer.getHorseJumpPower();
         final int barWidth = 182;
         int x = this.posX;
-        int filled = (int) (charge * (barWidth + 1));
+        int filled = (int)(charge * (barWidth + 1));
         int top = this.posY;
 
         RenderAssist.drawTexturedModalRect(x, top, 0, 84, barWidth, 5);
