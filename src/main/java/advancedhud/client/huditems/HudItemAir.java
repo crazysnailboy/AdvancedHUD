@@ -79,7 +79,7 @@ public class HudItemAir extends HudItem {
     public void render(float partialTicks) {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        RenderAssist.bindTexture(Gui.icons);
+        this.mc.renderEngine.bindTexture(Gui.icons);
         int left = this.posX + 81;
         int top = this.posY;
 

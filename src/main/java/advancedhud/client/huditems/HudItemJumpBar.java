@@ -56,7 +56,7 @@ public class HudItemJumpBar extends HudItem {
 
     @Override
     public void render(float partialTicks) {
-        RenderAssist.bindTexture(Gui.icons);
+        this.mc.renderEngine.bindTexture(Gui.icons);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         float charge = this.mc.thePlayer.getHorseJumpPower();

@@ -5,7 +5,6 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
-import advancedhud.api.RenderAssist;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import net.minecraft.client.Minecraft;
@@ -249,7 +248,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
 
                     GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-                    RenderAssist.bindTexture(Gui.icons);
+                    this.mc.renderEngine.bindTexture(Gui.icons);
                     int pingIndex = 4;
                     int ping = player.responseTime;
                     if (ping < 0) {

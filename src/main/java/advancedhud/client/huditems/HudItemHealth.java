@@ -64,7 +64,7 @@ public class HudItemHealth extends HudItem {
 
     @Override
     public void render(float partialTicks) {
-        RenderAssist.bindTexture(Gui.icons);
+        this.mc.renderEngine.bindTexture(Gui.icons);
         boolean highlight = this.mc.thePlayer.hurtResistantTime / 3 % 2 == 1;
 
         if (this.mc.thePlayer.hurtResistantTime < 10) {

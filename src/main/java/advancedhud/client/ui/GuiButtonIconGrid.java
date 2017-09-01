@@ -35,7 +35,7 @@ public class GuiButtonIconGrid extends GuiButton {
         GL11.glBlendFunc(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR);
         GL11.glColor4f(1F, 1F, 1F, 1F);
         //GL11.glScalef(0.5F, 0.5F, 1F);
-        RenderAssist.bindTexture(this.resourceLocation);
+        mc.getTextureManager().bindTexture(this.resourceLocation);
         RenderAssist.drawTexturedModalRect(this.xPosition, this.yPosition, 0, 0, 256, 64);
         if (mouseX > this.xPosition && mouseY > this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height) {
             float posX = ((mouseX - this.xPosition) - (mouseX - this.xPosition) % 16) + this.xPosition;

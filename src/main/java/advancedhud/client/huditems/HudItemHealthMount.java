@@ -67,7 +67,7 @@ public class HudItemHealthMount extends HudItem {
         if (!(tmp instanceof EntityLivingBase))
             return;
 
-        RenderAssist.bindTexture(Gui.icons);
+        this.mc.renderEngine.bindTexture(Gui.icons);
 
         int left_align = this.posX + 81;
 

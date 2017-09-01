@@ -74,7 +74,7 @@ public class HudItemHotbar extends HudItem {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         InventoryPlayer inv = this.mc.thePlayer.inventory;
         if (!this.rotated) {
-            RenderAssist.bindTexture(WIDGETS);
+            this.mc.renderEngine.bindTexture(WIDGETS);
             RenderAssist.drawTexturedModalRect(this.posX, this.posY, 0, 0, 182, 22);
             RenderAssist.drawTexturedModalRect(this.posX - 1 + inv.currentItem * 20, this.posY - 1, 0, 22, 24, 22);
 
@@ -99,9 +99,9 @@ public class HudItemHotbar extends HudItem {
         } else {
             GL11.glTranslatef((float) this.posX + this.getWidth(), this.posY, 0.0F);
             GL11.glRotatef(90F, 0.0F, 0.0F, 1.0F);
-            RenderAssist.bindTexture(WIDGETS);
+            this.mc.renderEngine.bindTexture(WIDGETS);
             RenderAssist.drawTexturedModalRect(0, 0, 0, 0, 182, 22);
-            RenderAssist.bindTexture(ROTATE_WIDGETS);
+            this.mc.renderEngine.bindTexture(ROTATE_WIDGETS);
             RenderAssist.drawTexturedModalRect(inv.currentItem * 20 - 1, -1, 0, 0, 24, 24);
 
             GL11.glDisable(GL11.GL_BLEND);

@@ -69,7 +69,7 @@ public class HudItemFood extends HudItem {
 
     @Override
     public void render(float partialTicks) {
-        RenderAssist.bindTexture(Gui.icons);
+        this.mc.renderEngine.bindTexture(Gui.icons);
         GL11.glColor4f(1.0f, 1.0f, 1.0f, this.getOpacity());
 
         int left = this.posX + 81;

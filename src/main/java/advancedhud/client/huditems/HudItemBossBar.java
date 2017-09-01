@@ -57,7 +57,7 @@ public class HudItemBossBar extends HudItem {
 
     @Override
     public void render(float partialTicks) {
-        RenderAssist.bindTexture("textures/gui/icons.png");
+        this.mc.renderEngine.bindTexture(Gui.icons);
         if (BossStatus.bossName != null && BossStatus.statusBarTime > 0 || this.mc.currentScreen instanceof GuiAdvancedHUDConfiguration || this.mc.currentScreen instanceof GuiScreenReposition) {
             if (BossStatus.bossName != null) {
                 --BossStatus.statusBarTime;
@@ -79,7 +79,7 @@ public class HudItemBossBar extends HudItem {
             String s = BossStatus.bossName != null ? BossStatus.bossName : I18n.format("advancedhud.configuration.title");
             this.mc.fontRendererObj.drawStringWithShadow(s, this.posX + 91 - this.mc.fontRendererObj.getStringWidth(s) / 2, b0 - 10, 0xFFFFFF);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderAssist.bindTexture(Gui.icons);
+            this.mc.renderEngine.bindTexture(Gui.icons);
         }
     }
 
