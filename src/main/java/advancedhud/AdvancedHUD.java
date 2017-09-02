@@ -14,11 +14,11 @@ import advancedhud.client.huditems.HudItemHotbar;
 import advancedhud.client.huditems.HudItemJumpBar;
 import advancedhud.client.huditems.HudItemRecordDisplay;
 import advancedhud.client.huditems.HudItemTooltips;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 @Mod(modid = AdvancedHUD.MODID, name = AdvancedHUD.NAME, version = AdvancedHUD.VERSION)
 public class AdvancedHUD {

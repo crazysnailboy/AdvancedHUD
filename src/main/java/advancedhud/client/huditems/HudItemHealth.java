@@ -17,6 +17,8 @@ import net.minecraft.util.MathHelper;
 public class HudItemHealth extends HudItem {
 
     Random rand = new Random();
+    float prevHealth = 0;
+    long lastSystemTime = 0L;
 
     @Override
     public String getName() {
@@ -71,9 +73,14 @@ public class HudItemHealth extends HudItem {
             highlight = false;
         }
 
+        if (this.mc.getSystemTime() - this.lastSystemTime > 1000L) {
+            this.prevHealth = this.mc.thePlayer.getHealth();
+            this.lastSystemTime = this.mc.getSystemTime();
+        }
+
         IAttributeInstance attrMaxHealth = this.mc.thePlayer.getEntityAttribute(SharedMonsterAttributes.maxHealth);
         int health = MathHelper.ceiling_float_int(this.mc.thePlayer.getHealth());
-        int healthLast = MathHelper.ceiling_float_int(this.mc.thePlayer.prevHealth);
+        int healthLast = MathHelper.ceiling_float_int(this.prevHealth); // int healthLast = MathHelper.ceiling_float_int(this.mc.thePlayer.prevHealth);
         float healthMax = (float)attrMaxHealth.getAttributeValue();
         float absorb = this.mc.thePlayer.getAbsorptionAmount();
 

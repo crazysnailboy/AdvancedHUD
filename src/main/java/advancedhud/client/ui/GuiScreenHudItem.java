@@ -1,5 +1,6 @@
 package advancedhud.client.ui;
 
+import java.io.IOException;
 import advancedhud.AdvancedHUD;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
@@ -52,7 +53,7 @@ public class GuiScreenHudItem extends GuiScreen {
     }
 
     @Override
-    protected void actionPerformed(GuiButton button) {
+    protected void actionPerformed(GuiButton button) throws IOException {
         if (button.id == -1) {
             this.mc.displayGuiScreen(this.parentScreen);
         } else if (button.id == 100) {

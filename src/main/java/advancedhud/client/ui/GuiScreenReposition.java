@@ -1,5 +1,6 @@
 package advancedhud.client.ui;
 
+import java.io.IOException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import advancedhud.SaveController;
@@ -25,7 +26,7 @@ public class GuiScreenReposition extends GuiScreen {
     }
 
     @Override
-    public void handleMouseInput() {
+    public void handleMouseInput() throws IOException {
         int mouseX = Mouse.getEventX() * this.width / this.mc.displayWidth;
         int mouseY = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
 
@@ -76,7 +77,7 @@ public class GuiScreenReposition extends GuiScreen {
     }
 
     @Override
-    public void handleKeyboardInput() {
+    public void handleKeyboardInput() throws IOException {
         super.handleKeyboardInput();
 
         if (Keyboard.getEventKey() == 29) {

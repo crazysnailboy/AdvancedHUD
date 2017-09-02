@@ -1,12 +1,11 @@
 package advancedhud.client.ui;
 
-import org.lwjgl.opengl.GL11;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
 import advancedhud.client.GuiAdvancedHUD;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.GlStateManager;
 
 public class GuiHudItemButton extends GuiButton {
 
@@ -23,9 +22,8 @@ public class GuiHudItemButton extends GuiButton {
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         if (this.visible) {
-            GL11.glPushMatrix();
-            FontRenderer fontrenderer = mc.fontRendererObj;
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            GlStateManager.pushMatrix(); // GL11.glPushMatrix();
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F); // GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             boolean hoverState = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
             for (HudItem huditem : HUDRegistry.getHudItemList()) {
                 if (huditem.getButtonLabel().equalsIgnoreCase(this.displayString)) {
@@ -33,13 +31,13 @@ public class GuiHudItemButton extends GuiButton {
                     huditem.render(GuiAdvancedHUD.partialTicks);
                 }
             }
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix(); // GL11.glPopAttrib();
 
             if (hoverState) {
-                GL11.glPushMatrix();
-                GL11.glTranslatef(0, 0, 200F);
-                this.drawCenteredString(fontrenderer, this.displayString, this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2 + 1, 0xFFFFFF);
-                GL11.glPopMatrix();
+                GlStateManager.pushMatrix(); // GL11.glPushMatrix();
+                GlStateManager.translate(0, 0, 200F); // GL11.glTranslatef(0, 0, 200F);
+                this.drawCenteredString(mc.fontRendererObj, this.displayString, this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2 + 1, 0xFFFFFF);
+                GlStateManager.popMatrix(); // GL11.glPopAttrib();
             }
 
         }
