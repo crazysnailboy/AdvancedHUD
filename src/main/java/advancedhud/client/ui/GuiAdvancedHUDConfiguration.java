@@ -5,11 +5,12 @@ import org.lwjgl.input.Keyboard;
 import advancedhud.SaveController;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.init.SoundEvents;
 
 public class GuiAdvancedHUDConfiguration extends GuiScreen {
 
@@ -76,7 +77,7 @@ public class GuiAdvancedHUDConfiguration extends GuiScreen {
         if (button instanceof GuiHudItemButton) {
             HudItem hudItem = HUDRegistry.getHudItemByID(button.id);
             if (hudItem != null && hudItem.isMoveable()) {
-                this.mc.displayGuiScreen(new GuiScreenReposition(this, hudItem));
+                Minecraft.getMinecraft().displayGuiScreen(new GuiScreenReposition(this, hudItem));
             }
         }
         super.actionPerformed(button);
@@ -89,10 +90,10 @@ public class GuiAdvancedHUDConfiguration extends GuiScreen {
                 GuiButton guibutton = (GuiButton)button;
 
                 if (guibutton.mousePressed(this.mc, mouseX, mouseY)) {
-                    this.mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
+                    this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F)); // mc.getSoundHandler().playSound(PositionedSoundRecord.createPositionedSoundRecord(new ResourceLocation("gui.button.press"), 1.0F));
                     HudItem hudItem = HUDRegistry.getHudItemByID(guibutton.id);
                     if (hudItem != null) {
-                        this.mc.displayGuiScreen(hudItem.getConfigScreen());
+                        Minecraft.getMinecraft().displayGuiScreen(hudItem.getConfigScreen());
                     }
                 }
             }

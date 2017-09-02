@@ -59,7 +59,7 @@ public class HudItemHealthMount extends HudItem {
 
     @Override
     public void render(float partialTicks) {
-        Entity ridingEntity = this.mc.thePlayer.ridingEntity;
+        Entity ridingEntity = this.mc.thePlayer.getRidingEntity();
         int right_height = 1;
         if (ridingEntity == null && (this.mc.currentScreen instanceof GuiAdvancedHUDConfiguration || this.mc.currentScreen instanceof GuiScreenReposition)) {
             ridingEntity = new EntityHorse(this.mc.theWorld);
@@ -67,13 +67,13 @@ public class HudItemHealthMount extends HudItem {
         if (!(ridingEntity instanceof EntityLivingBase))
             return;
 
-        this.mc.renderEngine.bindTexture(Gui.icons);
+        this.mc.renderEngine.bindTexture(Gui.ICONS);
 
         int left_align = this.posX + 81;
 
         EntityLivingBase mount = (EntityLivingBase)ridingEntity;
         int health = (int)Math.ceil(mount.getHealth());
-        double healthMax = mount.getEntityAttribute(SharedMonsterAttributes.maxHealth).getAttributeValue();
+        double healthMax = mount.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getAttributeValue();
         int hearts = (int)Math.ceil(((float)healthMax + 0.5F) / 2F);
 
         if (hearts > 30) {

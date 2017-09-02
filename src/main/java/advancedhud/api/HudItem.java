@@ -3,6 +3,7 @@ package advancedhud.api;
 import aurelienribon.tweenengine.TweenAccessor;
 import aurelienribon.tweenengine.TweenManager;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -67,6 +68,10 @@ public abstract class HudItem {
     public abstract GuiScreen getConfigScreen();
 
     public abstract void render(float partialTicks);
+
+    public void render(float partialTicks, Gui gui) {
+        this.render(partialTicks);
+    }
 
     /**
      * If you don't want any rotation, you can simply make this method return.

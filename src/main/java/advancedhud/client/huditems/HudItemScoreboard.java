@@ -13,7 +13,7 @@ import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 public class HudItemScoreboard extends HudItem {
 
@@ -87,7 +87,7 @@ public class HudItemScoreboard extends HudItem {
                 for (Iterator iterator = collection.iterator(); iterator.hasNext(); k = Math.max(k, this.mc.fontRendererObj.getStringWidth(s))) {
                     Score score = (Score)iterator.next();
                     ScorePlayerTeam scoreplayerteam = scoreboard.getPlayersTeam(score.getPlayerName());
-                    s = ScorePlayerTeam.formatPlayerName(scoreplayerteam, score.getPlayerName()) + ": " + EnumChatFormatting.RED + score.getScorePoints();
+                    s = ScorePlayerTeam.formatPlayerName(scoreplayerteam, score.getPlayerName()) + ": " + TextFormatting.RED + score.getScorePoints();
                 }
 
                 int i1 = this.posY;
@@ -101,7 +101,7 @@ public class HudItemScoreboard extends HudItem {
                     ++k1;
                     ScorePlayerTeam scoreplayerteam1 = scoreboard.getPlayersTeam(score1.getPlayerName());
                     String s1 = ScorePlayerTeam.formatPlayerName(scoreplayerteam1, score1.getPlayerName());
-                    String s2 = EnumChatFormatting.RED + "" + score1.getScorePoints();
+                    String s2 = TextFormatting.RED + "" + score1.getScorePoints();
                     int l1 = i1 - k1 * this.mc.fontRendererObj.FONT_HEIGHT;
                     int i2 = HUDRegistry.screenWidth - b0 + 2;
                     this.posX = j1;

@@ -13,7 +13,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 
 public class HudItemAir extends HudItem {
 
@@ -79,17 +79,17 @@ public class HudItemAir extends HudItem {
     public void render(float partialTicks) {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        this.mc.renderEngine.bindTexture(Gui.icons);
+        this.mc.renderEngine.bindTexture(Gui.ICONS);
         int left = this.posX + 81;
         int top = this.posY;
 
-        if (this.mc.thePlayer.isInsideOfMaterial(Material.water) || this.mc.currentScreen instanceof GuiAdvancedHUDConfiguration || this.mc.currentScreen instanceof GuiScreenReposition) {
+        if (this.mc.thePlayer.isInsideOfMaterial(Material.WATER) || this.mc.currentScreen instanceof GuiAdvancedHUDConfiguration || this.mc.currentScreen instanceof GuiScreenReposition) {
             if (!this.wasInWater) {
                 Tween.to(this, Engine.OPACITY, 0.1f).target(1.0f).start(this.manager);
                 this.wasInWater = true;
             }
         }
-        if (!this.mc.thePlayer.isInsideOfMaterial(Material.water) && this.wasInWater) {
+        if (!this.mc.thePlayer.isInsideOfMaterial(Material.WATER) && this.wasInWater) {
             Tween.to(this, Engine.OPACITY, 1.0f).delay(1.0f).target(0.0f).start(this.manager);
             this.wasInWater = false;
         }

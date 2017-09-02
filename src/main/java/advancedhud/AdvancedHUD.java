@@ -44,15 +44,15 @@ public class AdvancedHUD {
 
     private void registerHUDItems() {
         HUDRegistry.registerHudItem(new HudItemHotbar());
-        HUDRegistry.registerHudItem(new HudItemHealth());
-        HUDRegistry.registerHudItem(new HudItemAir());
-        HUDRegistry.registerHudItem(new HudItemFood());
-        HUDRegistry.registerHudItem(new HudItemArmor());
-        HUDRegistry.registerHudItem(new HudItemBossBar());
-        HUDRegistry.registerHudItem(new HudItemJumpBar());
-        HUDRegistry.registerHudItem(new HudItemHealthMount());
-        HUDRegistry.registerHudItem(new HudItemExperienceBar());
         HUDRegistry.registerHudItem(new HudItemCrosshairs());
+        HUDRegistry.registerHudItem(new HudItemBossBar());
+        HUDRegistry.registerHudItem(new HudItemHealth());
+        HUDRegistry.registerHudItem(new HudItemArmor());
+        HUDRegistry.registerHudItem(new HudItemFood());
+        HUDRegistry.registerHudItem(new HudItemHealthMount());
+        HUDRegistry.registerHudItem(new HudItemAir());
+        HUDRegistry.registerHudItem(new HudItemJumpBar());
+        HUDRegistry.registerHudItem(new HudItemExperienceBar());
         HUDRegistry.registerHudItem(new HudItemTooltips());
         HUDRegistry.registerHudItem(new HudItemRecordDisplay());
         HUDRegistry.setInitialLoadComplete(true);

@@ -1,19 +1,25 @@
 package advancedhud.client.huditems;
 
-import org.lwjgl.opengl.GL11;
+import java.util.Map;
+import java.util.UUID;
 import advancedhud.api.Alignment;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
 import advancedhud.api.RenderAssist;
-import advancedhud.client.ui.GuiAdvancedHUDConfiguration;
 import advancedhud.client.ui.GuiScreenHudItem;
-import advancedhud.client.ui.GuiScreenReposition;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.boss.BossStatus;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.BossInfo;
+import net.minecraft.world.BossInfoLerping;
+import net.minecraftforge.client.GuiIngameForge;
 
 public class HudItemBossBar extends HudItem {
+
+    private static final ResourceLocation GUI_BARS_TEXTURES = new ResourceLocation("textures/gui/bars.png");
 
     @Override
     public String getName() {
@@ -57,29 +63,56 @@ public class HudItemBossBar extends HudItem {
 
     @Override
     public void render(float partialTicks) {
-        this.mc.renderEngine.bindTexture(Gui.icons);
-        if (BossStatus.bossName != null && BossStatus.statusBarTime > 0 || this.mc.currentScreen instanceof GuiAdvancedHUDConfiguration || this.mc.currentScreen instanceof GuiScreenReposition) {
-            if (BossStatus.bossName != null) {
-                --BossStatus.statusBarTime;
-            }
-            short short1 = 182;
-            int j = this.posX;
-            int k = (int)(BossStatus.healthScale * (short1 + 1));
-            int b0 = this.posY + 11;
-            RenderAssist.drawTexturedModalRect(j, b0, 0, 74, short1, 5);
-            RenderAssist.drawTexturedModalRect(j, b0, 0, 74, short1, 5);
+        this.mc.renderEngine.bindTexture(Gui.ICONS);
 
-            if (BossStatus.bossName == null) {
-                k = 182;
-            }
-            if (k > 0) {
-                RenderAssist.drawTexturedModalRect(j, b0, 0, 79, k, 5);
-            }
+        int x = this.posX;
+        int y = this.posY + 11;
+        RenderAssist.drawTexturedModalRect(x, y, 0, 74, 182, 5);
+        RenderAssist.drawTexturedModalRect(x, y, 0, 74, 182, 5);
+        RenderAssist.drawTexturedModalRect(x, y, 0, 79, 182, 5);
 
-            String s = BossStatus.bossName != null ? BossStatus.bossName : I18n.format("advancedhud.configuration.title");
-            this.mc.fontRendererObj.drawStringWithShadow(s, this.posX + 91 - this.mc.fontRendererObj.getStringWidth(s) / 2, b0 - 10, 0xFFFFFF);
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            this.mc.renderEngine.bindTexture(Gui.icons);
+        String s = I18n.format("advancedhud.configuration.title");
+        this.mc.fontRendererObj.drawStringWithShadow(s, this.posX + 91 - this.mc.fontRendererObj.getStringWidth(s) / 2, y - 10, 0xFFFFFF);
+    }
+
+    @Override
+    public void render(float partialTicks, Gui gui) {
+
+        Map<UUID, BossInfoLerping> bossInfos = ((GuiIngameForge)gui).getBossOverlay().mapBossInfos; // this is normally private, i used an access transformer to make it public
+
+        if (!bossInfos.isEmpty()) {
+            ScaledResolution scaledresolution = new ScaledResolution(this.mc);
+            for (BossInfoLerping bossInfo : bossInfos.values()) {
+
+                int x = this.posX;
+                int y = this.posY + 11;
+
+                GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+                this.mc.renderEngine.bindTexture(GUI_BARS_TEXTURES);
+
+                RenderAssist.drawTexturedModalRect(x, y, 0, bossInfo.getColor().ordinal() * 5 * 2, 182, 5);
+
+                if (bossInfo.getOverlay() != BossInfo.Overlay.PROGRESS) {
+                    RenderAssist.drawTexturedModalRect(x, y, 0, 80 + (bossInfo.getOverlay().ordinal() - 1) * 5 * 2, 182, 5);
+                }
+
+                int i = (int)(bossInfo.getPercent() * 182.0F);
+                if (i > 0) {
+                    RenderAssist.drawTexturedModalRect(x, y, 0, bossInfo.getColor().ordinal() * 5 * 2 + 5, i, 5);
+                    if (bossInfo.getOverlay() != BossInfo.Overlay.PROGRESS) {
+                        RenderAssist.drawTexturedModalRect(x, y, 0, 80 + (bossInfo.getOverlay().ordinal() - 1) * 5 * 2 + 5, i, 5);
+                    }
+                }
+
+                String s = bossInfo.getName().getFormattedText();
+                this.mc.fontRendererObj.drawStringWithShadow(s, this.posX + (91 - this.mc.fontRendererObj.getStringWidth(s) / 2), y - 9, 0xFFFFFF);
+
+                if (y >= scaledresolution.getScaledHeight() / 3) {
+                    break;
+                }
+
+                y += 10 + this.mc.fontRendererObj.FONT_HEIGHT;
+            }
         }
     }
 
@@ -92,4 +125,5 @@ public class HudItemBossBar extends HudItem {
     public boolean canRotate() {
         return false;
     }
+
 }

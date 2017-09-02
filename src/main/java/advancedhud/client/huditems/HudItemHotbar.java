@@ -11,8 +11,11 @@ import advancedhud.client.ui.GuiScreenHudItem;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
 
 public class HudItemHotbar extends HudItem {
@@ -41,7 +44,7 @@ public class HudItemHotbar extends HudItem {
     public int getDefaultPosX() {
         if (this.rotated)
             return HUDRegistry.screenWidth - this.getWidth();
-        return (HUDRegistry.screenWidth - this.getWidth()) / 2;
+        return ((HUDRegistry.screenWidth - this.getWidth()) / 2);
     }
 
     @Override
@@ -72,11 +75,25 @@ public class HudItemHotbar extends HudItem {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+
         InventoryPlayer inv = this.mc.thePlayer.inventory;
+        EntityPlayer entityplayer = (EntityPlayer)this.mc.getRenderViewEntity();
+        ItemStack itemstack = entityplayer.getHeldItemOffhand();
+        EnumHandSide enumhandside = entityplayer.getPrimaryHand().opposite();
+
         if (!this.rotated) {
             this.mc.renderEngine.bindTexture(WIDGETS);
+
             RenderAssist.drawTexturedModalRect(this.posX, this.posY, 0, 0, 182, 22);
             RenderAssist.drawTexturedModalRect(this.posX - 1 + inv.currentItem * 20, this.posY - 1, 0, 22, 24, 22);
+
+            if (itemstack != null) {
+                if (enumhandside == EnumHandSide.LEFT) {
+                    RenderAssist.drawTexturedModalRect(this.posX - 29, this.posY - 1, 24, 22, 29, 24);
+                } else {
+                    RenderAssist.drawTexturedModalRect(this.posX + 182, this.posY - 1, 53, 22, 29, 24);
+                }
+            }
 
             GL11.glDisable(GL11.GL_BLEND);
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
@@ -94,6 +111,14 @@ public class HudItemHotbar extends HudItem {
                 RenderAssist.renderInventorySlot(i, x, z, partialTicks, this.mc);
             }
 
+            if (itemstack != null) {
+                if (enumhandside == EnumHandSide.LEFT) {
+                    RenderAssist.renderInventorySlot(itemstack, this.posX - 26, this.posY + 3, partialTicks, this.mc);
+                } else {
+                    RenderAssist.renderInventorySlot(itemstack, this.posX + 182 + 10, this.posY + 3, partialTicks, this.mc);
+                }
+            }
+
             RenderHelper.disableStandardItemLighting();
             GL11.glDisable(GL12.GL_RESCALE_NORMAL);
         } else {
@@ -101,8 +126,18 @@ public class HudItemHotbar extends HudItem {
             GL11.glRotatef(90F, 0.0F, 0.0F, 1.0F);
             this.mc.renderEngine.bindTexture(WIDGETS);
             RenderAssist.drawTexturedModalRect(0, 0, 0, 0, 182, 22);
+
+            if (itemstack != null) {
+                if (enumhandside == EnumHandSide.LEFT) {
+                    RenderAssist.drawTexturedModalRect(-29, -1, 24, 22, 29, 24);
+                } else {
+                    RenderAssist.drawTexturedModalRect(182, -1, 53, 22, 29, 24);
+                }
+            }
+
             this.mc.renderEngine.bindTexture(ROTATE_WIDGETS);
             RenderAssist.drawTexturedModalRect(inv.currentItem * 20 - 1, -1, 0, 0, 24, 24);
+
 
             GL11.glDisable(GL11.GL_BLEND);
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
@@ -118,6 +153,14 @@ public class HudItemHotbar extends HudItem {
                 int x = this.posX - 88;
                 int z = this.posY - 11 + i * 20 + 2;
                 RenderAssist.renderInventorySlot(i, x, z, partialTicks, this.mc);
+            }
+
+            if (itemstack != null) {
+                if (enumhandside == EnumHandSide.LEFT) {
+                    RenderAssist.renderInventorySlot(itemstack, this.posX + 3, this.posY - 26, partialTicks, this.mc);
+                } else {
+                    RenderAssist.renderInventorySlot(itemstack, 182 + 10, 3, partialTicks, this.mc);
+                }
             }
 
             RenderHelper.disableStandardItemLighting();

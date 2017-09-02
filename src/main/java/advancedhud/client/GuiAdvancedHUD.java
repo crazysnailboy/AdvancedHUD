@@ -19,8 +19,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StringUtils;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.GuiIngameForge;
 
 public class GuiAdvancedHUD extends GuiIngameForge {
@@ -55,7 +55,8 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         if (Minecraft.isFancyGraphicsEnabled()) {
             renderVignette(mc.thePlayer.getBrightness(partialTicks), res);
         } else {
-            GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+            GlStateManager.enableDepth();
+            GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         }
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F); // GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -82,15 +83,15 @@ public class GuiAdvancedHUD extends GuiIngameForge {
             GlStateManager.pushMatrix(); // GL11.glPushMatrix();
             GlStateManager.pushAttrib(); // GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
             GlStateManager.disableBlend(); // GL11.glDisable(GL11.GL_BLEND);
-            if (this.mc.thePlayer.ridingEntity instanceof EntityLivingBase) {
+            if (this.mc.thePlayer.getRidingEntity() instanceof EntityLivingBase) {
                 if (huditem.shouldDrawOnMount()) {
                     huditem.fixBounds();
-                    huditem.render(partialTicks);
+                    huditem.render(partialTicks, this);
                 }
             } else {
                 if (huditem.shouldDrawAsPlayer()) {
                     huditem.fixBounds();
-                    huditem.render(partialTicks);
+                    huditem.render(partialTicks, this);
                 }
             }
             GlStateManager.popAttrib(); // GL11.glPopAttrib();
@@ -167,10 +168,10 @@ public class GuiAdvancedHUD extends GuiIngameForge {
     protected void renderPlayerList(int width, int height) {
         this.mc.mcProfiler.startSection("playerList");
         ScoreObjective scoreobjective = this.mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(0);
-        NetHandlerPlayClient handler = this.mc.thePlayer.sendQueue;
+        NetHandlerPlayClient handler = this.mc.thePlayer.connection; // NetHandlerPlayClient handler = this.mc.thePlayer.sendQueue;
 
         if (this.mc.gameSettings.keyBindPlayerList.isPressed() && (!this.mc.isIntegratedServerRunning() || handler.getPlayerInfoMap().size() > 1 || scoreobjective != null)) { // if (this.mc.gameSettings.keyBindPlayerList.isPressed() && (!this.mc.isIntegratedServerRunning() || handler.playerInfoList.size() > 1 || scoreobjective != null)) {
-            List<?> players = (List<?>)handler.getPlayerInfoMap(); // List<?> players = handler.playerInfoList;
+            List<?> players = (List<?>) handler.getPlayerInfoMap(); // List<?> players = handler.playerInfoList;
             int maxPlayers = handler.currentServerMaxPlayers;
             int rows = maxPlayers;
             int columns;
@@ -197,7 +198,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
                 GL11.glEnable(GL11.GL_ALPHA_TEST);
 
                 if (i < players.size()) {
-                    NetworkPlayerInfo player = (NetworkPlayerInfo)players.get(i); // GuiPlayerInfo player = (GuiPlayerInfo)players.get(i);
+                    NetworkPlayerInfo player = (NetworkPlayerInfo) players.get(i); // GuiPlayerInfo player = (GuiPlayerInfo)players.get(i);
                     GameProfile gameProfile = player.getGameProfile();
                     ScorePlayerTeam team = this.mc.theWorld.getScoreboard().getPlayersTeam(gameProfile.getName()); // ScorePlayerTeam team = this.mc.theWorld.getScoreboard().getPlayersTeam(player.name);
                     String displayName = ScorePlayerTeam.formatPlayerName(team, gameProfile.getName()); // String displayName = ScorePlayerTeam.formatPlayerName(team, player.name);
@@ -208,15 +209,15 @@ public class GuiAdvancedHUD extends GuiIngameForge {
                         int maxX = xPos + columnWidth - 12 - 5;
 
                         if (maxX - endX > 5) {
-                            Score score = scoreobjective.getScoreboard().getValueFromObjective(gameProfile.getName(), scoreobjective); // Score score = scoreobjective.getScoreboard().func_96529_a(player.name, scoreobjective);
-                            String scoreDisplay = EnumChatFormatting.YELLOW + "" + score.getScorePoints();
+                            Score score = scoreobjective.getScoreboard().getOrCreateScore(gameProfile.getName(), scoreobjective); // Score score = scoreobjective.getScoreboard().func_96529_a(player.name, scoreobjective);
+                            String scoreDisplay = TextFormatting.YELLOW + "" + score.getScorePoints();
                             this.mc.fontRendererObj.drawStringWithShadow(scoreDisplay, maxX - this.mc.fontRendererObj.getStringWidth(scoreDisplay), yPos, 0xFFFFFF);
                         }
                     }
 
                     GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-                    this.mc.renderEngine.bindTexture(Gui.icons);
+                    this.mc.renderEngine.bindTexture(Gui.ICONS);
                     int pingIndex = 4;
                     int ping = player.getResponseTime(); // int ping = player.responseTime;
                     if (ping < 0) {

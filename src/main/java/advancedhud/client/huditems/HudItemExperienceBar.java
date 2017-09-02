@@ -64,7 +64,7 @@ public class HudItemExperienceBar extends HudItem {
 
     @Override
     public void render(float partialTicks) {
-        this.mc.renderEngine.bindTexture(Gui.icons);
+        this.mc.renderEngine.bindTexture(Gui.ICONS);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         int left = this.posX;
 

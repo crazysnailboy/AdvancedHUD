@@ -2,9 +2,10 @@ package advancedhud.api;
 
 import org.lwjgl.opengl.GL11;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 
@@ -26,17 +27,17 @@ public class RenderAssist {
         float g = (color >> 8 & 255) / 255.0F;
         float b = (color & 255) / 255.0F;
         Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldRenderer = tessellator.getWorldRenderer();
+        VertexBuffer vertexBuffer = tessellator.getBuffer();
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4f(r, g, b, a);
-        worldRenderer.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION); // tessellator.startDrawing(GL11.GL_LINE_LOOP);
+        vertexBuffer.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION); // tessellator.startDrawing(GL11.GL_LINE_LOOP);
         for (int i = 0; i < num_segments; i++) {
             double theta = 2.0f * Math.PI * i / num_segments; // get the current angle
             double x = radius * Math.cos(theta); // calculate the x component
             double y = radius * Math.sin(theta); // calculate the y component
-            worldRenderer.pos(x + posX, y + posY, 0.0D).endVertex(); // tessellator.addVertex(x + posX, y + posY, 0.0D); // output vertex
+            vertexBuffer.pos(x + posX, y + posY, 0.0D).endVertex(); // tessellator.addVertex(x + posX, y + posY, 0.0D); // output vertex
         }
         tessellator.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -95,16 +96,16 @@ public class RenderAssist {
         float g = (color >> 8 & 255) / 255.0F;
         float b = (color & 255) / 255.0F;
         Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldRenderer = tessellator.getWorldRenderer();
+        VertexBuffer vertexBuffer = tessellator.getBuffer();
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4f(r, g, b, a);
-        worldRenderer.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION); // tessellator.startDrawing(GL11.GL_LINE_LOOP);
-        worldRenderer.pos(x1, y2, 0.0D).endVertex(); // tessellator.addVertex(x1, y2, 0.0D);
-        worldRenderer.pos(x2, y2, 0.0D).endVertex(); // tessellator.addVertex(x2, y2, 0.0D);
-        worldRenderer.pos(x2, y1, 0.0D).endVertex(); // tessellator.addVertex(x2, y1, 0.0D);
-        worldRenderer.pos(x1, y1, 0.0D).endVertex(); // tessellator.addVertex(x1, y1, 0.0D);
+        vertexBuffer.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION); // tessellator.startDrawing(GL11.GL_LINE_LOOP);
+        vertexBuffer.pos(x1, y2, 0.0D).endVertex(); // tessellator.addVertex(x1, y2, 0.0D);
+        vertexBuffer.pos(x2, y2, 0.0D).endVertex(); // tessellator.addVertex(x2, y2, 0.0D);
+        vertexBuffer.pos(x2, y1, 0.0D).endVertex(); // tessellator.addVertex(x2, y1, 0.0D);
+        vertexBuffer.pos(x1, y1, 0.0D).endVertex(); // tessellator.addVertex(x1, y1, 0.0D);
         tessellator.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);
@@ -142,12 +143,12 @@ public class RenderAssist {
     public static void drawTexturedModalRect(float x, float y, float u, float v, float width, float height) {
         float f = 0.00390625F;
         Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldRenderer = tessellator.getWorldRenderer();
-        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX); // tessellator.startDrawingQuads();
-        worldRenderer.pos(x + 0, y + height, RenderAssist.zLevel).tex((u + 0) * f, (v + height) * f).endVertex(); // tessellator.addVertexWithUV(x + 0, y + height, RenderAssist.zLevel, (u + 0) * f, (v + height) * f);
-        worldRenderer.pos(x + width, y + height, RenderAssist.zLevel).tex((u + width) * f, (v + height) * f).endVertex(); // tessellator.addVertexWithUV(x + width, y + height, RenderAssist.zLevel, (u + width) * f, (v + height) * f);
-        worldRenderer.pos(x + width, y + 0, RenderAssist.zLevel).tex((u + width) * f, (v + 0) * f).endVertex(); // tessellator.addVertexWithUV(x + width, y + 0, RenderAssist.zLevel, (u + width) * f, (v + 0) * f);
-        worldRenderer.pos(x + 0, y + 0, RenderAssist.zLevel).tex((u + 0) * f, (v + 0) * f).endVertex(); // tessellator.addVertexWithUV(x + 0, y + 0, RenderAssist.zLevel, (u + 0) * f, (v + 0) * f);
+        VertexBuffer vertexBuffer = tessellator.getBuffer();
+        vertexBuffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX); // tessellator.startDrawingQuads();
+        vertexBuffer.pos(x + 0, y + height, RenderAssist.zLevel).tex((u + 0) * f, (v + height) * f).endVertex(); // tessellator.addVertexWithUV(x + 0, y + height, RenderAssist.zLevel, (u + 0) * f, (v + height) * f);
+        vertexBuffer.pos(x + width, y + height, RenderAssist.zLevel).tex((u + width) * f, (v + height) * f).endVertex(); // tessellator.addVertexWithUV(x + width, y + height, RenderAssist.zLevel, (u + width) * f, (v + height) * f);
+        vertexBuffer.pos(x + width, y + 0, RenderAssist.zLevel).tex((u + width) * f, (v + 0) * f).endVertex(); // tessellator.addVertexWithUV(x + width, y + 0, RenderAssist.zLevel, (u + width) * f, (v + 0) * f);
+        vertexBuffer.pos(x + 0, y + 0, RenderAssist.zLevel).tex((u + 0) * f, (v + 0) * f).endVertex(); // tessellator.addVertexWithUV(x + 0, y + 0, RenderAssist.zLevel, (u + 0) * f, (v + 0) * f);
         tessellator.draw();
     }
 
@@ -179,16 +180,16 @@ public class RenderAssist {
         float g = (color >> 8 & 255) / 255.0F;
         float b = (color & 255) / 255.0F;
         Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldRenderer = tessellator.getWorldRenderer();
+        VertexBuffer vertexBuffer = tessellator.getBuffer();
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4f(r, g, b, a);
-        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION); // tessellator.startDrawingQuads();
-        worldRenderer.pos(x1, y2, 0.0D).endVertex(); // tessellator.addVertex(x1, y2, 0.0D);
-        worldRenderer.pos(x2, y2, 0.0D).endVertex(); // tessellator.addVertex(x2, y2, 0.0D);
-        worldRenderer.pos(x2, y1, 0.0D).endVertex(); // tessellator.addVertex(x2, y1, 0.0D);
-        worldRenderer.pos(x1, y1, 0.0D).endVertex(); // tessellator.addVertex(x1, y1, 0.0D);
+        vertexBuffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION); // tessellator.startDrawingQuads();
+        vertexBuffer.pos(x1, y2, 0.0D).endVertex(); // tessellator.addVertex(x1, y2, 0.0D);
+        vertexBuffer.pos(x2, y2, 0.0D).endVertex(); // tessellator.addVertex(x2, y2, 0.0D);
+        vertexBuffer.pos(x2, y1, 0.0D).endVertex(); // tessellator.addVertex(x2, y1, 0.0D);
+        vertexBuffer.pos(x1, y1, 0.0D).endVertex(); // tessellator.addVertex(x1, y1, 0.0D);
         tessellator.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);
@@ -197,14 +198,14 @@ public class RenderAssist {
     /**
      * Renders the specified item of the inventory slot at the specified location.
      */
-    public static void renderInventorySlot(int slot, int x, int y, float partialTick, Minecraft mc) {
+    public static void renderInventorySlot(int slot, int x, int y, float partialTicks, Minecraft mc) {
         RenderItem itemRenderer = mc.getRenderItem(); // RenderItem itemRenderer = new RenderItem();
         ItemStack itemstack = mc.thePlayer.inventory.mainInventory[slot];
         x += 91;
         y += 12;
 
         if (itemstack != null) {
-            float f1 = itemstack.animationsToGo - partialTick;
+            float f1 = itemstack.animationsToGo - partialTicks;
 
             if (f1 > 0.0F) {
                 GL11.glPushMatrix();
@@ -221,6 +222,29 @@ public class RenderAssist {
             }
 
             itemRenderer.renderItemOverlayIntoGUI(mc.fontRendererObj, itemstack, x, y, (String)null); // itemRenderer.renderItemOverlayIntoGUI(mc.fontRenderer, mc.getTextureManager(), itemstack, x, y);
+        }
+    }
+
+    public static void renderInventorySlot(ItemStack stack, int x, int y, float partialTicks, Minecraft mc) {
+        if (stack != null) {
+            float f = (float)stack.animationsToGo - partialTicks;
+
+            if (f > 0.0F) {
+                GlStateManager.pushMatrix();
+                float f1 = 1.0F + f / 5.0F;
+                GlStateManager.translate((float)(x + 8), (float)(y + 12), 0.0F);
+                GlStateManager.scale(1.0F / f1, (f1 + 1.0F) / 2.0F, 1.0F);
+                GlStateManager.translate((float)(-(x + 8)), (float)(-(y + 12)), 0.0F);
+            }
+
+            RenderItem itemRenderer = mc.getRenderItem();
+            itemRenderer.renderItemAndEffectIntoGUI(stack, x, y);
+
+            if (f > 0.0F) {
+                GlStateManager.popMatrix();
+            }
+
+            itemRenderer.renderItemOverlays(mc.fontRendererObj, stack, x, y);
         }
     }
 

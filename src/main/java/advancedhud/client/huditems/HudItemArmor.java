@@ -66,7 +66,7 @@ public class HudItemArmor extends HudItem {
 
     @Override
     public void render(float partialTicks) {
-        this.mc.renderEngine.bindTexture(Gui.icons);
+        this.mc.renderEngine.bindTexture(Gui.ICONS);
 
         int left = this.posX;
         int top = this.posY;

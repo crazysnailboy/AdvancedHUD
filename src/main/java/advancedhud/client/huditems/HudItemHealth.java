@@ -11,8 +11,8 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.potion.Potion;
-import net.minecraft.util.MathHelper;
+import net.minecraft.init.MobEffects;
+import net.minecraft.util.math.MathHelper;
 
 public class HudItemHealth extends HudItem {
 
@@ -66,7 +66,7 @@ public class HudItemHealth extends HudItem {
 
     @Override
     public void render(float partialTicks) {
-        this.mc.renderEngine.bindTexture(Gui.icons);
+        this.mc.renderEngine.bindTexture(Gui.ICONS);
         boolean highlight = this.mc.thePlayer.hurtResistantTime / 3 % 2 == 1;
 
         if (this.mc.thePlayer.hurtResistantTime < 10) {
@@ -78,7 +78,7 @@ public class HudItemHealth extends HudItem {
             this.lastSystemTime = this.mc.getSystemTime();
         }
 
-        IAttributeInstance attrMaxHealth = this.mc.thePlayer.getEntityAttribute(SharedMonsterAttributes.maxHealth);
+        IAttributeInstance attrMaxHealth = this.mc.thePlayer.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH);
         int health = MathHelper.ceiling_float_int(this.mc.thePlayer.getHealth());
         int healthLast = MathHelper.ceiling_float_int(this.prevHealth); // int healthLast = MathHelper.ceiling_float_int(this.mc.thePlayer.prevHealth);
         float healthMax = (float)attrMaxHealth.getAttributeValue();
@@ -93,16 +93,16 @@ public class HudItemHealth extends HudItem {
         int top = this.posY;
 
         int regen = -1;
-        if (this.mc.thePlayer.isPotionActive(Potion.regeneration)) {
+        if (this.mc.thePlayer.isPotionActive(MobEffects.REGENERATION)) {
             regen = this.mc.ingameGUI.getUpdateCounter() % 25;
         }
 
         final int TOP = 9 * (this.mc.theWorld.getWorldInfo().isHardcoreModeEnabled() ? 5 : 0);
         final int BACKGROUND = (highlight ? 25 : 16);
         int MARGIN = 16;
-        if (this.mc.thePlayer.isPotionActive(Potion.poison))
+        if (this.mc.thePlayer.isPotionActive(MobEffects.POISON))
             MARGIN += 36;
-        else if (this.mc.thePlayer.isPotionActive(Potion.wither))
+        else if (this.mc.thePlayer.isPotionActive(MobEffects.WITHER))
             MARGIN += 72;
         float absorbRemaining = absorb;
         if (!this.rotated) {

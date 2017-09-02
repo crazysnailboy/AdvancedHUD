@@ -10,7 +10,7 @@ import advancedhud.client.ui.GuiScreenHudItem;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.potion.Potion;
+import net.minecraft.init.MobEffects;
 import net.minecraft.util.FoodStats;
 
 public class HudItemFood extends HudItem {
@@ -69,7 +69,7 @@ public class HudItemFood extends HudItem {
 
     @Override
     public void render(float partialTicks) {
-        this.mc.renderEngine.bindTexture(Gui.icons);
+        this.mc.renderEngine.bindTexture(Gui.ICONS);
         GL11.glColor4f(1.0f, 1.0f, 1.0f, this.getOpacity());
 
         int left = this.posX + 81;
@@ -92,7 +92,7 @@ public class HudItemFood extends HudItem {
             int icon = 16;
             byte backgound = 0;
 
-            if (this.mc.thePlayer.isPotionActive(Potion.hunger)) {
+            if (this.mc.thePlayer.isPotionActive(MobEffects.HUNGER)) {
                 icon += 36;
                 backgound = 13;
             }

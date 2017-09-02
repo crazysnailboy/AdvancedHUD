@@ -64,15 +64,17 @@ public class HudItemCrosshairs extends HudItem {
     @Override
     public void render(float partialTicks) {
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        GL11.glEnable(GL11.GL_BLEND);
         OpenGlHelper.glBlendFunc(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR, 1, 0);
         if (this.selectedIconX >= 0 && this.selectedIconY >= 0) {
             this.mc.renderEngine.bindTexture(CROSSHAIR_ICONS);
             RenderAssist.drawTexturedModalRect(this.posX, this.posY, this.selectedIconX, this.selectedIconY, 16, 16);
         } else {
-            this.mc.renderEngine.bindTexture(Gui.icons);
+            this.mc.renderEngine.bindTexture(Gui.ICONS);
             RenderAssist.drawTexturedModalRect(this.posX, this.posY, 0, 0, 16, 16);
         }
         OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+        GL11.glDisable(GL11.GL_BLEND);
     }
 
     public int getSelectedIconX() {
