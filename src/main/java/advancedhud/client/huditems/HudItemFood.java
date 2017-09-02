@@ -75,7 +75,7 @@ public class HudItemFood extends HudItem {
         int left = this.posX + 81;
         int top = this.posY;
 
-        FoodStats stats = this.mc.thePlayer.getFoodStats();
+        FoodStats stats = this.mc.player.getFoodStats();
         int level = stats.getFoodLevel();
 
         for (int i = 0; i < 10; ++i) {
@@ -92,12 +92,12 @@ public class HudItemFood extends HudItem {
             int icon = 16;
             byte backgound = 0;
 
-            if (this.mc.thePlayer.isPotionActive(MobEffects.HUNGER)) {
+            if (this.mc.player.isPotionActive(MobEffects.HUNGER)) {
                 icon += 36;
                 backgound = 13;
             }
 
-            if (this.mc.thePlayer.getFoodStats().getSaturationLevel() <= 0.0F && this.mc.ingameGUI.getUpdateCounter() % (level * 3 + 1) == 0) {
+            if (this.mc.player.getFoodStats().getSaturationLevel() <= 0.0F && this.mc.ingameGUI.getUpdateCounter() % (level * 3 + 1) == 0) {
                 y = top + this.rand.nextInt(3) - 1;
                 if (this.rotated) {
                     x = left - 81 + this.rand.nextInt(3) - 1;

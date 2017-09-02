@@ -67,24 +67,24 @@ public class HudItemHealth extends HudItem {
     @Override
     public void render(float partialTicks) {
         this.mc.renderEngine.bindTexture(Gui.ICONS);
-        boolean highlight = this.mc.thePlayer.hurtResistantTime / 3 % 2 == 1;
+        boolean highlight = this.mc.player.hurtResistantTime / 3 % 2 == 1;
 
-        if (this.mc.thePlayer.hurtResistantTime < 10) {
+        if (this.mc.player.hurtResistantTime < 10) {
             highlight = false;
         }
 
         if (this.mc.getSystemTime() - this.lastSystemTime > 1000L) {
-            this.prevHealth = this.mc.thePlayer.getHealth();
+            this.prevHealth = this.mc.player.getHealth();
             this.lastSystemTime = this.mc.getSystemTime();
         }
 
-        IAttributeInstance attrMaxHealth = this.mc.thePlayer.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH);
-        int health = MathHelper.ceiling_float_int(this.mc.thePlayer.getHealth());
-        int healthLast = MathHelper.ceiling_float_int(this.prevHealth); // int healthLast = MathHelper.ceiling_float_int(this.mc.thePlayer.prevHealth);
+        IAttributeInstance attrMaxHealth = this.mc.player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH);
+        int health = MathHelper.ceil(this.mc.player.getHealth());
+        int healthLast = MathHelper.ceil(this.prevHealth); // int healthLast = MathHelper.ceil(this.mc.player.prevHealth);
         float healthMax = (float)attrMaxHealth.getAttributeValue();
-        float absorb = this.mc.thePlayer.getAbsorptionAmount();
+        float absorb = this.mc.player.getAbsorptionAmount();
 
-        int healthRows = MathHelper.ceiling_float_int((healthMax + absorb) / 2.0F / 10.0F);
+        int healthRows = MathHelper.ceil((healthMax + absorb) / 2.0F / 10.0F);
         int rowHeight = Math.max(10 - (healthRows - 2), 3);
 
         this.rand.setSeed((long)(this.mc.ingameGUI.getUpdateCounter() * 312871));
@@ -93,22 +93,22 @@ public class HudItemHealth extends HudItem {
         int top = this.posY;
 
         int regen = -1;
-        if (this.mc.thePlayer.isPotionActive(MobEffects.REGENERATION)) {
+        if (this.mc.player.isPotionActive(MobEffects.REGENERATION)) {
             regen = this.mc.ingameGUI.getUpdateCounter() % 25;
         }
 
-        final int TOP = 9 * (this.mc.theWorld.getWorldInfo().isHardcoreModeEnabled() ? 5 : 0);
+        final int TOP = 9 * (this.mc.world.getWorldInfo().isHardcoreModeEnabled() ? 5 : 0);
         final int BACKGROUND = (highlight ? 25 : 16);
         int MARGIN = 16;
-        if (this.mc.thePlayer.isPotionActive(MobEffects.POISON))
+        if (this.mc.player.isPotionActive(MobEffects.POISON))
             MARGIN += 36;
-        else if (this.mc.thePlayer.isPotionActive(MobEffects.WITHER))
+        else if (this.mc.player.isPotionActive(MobEffects.WITHER))
             MARGIN += 72;
         float absorbRemaining = absorb;
         if (!this.rotated) {
-            for (int i = MathHelper.ceiling_float_int((healthMax + absorb) / 2.0F) - 1; i >= 0; --i) {
+            for (int i = MathHelper.ceil((healthMax + absorb) / 2.0F) - 1; i >= 0; --i) {
                 //int b0 = (highlight ? 1 : 0);
-                int row = MathHelper.ceiling_float_int((float)(i + 1) / 10.0F) - 1;
+                int row = MathHelper.ceil((float)(i + 1) / 10.0F) - 1;
                 int x = left + i % 10 * 8;
                 int y = top - row * rowHeight;
 
@@ -140,9 +140,9 @@ public class HudItemHealth extends HudItem {
                 }
             }
         } else {
-            for (int i = MathHelper.ceiling_float_int((healthMax + absorb) / 2.0F) - 1; i >= 0; --i) {
+            for (int i = MathHelper.ceil((healthMax + absorb) / 2.0F) - 1; i >= 0; --i) {
                 //int b0 = (highlight ? 1 : 0);
-                int row = MathHelper.ceiling_float_int((float)(i + 1) / 10.0F) - 1;
+                int row = MathHelper.ceil((float)(i + 1) / 10.0F) - 1;
                 int x = left - row * rowHeight;
                 int y = top + i % 10 * 8;
 

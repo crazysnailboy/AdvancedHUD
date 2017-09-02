@@ -105,9 +105,9 @@ public class HudItemExperienceBar extends HudItem {
 
     @Override
     public void tick() {
-        this.max_xp = this.mc.thePlayer.xpBarCap();
-        this.current_xp = this.mc.thePlayer.experience;
-        this.current_level = this.mc.thePlayer.experienceLevel;
+        this.max_xp = this.mc.player.xpBarCap();
+        this.current_xp = this.mc.player.experience;
+        this.current_level = this.mc.player.experienceLevel;
     }
 
     @Override

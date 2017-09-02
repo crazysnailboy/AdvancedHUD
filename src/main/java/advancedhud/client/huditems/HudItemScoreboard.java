@@ -40,7 +40,7 @@ public class HudItemScoreboard extends HudItem {
     @SuppressWarnings("rawtypes")
     @Override
     public int getDefaultPosY() {
-        ScoreObjective objective = this.mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
+        ScoreObjective objective = this.mc.world.getScoreboard().getObjectiveInDisplaySlot(1);
         if (objective != null) {
             Scoreboard scoreboard = objective.getScoreboard();
             Collection collection = scoreboard.getSortedScores(objective);
@@ -75,7 +75,7 @@ public class HudItemScoreboard extends HudItem {
     @SuppressWarnings("rawtypes")
     @Override
     public void render(float partialTicks) {
-        ScoreObjective objective = this.mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
+        ScoreObjective objective = this.mc.world.getScoreboard().getObjectiveInDisplaySlot(1);
         if (objective != null) {
             Scoreboard scoreboard = objective.getScoreboard();
             Collection collection = scoreboard.getSortedScores(objective);

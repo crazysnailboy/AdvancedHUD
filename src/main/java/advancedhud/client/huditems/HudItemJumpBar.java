@@ -59,7 +59,7 @@ public class HudItemJumpBar extends HudItem {
         this.mc.renderEngine.bindTexture(Gui.ICONS);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        float charge = this.mc.thePlayer.getHorseJumpPower();
+        float charge = this.mc.player.getHorseJumpPower();
         final int barWidth = 182;
         int x = this.posX;
         int filled = (int)(charge * (barWidth + 1));

@@ -59,10 +59,10 @@ public class HudItemHealthMount extends HudItem {
 
     @Override
     public void render(float partialTicks) {
-        Entity ridingEntity = this.mc.thePlayer.getRidingEntity();
+        Entity ridingEntity = this.mc.player.getRidingEntity();
         int right_height = 1;
         if (ridingEntity == null && (this.mc.currentScreen instanceof GuiAdvancedHUDConfiguration || this.mc.currentScreen instanceof GuiScreenReposition)) {
-            ridingEntity = new EntityHorse(this.mc.theWorld);
+            ridingEntity = new EntityHorse(this.mc.world);
         }
         if (!(ridingEntity instanceof EntityLivingBase))
             return;

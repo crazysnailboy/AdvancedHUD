@@ -83,21 +83,21 @@ public class HudItemAir extends HudItem {
         int left = this.posX + 81;
         int top = this.posY;
 
-        if (this.mc.thePlayer.isInsideOfMaterial(Material.WATER) || this.mc.currentScreen instanceof GuiAdvancedHUDConfiguration || this.mc.currentScreen instanceof GuiScreenReposition) {
+        if (this.mc.player.isInsideOfMaterial(Material.WATER) || this.mc.currentScreen instanceof GuiAdvancedHUDConfiguration || this.mc.currentScreen instanceof GuiScreenReposition) {
             if (!this.wasInWater) {
                 Tween.to(this, Engine.OPACITY, 0.1f).target(1.0f).start(this.manager);
                 this.wasInWater = true;
             }
         }
-        if (!this.mc.thePlayer.isInsideOfMaterial(Material.WATER) && this.wasInWater) {
+        if (!this.mc.player.isInsideOfMaterial(Material.WATER) && this.wasInWater) {
             Tween.to(this, Engine.OPACITY, 1.0f).delay(1.0f).target(0.0f).start(this.manager);
             this.wasInWater = false;
         }
 
         GL11.glColor4f(1.0f, 1.0f, 1.0f, this.getOpacity());
-        int air = this.mc.thePlayer.getAir();
-        int full = MathHelper.ceiling_double_int((air - 2) * 10.0D / 300.0D);
-        int partial = MathHelper.ceiling_double_int(air * 10.0D / 300.0D) - full;
+        int air = this.mc.player.getAir();
+        int full = MathHelper.ceil((air - 2) * 10.0D / 300.0D);
+        int partial = MathHelper.ceil(air * 10.0D / 300.0D) - full;
 
         for (int i = 0; i < full + partial; ++i) {
             if (!this.rotated)

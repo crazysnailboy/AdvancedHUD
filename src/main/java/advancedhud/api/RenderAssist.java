@@ -200,7 +200,7 @@ public class RenderAssist {
      */
     public static void renderInventorySlot(int slot, int x, int y, float partialTicks, Minecraft mc) {
         RenderItem itemRenderer = mc.getRenderItem(); // RenderItem itemRenderer = new RenderItem();
-        ItemStack itemstack = mc.thePlayer.inventory.mainInventory[slot];
+        ItemStack itemstack = mc.player.inventory.mainInventory[slot];
         x += 91;
         y += 12;
 

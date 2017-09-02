@@ -71,7 +71,7 @@ public class HudItemArmor extends HudItem {
         int left = this.posX;
         int top = this.posY;
 
-        int level = ForgeHooks.getTotalArmorValue(this.mc.thePlayer);
+        int level = ForgeHooks.getTotalArmorValue(this.mc.player);
         if ((this.mc.currentScreen instanceof GuiAdvancedHUDConfiguration || this.mc.currentScreen instanceof GuiScreenReposition) && level == 0) {
             level = 10;
         }

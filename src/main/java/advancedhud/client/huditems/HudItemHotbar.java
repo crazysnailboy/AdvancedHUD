@@ -76,7 +76,7 @@ public class HudItemHotbar extends HudItem {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        InventoryPlayer inv = this.mc.thePlayer.inventory;
+        InventoryPlayer inv = this.mc.player.inventory;
         EntityPlayer entityplayer = (EntityPlayer)this.mc.getRenderViewEntity();
         ItemStack itemstack = entityplayer.getHeldItemOffhand();
         EnumHandSide enumhandside = entityplayer.getPrimaryHand().opposite();

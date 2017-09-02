@@ -84,8 +84,8 @@ public class HudItemTooltips extends HudItem {
 
     @Override
     public void tick() {
-        if (this.mc.thePlayer != null) {
-            ItemStack currentItem = this.mc.thePlayer.inventory.getCurrentItem();
+        if (this.mc.player != null) {
+            ItemStack currentItem = this.mc.player.inventory.getCurrentItem();
             String currentName = currentItem == null ? "" : currentItem.getDisplayName();
 
             this.resetFadeTimer = !currentName.equals(this.itemName);

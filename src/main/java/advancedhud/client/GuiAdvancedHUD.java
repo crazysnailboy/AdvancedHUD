@@ -53,10 +53,9 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         GlStateManager.enableBlend(); // GL11.glEnable(GL11.GL_BLEND);
 
         if (Minecraft.isFancyGraphicsEnabled()) {
-            renderVignette(mc.thePlayer.getBrightness(partialTicks), res);
+            renderVignette(mc.player.getBrightness(partialTicks), res);
         } else {
-            GlStateManager.enableDepth();
-            GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+            GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
         }
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F); // GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -83,7 +82,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
             GlStateManager.pushMatrix(); // GL11.glPushMatrix();
             GlStateManager.pushAttrib(); // GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
             GlStateManager.disableBlend(); // GL11.glDisable(GL11.GL_BLEND);
-            if (this.mc.thePlayer.getRidingEntity() instanceof EntityLivingBase) {
+            if (this.mc.player.getRidingEntity() instanceof EntityLivingBase) {
                 if (huditem.shouldDrawOnMount()) {
                     huditem.fixBounds();
                     huditem.render(partialTicks, this);
@@ -128,7 +127,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         ArrayList<String> listR = new ArrayList<String>();
 
         if (this.mc.isDemo()) {
-            long time = this.mc.theWorld.getTotalWorldTime();
+            long time = this.mc.world.getTotalWorldTime();
             if (time >= 120500L) {
                 listR.add(I18n.format("demo.demoExpired"));
             } else {
@@ -167,8 +166,8 @@ public class GuiAdvancedHUD extends GuiIngameForge {
     @Override
     protected void renderPlayerList(int width, int height) {
         this.mc.mcProfiler.startSection("playerList");
-        ScoreObjective scoreobjective = this.mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(0);
-        NetHandlerPlayClient handler = this.mc.thePlayer.connection; // NetHandlerPlayClient handler = this.mc.thePlayer.sendQueue;
+        ScoreObjective scoreobjective = this.mc.world.getScoreboard().getObjectiveInDisplaySlot(0);
+        NetHandlerPlayClient handler = this.mc.player.connection; // NetHandlerPlayClient handler = this.mc.thePlayer.sendQueue;
 
         if (this.mc.gameSettings.keyBindPlayerList.isPressed() && (!this.mc.isIntegratedServerRunning() || handler.getPlayerInfoMap().size() > 1 || scoreobjective != null)) { // if (this.mc.gameSettings.keyBindPlayerList.isPressed() && (!this.mc.isIntegratedServerRunning() || handler.playerInfoList.size() > 1 || scoreobjective != null)) {
             List<?> players = (List<?>) handler.getPlayerInfoMap(); // List<?> players = handler.playerInfoList;
@@ -200,7 +199,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
                 if (i < players.size()) {
                     NetworkPlayerInfo player = (NetworkPlayerInfo) players.get(i); // GuiPlayerInfo player = (GuiPlayerInfo)players.get(i);
                     GameProfile gameProfile = player.getGameProfile();
-                    ScorePlayerTeam team = this.mc.theWorld.getScoreboard().getPlayersTeam(gameProfile.getName()); // ScorePlayerTeam team = this.mc.theWorld.getScoreboard().getPlayersTeam(player.name);
+                    ScorePlayerTeam team = this.mc.world.getScoreboard().getPlayersTeam(gameProfile.getName()); // ScorePlayerTeam team = this.mc.theWorld.getScoreboard().getPlayersTeam(player.name);
                     String displayName = ScorePlayerTeam.formatPlayerName(team, gameProfile.getName()); // String displayName = ScorePlayerTeam.formatPlayerName(team, player.name);
                     this.mc.fontRendererObj.drawStringWithShadow(displayName, xPos, yPos, 0xFFFFFF);
 
@@ -262,7 +261,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
     public void updateTick() {
         this.mc.mcProfiler.startSection("Advanced HUD - UpdateTick");
 
-        if (this.mc.theWorld != null) {
+        if (this.mc.world != null) {
             for (HudItem huditem : HUDRegistry.getHudItemList()) {
                 this.mc.mcProfiler.startSection(huditem.getName());
                 if (this.mc.playerController.isInCreativeMode() && !huditem.isRenderedInCreative()) {
@@ -283,10 +282,10 @@ public class GuiAdvancedHUD extends GuiIngameForge {
     }
 
     @Override
-    public void setRecordPlaying(String recordName, boolean isPlaying) {
+    public void setOverlayMessage(String recordName, boolean animateColor) {
         this.recordPlaying = recordName;
         this.recordPlayingUpFor = 60;
-        this.recordIsPlaying = isPlaying;
+        this.animateOverlayMessageColor = animateColor;
     }
 
     private class GuiOverlayDebugForge extends GuiOverlayDebug {
