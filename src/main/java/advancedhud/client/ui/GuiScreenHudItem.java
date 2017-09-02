@@ -41,7 +41,7 @@ public class GuiScreenHudItem extends GuiScreen {
             this.initGui();
         }
 
-        this.drawCenteredString(this.mc.fontRendererObj, this.hudItem.getButtonLabel(), HUDRegistry.screenWidth / 2, 10, 0xFFFFFF);
+        this.drawCenteredString(this.mc.fontRenderer, this.hudItem.getButtonLabel(), HUDRegistry.screenWidth / 2, 10, 0xFFFFFF);
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 

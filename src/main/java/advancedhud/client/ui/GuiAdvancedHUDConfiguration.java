@@ -45,9 +45,9 @@ public class GuiAdvancedHUDConfiguration extends GuiScreen {
         }
 
         if (help) {
-            this.drawCenteredString(this.mc.fontRendererObj, I18n.format("advancedhud.configuration.help.1"), this.width / 2, 17, 0xFFFFFF);
-            this.drawCenteredString(this.mc.fontRendererObj, I18n.format("advancedhud.configuration.help.2"), this.width / 2, 27, 0xFFFFFF);
-            this.drawCenteredString(this.mc.fontRendererObj, I18n.format("advancedhud.configuration.help.3", I18n.format("advancedhud.configuration.", (asMount ? "player" : "mount"))), this.width / 2, 37, 0xFFFFFF);
+            this.drawCenteredString(this.mc.fontRenderer, I18n.format("advancedhud.configuration.help.1"), this.width / 2, 17, 0xFFFFFF);
+            this.drawCenteredString(this.mc.fontRenderer, I18n.format("advancedhud.configuration.help.2"), this.width / 2, 27, 0xFFFFFF);
+            this.drawCenteredString(this.mc.fontRenderer, I18n.format("advancedhud.configuration.help.3", I18n.format("advancedhud.configuration.", (asMount ? "player" : "mount"))), this.width / 2, 37, 0xFFFFFF);
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);

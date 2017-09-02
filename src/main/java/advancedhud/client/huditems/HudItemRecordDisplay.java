@@ -75,7 +75,7 @@ public class HudItemRecordDisplay extends HudItem {
                 GL11.glEnable(GL11.GL_BLEND);
                 GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                 int color = this.recordIsPlaying ? Color.HSBtoRGB(hue / 50.0F, 0.7F, 0.6F) & 0xFFFFFF : 0xFFFFFF;
-                this.mc.fontRendererObj.drawString(this.recordPlaying, -this.mc.fontRendererObj.getStringWidth(this.recordPlaying) / 2, -4, color | opacity << 24);
+                this.mc.fontRenderer.drawString(this.recordPlaying, -this.mc.fontRenderer.getStringWidth(this.recordPlaying) / 2, -4, color | opacity << 24);
             }
         }
     }

@@ -200,12 +200,12 @@ public class RenderAssist {
      */
     public static void renderInventorySlot(int slot, int x, int y, float partialTicks, Minecraft mc) {
         RenderItem itemRenderer = mc.getRenderItem(); // RenderItem itemRenderer = new RenderItem();
-        ItemStack itemstack = mc.player.inventory.mainInventory[slot];
+        ItemStack itemstack = mc.player.inventory.getStackInSlot(slot); // ItemStack itemstack = mc.player.inventory.mainInventory[slot];
         x += 91;
         y += 12;
 
-        if (itemstack != null) {
-            float f1 = itemstack.animationsToGo - partialTicks;
+        if (!itemstack.isEmpty()) {
+            float f1 = itemstack.getAnimationsToGo() - partialTicks; // float f1 = itemstack.animationsToGo - partialTick;
 
             if (f1 > 0.0F) {
                 GL11.glPushMatrix();
@@ -221,13 +221,13 @@ public class RenderAssist {
                 GL11.glPopMatrix();
             }
 
-            itemRenderer.renderItemOverlayIntoGUI(mc.fontRendererObj, itemstack, x, y, (String)null); // itemRenderer.renderItemOverlayIntoGUI(mc.fontRenderer, mc.getTextureManager(), itemstack, x, y);
+            itemRenderer.renderItemOverlayIntoGUI(mc.fontRenderer, itemstack, x, y, (String)null); // itemRenderer.renderItemOverlayIntoGUI(mc.fontRenderer, mc.getTextureManager(), itemstack, x, y);
         }
     }
 
     public static void renderInventorySlot(ItemStack stack, int x, int y, float partialTicks, Minecraft mc) {
-        if (stack != null) {
-            float f = (float)stack.animationsToGo - partialTicks;
+        if (!stack.isEmpty()) {
+            float f = (float)stack.getAnimationsToGo() - partialTicks;
 
             if (f > 0.0F) {
                 GlStateManager.pushMatrix();
@@ -244,7 +244,7 @@ public class RenderAssist {
                 GlStateManager.popMatrix();
             }
 
-            itemRenderer.renderItemOverlays(mc.fontRendererObj, stack, x, y);
+            itemRenderer.renderItemOverlays(mc.fontRenderer, stack, x, y);
         }
     }
 

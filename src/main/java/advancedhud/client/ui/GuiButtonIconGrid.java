@@ -28,34 +28,34 @@ public class GuiButtonIconGrid extends GuiButton {
 
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-        RenderAssist.drawRect(this.xPosition - 0.5F, this.yPosition - 0.5F, this.xPosition + 256.5F, this.yPosition + 64.5F, 0x80000000);
-        RenderAssist.drawUnfilledRect(this.xPosition - 0.5F, this.yPosition - 0.5F, this.xPosition + 256.5F, this.yPosition + 64.5F, 0xFFFFFFFF);
+        RenderAssist.drawRect(this.x - 0.5F, this.y - 0.5F, this.x + 256.5F, this.y + 64.5F, 0x80000000);
+        RenderAssist.drawUnfilledRect(this.x - 0.5F, this.y - 0.5F, this.x + 256.5F, this.y + 64.5F, 0xFFFFFFFF);
         GL11.glPushMatrix();
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR);
         GL11.glColor4f(1F, 1F, 1F, 1F);
         //GL11.glScalef(0.5F, 0.5F, 1F);
         mc.getTextureManager().bindTexture(this.resourceLocation);
-        RenderAssist.drawTexturedModalRect(this.xPosition, this.yPosition, 0, 0, 256, 64);
-        if (mouseX > this.xPosition && mouseY > this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height) {
-            float posX = ((mouseX - this.xPosition) - (mouseX - this.xPosition) % 16) + this.xPosition;
-            float posY = ((mouseY - this.yPosition) - (mouseY - this.yPosition) % 16) + this.yPosition;
+        RenderAssist.drawTexturedModalRect(this.x, this.y, 0, 0, 256, 64);
+        if (mouseX > this.x && mouseY > this.y && mouseX < this.x + this.width && mouseY < this.y + this.height) {
+            float posX = ((mouseX - this.x) - (mouseX - this.x) % 16) + this.x;
+            float posY = ((mouseY - this.y) - (mouseY - this.y) % 16) + this.y;
             int color = 0xFF1F95FF;
             if (Mouse.isButtonDown(0))
                 color = 0xFF1059F7;
             RenderAssist.drawUnfilledRect(posX - 0.125F, posY - 0.125F, posX + 16.125F, posY + 16.125F, color);
         }
         if (this.crosshairs.getSelectedIconX() >= 0 && this.crosshairs.getSelectedIconY() >= 0)
-            RenderAssist.drawUnfilledRect(this.xPosition + this.crosshairs.getSelectedIconX() - 0.375F, this.yPosition + this.crosshairs.getSelectedIconY() - 0.5F, this.xPosition + this.crosshairs.getSelectedIconX() + 16, this.yPosition + this.crosshairs.getSelectedIconY() + 16F, 0xFFFFFFFF);
+            RenderAssist.drawUnfilledRect(this.x + this.crosshairs.getSelectedIconX() - 0.375F, this.y + this.crosshairs.getSelectedIconY() - 0.5F, this.x + this.crosshairs.getSelectedIconX() + 16, this.y + this.crosshairs.getSelectedIconY() + 16F, 0xFFFFFFFF);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
     }
 
     @Override
     public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
-        if (mouseX > this.xPosition && mouseY > this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height) {
-            this.crosshairs.setSelectedIconX((mouseX - this.xPosition) - (mouseX - this.xPosition) % 16);
-            this.crosshairs.setSelectedIconY((mouseY - this.yPosition) - (mouseY - this.yPosition) % 16);
+        if (mouseX > this.x && mouseY > this.y && mouseX < this.x + this.width && mouseY < this.y + this.height) {
+            this.crosshairs.setSelectedIconX((mouseX - this.x) - (mouseX - this.x) % 16);
+            this.crosshairs.setSelectedIconY((mouseY - this.y) - (mouseY - this.y) % 16);
         }
         //AdvancedHUD.log.info("Selected Icon: "+selectedIconX+","+selectedIconY);
         return super.mousePressed(mc, mouseX, mouseY);

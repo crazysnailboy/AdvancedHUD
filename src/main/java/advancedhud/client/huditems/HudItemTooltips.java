@@ -68,7 +68,7 @@ public class HudItemTooltips extends HudItem {
         }
 
         if (this.itemName != null && !this.itemName.isEmpty()) {
-            FontRenderer fontrenderer = this.mc.fontRendererObj;
+            FontRenderer fontrenderer = this.mc.fontRenderer;
             int posX;
             if (Alignment.isLeft(this.alignment)) {
                 posX = this.posX;

@@ -45,7 +45,7 @@ public class HudItemScoreboard extends HudItem {
             Scoreboard scoreboard = objective.getScoreboard();
             Collection collection = scoreboard.getSortedScores(objective);
             if (collection.size() <= 15) {
-                int l = collection.size() * this.mc.fontRendererObj.FONT_HEIGHT;
+                int l = collection.size() * this.mc.fontRenderer.FONT_HEIGHT;
                 return HUDRegistry.screenHeight / 2 + l / 3;
             }
         }
@@ -81,10 +81,10 @@ public class HudItemScoreboard extends HudItem {
             Collection collection = scoreboard.getSortedScores(objective);
 
             if (collection.size() <= 15) {
-                int k = this.mc.fontRendererObj.getStringWidth(objective.getDisplayName());
+                int k = this.mc.fontRenderer.getStringWidth(objective.getDisplayName());
                 String s;
 
-                for (Iterator iterator = collection.iterator(); iterator.hasNext(); k = Math.max(k, this.mc.fontRendererObj.getStringWidth(s))) {
+                for (Iterator iterator = collection.iterator(); iterator.hasNext(); k = Math.max(k, this.mc.fontRenderer.getStringWidth(s))) {
                     Score score = (Score)iterator.next();
                     ScorePlayerTeam scoreplayerteam = scoreboard.getPlayersTeam(score.getPlayerName());
                     s = ScorePlayerTeam.formatPlayerName(scoreplayerteam, score.getPlayerName()) + ": " + TextFormatting.RED + score.getScorePoints();
@@ -102,18 +102,18 @@ public class HudItemScoreboard extends HudItem {
                     ScorePlayerTeam scoreplayerteam1 = scoreboard.getPlayersTeam(score1.getPlayerName());
                     String s1 = ScorePlayerTeam.formatPlayerName(scoreplayerteam1, score1.getPlayerName());
                     String s2 = TextFormatting.RED + "" + score1.getScorePoints();
-                    int l1 = i1 - k1 * this.mc.fontRendererObj.FONT_HEIGHT;
+                    int l1 = i1 - k1 * this.mc.fontRenderer.FONT_HEIGHT;
                     int i2 = HUDRegistry.screenWidth - b0 + 2;
                     this.posX = j1;
-                    RenderAssist.drawRect(j1 - 2, l1, i2, l1 + this.mc.fontRendererObj.FONT_HEIGHT, 0x50000000);
-                    this.mc.fontRendererObj.drawString(s1, j1, l1, 0x20FFFFFF);
-                    this.mc.fontRendererObj.drawString(s2, i2 - this.mc.fontRendererObj.getStringWidth(s2), l1, 0x20FFFFFF);
+                    RenderAssist.drawRect(j1 - 2, l1, i2, l1 + this.mc.fontRenderer.FONT_HEIGHT, 0x50000000);
+                    this.mc.fontRenderer.drawString(s1, j1, l1, 0x20FFFFFF);
+                    this.mc.fontRenderer.drawString(s2, i2 - this.mc.fontRenderer.getStringWidth(s2), l1, 0x20FFFFFF);
 
                     if (k1 == collection.size()) {
                         String s3 = objective.getDisplayName();
-                        RenderAssist.drawRect(j1 - 2, l1 - this.mc.fontRendererObj.FONT_HEIGHT - 1, i2, l1 - 1, 0x60000000);
+                        RenderAssist.drawRect(j1 - 2, l1 - this.mc.fontRenderer.FONT_HEIGHT - 1, i2, l1 - 1, 0x60000000);
                         RenderAssist.drawRect(j1 - 2, l1 - 1, i2, l1, 0x50000000);
-                        this.mc.fontRendererObj.drawString(s3, j1 + k / 2 - this.mc.fontRendererObj.getStringWidth(s3) / 2, l1 - this.mc.fontRendererObj.FONT_HEIGHT, 0x20FFFFFF);
+                        this.mc.fontRenderer.drawString(s3, j1 + k / 2 - this.mc.fontRenderer.getStringWidth(s3) / 2, l1 - this.mc.fontRenderer.FONT_HEIGHT, 0x20FFFFFF);
                     }
                 }
             }

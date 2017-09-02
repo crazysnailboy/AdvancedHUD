@@ -21,7 +21,7 @@ import net.minecraft.util.ResourceLocation;
 public class HudItemHotbar extends HudItem {
 
     private static final ResourceLocation WIDGETS = new ResourceLocation("textures/gui/widgets.png");
-    private static final ResourceLocation ROTATE_WIDGETS = new ResourceLocation(AdvancedHUD.MODID, "textures/gui/rotateWidgets.png");
+    private static final ResourceLocation ROTATE_WIDGETS = new ResourceLocation(AdvancedHUD.MODID, "textures/gui/rotate_widgets.png");
 
     @Override
     public String getName() {
@@ -87,7 +87,7 @@ public class HudItemHotbar extends HudItem {
             RenderAssist.drawTexturedModalRect(this.posX, this.posY, 0, 0, 182, 22);
             RenderAssist.drawTexturedModalRect(this.posX - 1 + inv.currentItem * 20, this.posY - 1, 0, 22, 24, 22);
 
-            if (itemstack != null) {
+            if (!itemstack.isEmpty()) {
                 if (enumhandside == EnumHandSide.LEFT) {
                     RenderAssist.drawTexturedModalRect(this.posX - 29, this.posY - 1, 24, 22, 29, 24);
                 } else {
@@ -111,7 +111,7 @@ public class HudItemHotbar extends HudItem {
                 RenderAssist.renderInventorySlot(i, x, z, partialTicks, this.mc);
             }
 
-            if (itemstack != null) {
+            if (!itemstack.isEmpty()) {
                 if (enumhandside == EnumHandSide.LEFT) {
                     RenderAssist.renderInventorySlot(itemstack, this.posX - 26, this.posY + 3, partialTicks, this.mc);
                 } else {

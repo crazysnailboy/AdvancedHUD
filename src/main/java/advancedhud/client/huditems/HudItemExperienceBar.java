@@ -92,13 +92,13 @@ public class HudItemExperienceBar extends HudItem {
         if (this.mc.playerController.isNotCreative() && this.current_level > 0) {
             int color = 0x80FF20;
             String text = "" + this.current_level;
-            int x = (this.getWidth() / 2) - this.mc.fontRendererObj.getStringWidth(text) / 2;
+            int x = (this.getWidth() / 2) - this.mc.fontRenderer.getStringWidth(text) / 2;
             int y = -Math.round(this.getHeight() * 0.75f);
-            this.mc.fontRendererObj.drawString(text, x + 1, y, 0x000000);
-            this.mc.fontRendererObj.drawString(text, x - 1, y, 0x000000);
-            this.mc.fontRendererObj.drawString(text, x, y + 1, 0x000000);
-            this.mc.fontRendererObj.drawString(text, x, y - 1, 0x000000);
-            this.mc.fontRendererObj.drawString(text, x, y, color);
+            this.mc.fontRenderer.drawString(text, x + 1, y, 0x000000);
+            this.mc.fontRenderer.drawString(text, x - 1, y, 0x000000);
+            this.mc.fontRenderer.drawString(text, x, y + 1, 0x000000);
+            this.mc.fontRenderer.drawString(text, x, y - 1, 0x000000);
+            this.mc.fontRenderer.drawString(text, x, y, color);
         }
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
     }

@@ -144,20 +144,20 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         for (String msg : listL) {
             if (msg == null)
                 continue;
-            drawRect(1, top - 1, 2 + this.mc.fontRendererObj.getStringWidth(msg) + 1, top + this.mc.fontRendererObj.FONT_HEIGHT - 1, 0x90505050);
-            this.mc.fontRendererObj.drawString(msg, 2, top, 0xE0E0E0);
-            top += this.mc.fontRendererObj.FONT_HEIGHT;
+            drawRect(1, top - 1, 2 + this.mc.fontRenderer.getStringWidth(msg) + 1, top + this.mc.fontRenderer.FONT_HEIGHT - 1, 0x90505050);
+            this.mc.fontRenderer.drawString(msg, 2, top, 0xE0E0E0);
+            top += this.mc.fontRenderer.FONT_HEIGHT;
         }
 
         top = 2;
         for (String msg : listR) {
             if (msg == null)
                 continue;
-            int w = this.mc.fontRendererObj.getStringWidth(msg);
+            int w = this.mc.fontRenderer.getStringWidth(msg);
             int left = width - 2 - w;
-            drawRect(left - 1, top - 1, left + w + 1, top + this.mc.fontRendererObj.FONT_HEIGHT - 1, 0x90505050);
-            this.mc.fontRendererObj.drawString(msg, left, top, 0xE0E0E0);
-            top += this.mc.fontRendererObj.FONT_HEIGHT;
+            drawRect(left - 1, top - 1, left + w + 1, top + this.mc.fontRenderer.FONT_HEIGHT - 1, 0x90505050);
+            this.mc.fontRenderer.drawString(msg, left, top, 0xE0E0E0);
+            top += this.mc.fontRenderer.FONT_HEIGHT;
         }
 
         this.mc.mcProfiler.endSection();
@@ -201,16 +201,16 @@ public class GuiAdvancedHUD extends GuiIngameForge {
                     GameProfile gameProfile = player.getGameProfile();
                     ScorePlayerTeam team = this.mc.world.getScoreboard().getPlayersTeam(gameProfile.getName()); // ScorePlayerTeam team = this.mc.theWorld.getScoreboard().getPlayersTeam(player.name);
                     String displayName = ScorePlayerTeam.formatPlayerName(team, gameProfile.getName()); // String displayName = ScorePlayerTeam.formatPlayerName(team, player.name);
-                    this.mc.fontRendererObj.drawStringWithShadow(displayName, xPos, yPos, 0xFFFFFF);
+                    this.mc.fontRenderer.drawStringWithShadow(displayName, xPos, yPos, 0xFFFFFF);
 
                     if (scoreobjective != null) {
-                        int endX = xPos + this.mc.fontRendererObj.getStringWidth(displayName) + 5;
+                        int endX = xPos + this.mc.fontRenderer.getStringWidth(displayName) + 5;
                         int maxX = xPos + columnWidth - 12 - 5;
 
                         if (maxX - endX > 5) {
                             Score score = scoreobjective.getScoreboard().getOrCreateScore(gameProfile.getName(), scoreobjective); // Score score = scoreobjective.getScoreboard().func_96529_a(player.name, scoreobjective);
                             String scoreDisplay = TextFormatting.YELLOW + "" + score.getScorePoints();
-                            this.mc.fontRendererObj.drawStringWithShadow(scoreDisplay, maxX - this.mc.fontRendererObj.getStringWidth(scoreDisplay), yPos, 0xFFFFFF);
+                            this.mc.fontRenderer.drawStringWithShadow(scoreDisplay, maxX - this.mc.fontRenderer.getStringWidth(scoreDisplay), yPos, 0xFFFFFF);
                         }
                     }
 

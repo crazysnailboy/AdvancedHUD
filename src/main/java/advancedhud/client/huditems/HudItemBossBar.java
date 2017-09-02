@@ -72,7 +72,7 @@ public class HudItemBossBar extends HudItem {
         RenderAssist.drawTexturedModalRect(x, y, 0, 79, 182, 5);
 
         String s = I18n.format("advancedhud.configuration.title");
-        this.mc.fontRendererObj.drawStringWithShadow(s, this.posX + 91 - this.mc.fontRendererObj.getStringWidth(s) / 2, y - 10, 0xFFFFFF);
+        this.mc.fontRenderer.drawStringWithShadow(s, this.posX + 91 - this.mc.fontRenderer.getStringWidth(s) / 2, y - 10, 0xFFFFFF);
     }
 
     @Override
@@ -105,13 +105,13 @@ public class HudItemBossBar extends HudItem {
                 }
 
                 String s = bossInfo.getName().getFormattedText();
-                this.mc.fontRendererObj.drawStringWithShadow(s, this.posX + (91 - this.mc.fontRendererObj.getStringWidth(s) / 2), y - 9, 0xFFFFFF);
+                this.mc.fontRenderer.drawStringWithShadow(s, this.posX + (91 - this.mc.fontRenderer.getStringWidth(s) / 2), y - 9, 0xFFFFFF);
 
                 if (y >= scaledresolution.getScaledHeight() / 3) {
                     break;
                 }
 
-                y += 10 + this.mc.fontRendererObj.FONT_HEIGHT;
+                y += 10 + this.mc.fontRenderer.FONT_HEIGHT;
             }
         }
     }
