@@ -77,7 +77,7 @@ public class HUDRegistry {
     public static boolean checkForResize() {
         Minecraft mc = Minecraft.getMinecraft();
 
-        ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+        ScaledResolution scaledresolution = new ScaledResolution(mc);
         if (scaledresolution.getScaledWidth() != screenWidth || scaledresolution.getScaledHeight() != screenHeight) {
             if (screenWidth != 0) {
                 fixHudItemOffsets(scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), screenWidth, screenHeight);

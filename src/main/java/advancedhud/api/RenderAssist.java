@@ -2,10 +2,10 @@ package advancedhud.api;
 
 import org.lwjgl.opengl.GL11;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -31,12 +31,12 @@ public class RenderAssist {
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4f(r, g, b, a);
-        worldRenderer.startDrawing(GL11.GL_LINE_LOOP); // tessellator.startDrawing(GL11.GL_LINE_LOOP);
+        worldRenderer.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION); // tessellator.startDrawing(GL11.GL_LINE_LOOP);
         for (int i = 0; i < num_segments; i++) {
             double theta = 2.0f * Math.PI * i / num_segments; // get the current angle
             double x = radius * Math.cos(theta); // calculate the x component
             double y = radius * Math.sin(theta); // calculate the y component
-            worldRenderer.addVertex(x + posX, y + posY, 0.0D); // tessellator.addVertex(x + posX, y + posY, 0.0D); // output vertex
+            worldRenderer.pos(x + posX, y + posY, 0.0D).endVertex(); // tessellator.addVertex(x + posX, y + posY, 0.0D); // output vertex
         }
         tessellator.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -100,11 +100,11 @@ public class RenderAssist {
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glColor4f(r, g, b, a);
-        worldRenderer.startDrawing(GL11.GL_LINE_LOOP); // tessellator.startDrawing(GL11.GL_LINE_LOOP);
-        worldRenderer.addVertex(x1, y2, 0.0D); // tessellator.addVertex(x1, y2, 0.0D);
-        worldRenderer.addVertex(x2, y2, 0.0D); // tessellator.addVertex(x2, y2, 0.0D);
-        worldRenderer.addVertex(x2, y1, 0.0D); // tessellator.addVertex(x2, y1, 0.0D);
-        worldRenderer.addVertex(x1, y1, 0.0D); // tessellator.addVertex(x1, y1, 0.0D);
+        worldRenderer.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION); // tessellator.startDrawing(GL11.GL_LINE_LOOP);
+        worldRenderer.pos(x1, y2, 0.0D).endVertex(); // tessellator.addVertex(x1, y2, 0.0D);
+        worldRenderer.pos(x2, y2, 0.0D).endVertex(); // tessellator.addVertex(x2, y2, 0.0D);
+        worldRenderer.pos(x2, y1, 0.0D).endVertex(); // tessellator.addVertex(x2, y1, 0.0D);
+        worldRenderer.pos(x1, y1, 0.0D).endVertex(); // tessellator.addVertex(x1, y1, 0.0D);
         tessellator.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);
@@ -143,35 +143,35 @@ public class RenderAssist {
         float f = 0.00390625F;
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldRenderer = tessellator.getWorldRenderer();
-        worldRenderer.startDrawingQuads(); // tessellator.startDrawingQuads();
-        worldRenderer.addVertexWithUV(x + 0, y + height, RenderAssist.zLevel, (u + 0) * f, (v + height) * f); // tessellator.addVertexWithUV(x + 0, y + height, RenderAssist.zLevel, (u + 0) * f, (v + height) * f);
-        worldRenderer.addVertexWithUV(x + width, y + height, RenderAssist.zLevel, (u + width) * f, (v + height) * f); // tessellator.addVertexWithUV(x + width, y + height, RenderAssist.zLevel, (u + width) * f, (v + height) * f);
-        worldRenderer.addVertexWithUV(x + width, y + 0, RenderAssist.zLevel, (u + width) * f, (v + 0) * f); // tessellator.addVertexWithUV(x + width, y + 0, RenderAssist.zLevel, (u + width) * f, (v + 0) * f);
-        worldRenderer.addVertexWithUV(x + 0, y + 0, RenderAssist.zLevel, (u + 0) * f, (v + 0) * f); // tessellator.addVertexWithUV(x + 0, y + 0, RenderAssist.zLevel, (u + 0) * f, (v + 0) * f);
+        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX); // tessellator.startDrawingQuads();
+        worldRenderer.pos(x + 0, y + height, RenderAssist.zLevel).tex((u + 0) * f, (v + height) * f).endVertex(); // tessellator.addVertexWithUV(x + 0, y + height, RenderAssist.zLevel, (u + 0) * f, (v + height) * f);
+        worldRenderer.pos(x + width, y + height, RenderAssist.zLevel).tex((u + width) * f, (v + height) * f).endVertex(); // tessellator.addVertexWithUV(x + width, y + height, RenderAssist.zLevel, (u + width) * f, (v + height) * f);
+        worldRenderer.pos(x + width, y + 0, RenderAssist.zLevel).tex((u + width) * f, (v + 0) * f).endVertex(); // tessellator.addVertexWithUV(x + width, y + 0, RenderAssist.zLevel, (u + width) * f, (v + 0) * f);
+        worldRenderer.pos(x + 0, y + 0, RenderAssist.zLevel).tex((u + 0) * f, (v + 0) * f).endVertex(); // tessellator.addVertexWithUV(x + 0, y + 0, RenderAssist.zLevel, (u + 0) * f, (v + 0) * f);
         tessellator.draw();
     }
 
     /**
      * Draws a solid color rectangle with the specified coordinates and color.
-     * @param left
-     * @param top
-     * @param right
-     * @param bottom
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
      * @param color
      */
-    public static void drawRect(float left, float top, float right, float bottom, int color) {
+    public static void drawRect(float x1, float y1, float x2, float y2, int color) {
         float j1;
 
-        if (left < right) {
-            j1 = left;
-            left = right;
-            right = j1;
+        if (x1 < x2) {
+            j1 = x1;
+            x1 = x2;
+            x2 = j1;
         }
 
-        if (top < bottom) {
-            j1 = top;
-            top = bottom;
-            bottom = j1;
+        if (y1 < y2) {
+            j1 = y1;
+            y1 = y2;
+            y2 = j1;
         }
 
         float a = (color >> 24 & 255) / 255.0F;
@@ -180,18 +180,18 @@ public class RenderAssist {
         float b = (color & 255) / 255.0F;
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldRenderer = tessellator.getWorldRenderer();
-        GlStateManager.enableBlend(); // GL11.glEnable(GL11.GL_BLEND);
-        GlStateManager.disableTexture2D(); // GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0); // GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GlStateManager.color(r, g, b, a); // GL11.glColor4f(r, g, b, a);
-        worldRenderer.startDrawingQuads(); // tessellator.startDrawingQuads();
-        worldRenderer.addVertex(left, bottom, 0.0D); // tessellator.addVertex(x1, y2, 0.0D);
-        worldRenderer.addVertex(right, bottom, 0.0D); // tessellator.addVertex(x2, y2, 0.0D);
-        worldRenderer.addVertex(right, top, 0.0D); // tessellator.addVertex(x2, y1, 0.0D);
-        worldRenderer.addVertex(left, top, 0.0D); // tessellator.addVertex(x1, y1, 0.0D);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glColor4f(r, g, b, a);
+        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION); // tessellator.startDrawingQuads();
+        worldRenderer.pos(x1, y2, 0.0D).endVertex(); // tessellator.addVertex(x1, y2, 0.0D);
+        worldRenderer.pos(x2, y2, 0.0D).endVertex(); // tessellator.addVertex(x2, y2, 0.0D);
+        worldRenderer.pos(x2, y1, 0.0D).endVertex(); // tessellator.addVertex(x2, y1, 0.0D);
+        worldRenderer.pos(x1, y1, 0.0D).endVertex(); // tessellator.addVertex(x1, y1, 0.0D);
         tessellator.draw();
-        GlStateManager.enableTexture2D(); // GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GlStateManager.disableBlend(); // GL11.glDisable(GL11.GL_BLEND);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_BLEND);
     }
 
     /**

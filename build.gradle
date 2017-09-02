@@ -7,7 +7,7 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath 'net.minecraftforge.gradle:ForgeGradle:2.0-SNAPSHOT'
+		classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
 	}
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -15,12 +15,12 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "0.1.9"
 group = "com.maxpowa.advancedhud"
-archivesBaseName = "AdvancedHUD-1.8"
+archivesBaseName = "AdvancedHUD-1.8.9"
 
 minecraft {
-	version = "1.8-11.14.4.1577"
+	version = "1.8.9-11.15.1.1902-1.8.9"
 	runDir = "run"
-	mappings = "stable_18"
+	mappings = "stable_22"
 	makeObfSourceJar = false
 
 	replace "\${version}", project.version

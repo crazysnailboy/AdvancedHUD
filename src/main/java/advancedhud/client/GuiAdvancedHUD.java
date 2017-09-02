@@ -47,7 +47,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         GuiAdvancedHUD.partialTicks = partialTicks;
         HUDRegistry.checkForResize();
 
-        this.res = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);
+        this.res = new ScaledResolution(this.mc);
 
         this.mc.entityRenderer.setupOverlayRendering();
         GlStateManager.enableBlend(); // GL11.glEnable(GL11.GL_BLEND);
