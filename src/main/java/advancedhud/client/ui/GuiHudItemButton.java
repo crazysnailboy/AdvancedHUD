@@ -20,7 +20,7 @@ public class GuiHudItemButton extends GuiButton {
     }
 
     @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
         if (this.visible) {
             GlStateManager.pushMatrix(); // GL11.glPushMatrix();
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F); // GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

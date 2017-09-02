@@ -4,7 +4,7 @@ buildscript {
 		maven { url = "http://files.minecraftforge.net/maven" }
 	}
 	dependencies {
-		classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+		classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
 	}
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -12,17 +12,17 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "0.1.9"
 group = "com.maxpowa.advancedhud"
-archivesBaseName = "AdvancedHUD-1.11"
+archivesBaseName = "AdvancedHUD-1.12"
 
-sourceCompatibility = targetCompatibility = "1.6"
+sourceCompatibility = targetCompatibility = '1.8'
 compileJava {
-	sourceCompatibility = targetCompatibility = "1.6"
+	sourceCompatibility = targetCompatibility = '1.8'
 }
 
 minecraft {
-	version = "1.11-13.19.1.2189"
+	version = "1.12-14.21.1.2387"
 	runDir = "run"
-	mappings = "stable_32"
+	mappings = "snapshot_20170624"
 	makeObfSourceJar = false
 
 	replace "\${version}", project.version

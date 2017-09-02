@@ -27,7 +27,7 @@ public class GuiButtonIconGrid extends GuiButton {
     }
 
     @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
         RenderAssist.drawRect(this.x - 0.5F, this.y - 0.5F, this.x + 256.5F, this.y + 64.5F, 0x80000000);
         RenderAssist.drawUnfilledRect(this.x - 0.5F, this.y - 0.5F, this.x + 256.5F, this.y + 64.5F, 0xFFFFFFFF);
         GL11.glPushMatrix();

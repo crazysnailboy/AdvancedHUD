@@ -7,6 +7,7 @@ import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
 import advancedhud.api.RenderAssist;
 import advancedhud.client.ui.GuiScreenHudItem;
+import net.minecraft.client.gui.BossInfoClient;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
@@ -14,7 +15,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.BossInfo;
-import net.minecraft.world.BossInfoLerping;
 import net.minecraftforge.client.GuiIngameForge;
 
 public class HudItemBossBar extends HudItem {
@@ -78,11 +78,11 @@ public class HudItemBossBar extends HudItem {
     @Override
     public void render(float partialTicks, Gui gui) {
 
-        Map<UUID, BossInfoLerping> bossInfos = ((GuiIngameForge)gui).getBossOverlay().mapBossInfos; // this is normally private, i used an access transformer to make it public
+        Map<UUID, BossInfoClient> bossInfos = ((GuiIngameForge)gui).getBossOverlay().mapBossInfos; // this is normally private, i used an access transformer to make it public
 
         if (!bossInfos.isEmpty()) {
             ScaledResolution scaledresolution = new ScaledResolution(this.mc);
-            for (BossInfoLerping bossInfo : bossInfos.values()) {
+            for (BossInfoClient bossInfo : bossInfos.values()) {
 
                 int x = this.posX;
                 int y = this.posY + 11;

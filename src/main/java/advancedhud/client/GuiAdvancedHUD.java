@@ -53,7 +53,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         GlStateManager.enableBlend(); // GL11.glEnable(GL11.GL_BLEND);
 
         if (Minecraft.isFancyGraphicsEnabled()) {
-            renderVignette(mc.player.getBrightness(partialTicks), res);
+            renderVignette(mc.player.getBrightness(), res);
         } else {
             GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
         }
