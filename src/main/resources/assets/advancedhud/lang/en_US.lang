@@ -10,7 +10,7 @@ advancedhud.item.hotbar.name=HOTBAR
 advancedhud.item.jumpbar.name=JUMPBAR
 advancedhud.item.record.name=RECORDDISPLAY
 advancedhud.item.scoreboard.name=SCOREBOARD
-advancedhud.item.tooltip.name=TOOLTIP
+advancedhud.item.itemtooltip.name=TOOLTIP
 
 advancedhud.configuration.title=AdvancedHUD Config
 advancedhud.configuration.help.1=LEFT CLICK to reposition, RIGHT CLICK to change settings
