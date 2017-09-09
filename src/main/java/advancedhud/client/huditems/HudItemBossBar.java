@@ -1,7 +1,9 @@
 package advancedhud.client.huditems;
 
+import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.UUID;
+import advancedhud.ReflectionHelper;
 import advancedhud.api.Alignment;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
@@ -9,6 +11,7 @@ import advancedhud.api.RenderAssist;
 import advancedhud.client.ui.GuiScreenHudItem;
 import net.minecraft.client.gui.BossInfoClient;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiBossOverlay;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -20,6 +23,7 @@ import net.minecraftforge.client.GuiIngameForge;
 public class HudItemBossBar extends HudItem {
 
     private static final ResourceLocation GUI_BARS_TEXTURES = new ResourceLocation("textures/gui/bars.png");
+    private static final Field mapBossInfosField = ReflectionHelper.getDeclaredField(GuiBossOverlay.class, "mapBossInfos", "field_184060_g");
 
     @Override
     public String getName() {
@@ -78,7 +82,7 @@ public class HudItemBossBar extends HudItem {
     @Override
     public void render(float partialTicks, Gui gui) {
 
-        Map<UUID, BossInfoClient> bossInfos = ((GuiIngameForge)gui).getBossOverlay().mapBossInfos; // this is normally private, i used an access transformer to make it public
+        Map<UUID, BossInfoClient> bossInfos = ReflectionHelper.getFieldValue(mapBossInfosField, ((GuiIngameForge)gui).getBossOverlay());
 
         if (!bossInfos.isEmpty()) {
             ScaledResolution scaledresolution = new ScaledResolution(this.mc);
