@@ -10,7 +10,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 
-version = "0.1.9"
+version = "0.1.10"
 group = "com.maxpowa.advancedhud"
 archivesBaseName = "AdvancedHUD-1.10.2"
 
@@ -41,11 +41,5 @@ processResources {
 	}
 	from(sourceSets.main.resources.srcDirs) {
 		exclude 'mcmod.info'
-	}
-}
-
-jar {
-	manifest {
-		attributes 'FMLAT': 'advancedhud_at.cfg'
 	}
 }
