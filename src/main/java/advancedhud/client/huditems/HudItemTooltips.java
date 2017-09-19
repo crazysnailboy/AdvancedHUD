@@ -1,15 +1,11 @@
 package advancedhud.client.huditems;
 
-import org.lwjgl.opengl.GL11;
 import advancedhud.api.Alignment;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
-import advancedhud.client.ui.GuiAdvancedHUDConfiguration;
-import advancedhud.client.ui.GuiScreenHudItem;
-import advancedhud.client.ui.GuiScreenReposition;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.renderer.GlStateManager.DestFactor;
+import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 
@@ -24,8 +20,8 @@ public class HudItemTooltips extends HudItem {
     }
 
     @Override
-    public String getButtonLabel() {
-        return I18n.format("advancedhud.item.itemtooltip.name");
+    public int getDefaultID() {
+        return 10;
     }
 
     @Override
@@ -54,20 +50,13 @@ public class HudItemTooltips extends HudItem {
     }
 
     @Override
-    public int getDefaultID() {
-        return 10;
-    }
-
-    @Override
     public void render(float partialTicks) {
-
-        mc.mcProfiler.startSection("toolHighlight");
 
         boolean renderTooltip = false;
         String tooltipText = null;
         int opacity = 255;
 
-        if (this.mc.currentScreen instanceof GuiAdvancedHUDConfiguration || this.mc.currentScreen instanceof GuiScreenReposition) {
+        if (configMode()) {
             renderTooltip = true;
             tooltipText = this.getButtonLabel();
         } else if (this.mc.gameSettings.heldItemTooltips) {
@@ -93,15 +82,13 @@ public class HudItemTooltips extends HudItem {
 
             GlStateManager.pushMatrix();
             GlStateManager.enableBlend();
-            GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+            GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
 
             this.mc.fontRendererObj.drawStringWithShadow(tooltipText, posX, this.posY, 0xFFFFFF | (opacity << 24));
 
             GlStateManager.disableBlend();
             GlStateManager.popMatrix();
         }
-
-        mc.mcProfiler.endSection();
     }
 
     @Override
@@ -129,11 +116,6 @@ public class HudItemTooltips extends HudItem {
     @Override
     public boolean shouldDrawOnMount() {
         return true;
-    }
-
-    @Override
-    public GuiScreen getConfigScreen() {
-        return new GuiScreenHudItem(this.mc.currentScreen, this);
     }
 
     @Override

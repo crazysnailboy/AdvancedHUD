@@ -7,11 +7,8 @@ import advancedhud.ReflectionHelper;
 import advancedhud.api.Alignment;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
-import advancedhud.api.RenderAssist;
-import advancedhud.client.ui.GuiScreenHudItem;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiBossOverlay;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -31,8 +28,8 @@ public class HudItemBossBar extends HudItem {
     }
 
     @Override
-    public String getButtonLabel() {
-        return I18n.format("advancedhud.item.bossbar.name");
+    public int getDefaultID() {
+        return 6;
     }
 
     @Override
@@ -61,19 +58,14 @@ public class HudItemBossBar extends HudItem {
     }
 
     @Override
-    public int getDefaultID() {
-        return 6;
-    }
-
-    @Override
     public void render(float partialTicks) {
         this.mc.renderEngine.bindTexture(Gui.ICONS);
 
         int x = this.posX;
         int y = this.posY + 11;
-        RenderAssist.drawTexturedModalRect(x, y, 0, 74, 182, 5);
-        RenderAssist.drawTexturedModalRect(x, y, 0, 74, 182, 5);
-        RenderAssist.drawTexturedModalRect(x, y, 0, 79, 182, 5);
+        this.drawTexturedModalRect(x, y, 0, 74, 182, 5);
+        this.drawTexturedModalRect(x, y, 0, 74, 182, 5);
+        this.drawTexturedModalRect(x, y, 0, 79, 182, 5);
 
         String s = I18n.format("advancedhud.configuration.title");
         this.mc.fontRendererObj.drawStringWithShadow(s, this.posX + 91 - this.mc.fontRendererObj.getStringWidth(s) / 2, y - 10, 0xFFFFFF);
@@ -94,17 +86,17 @@ public class HudItemBossBar extends HudItem {
                 GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                 this.mc.renderEngine.bindTexture(GUI_BARS_TEXTURES);
 
-                RenderAssist.drawTexturedModalRect(x, y, 0, bossInfo.getColor().ordinal() * 5 * 2, 182, 5);
+                this.drawTexturedModalRect(x, y, 0, bossInfo.getColor().ordinal() * 5 * 2, 182, 5);
 
                 if (bossInfo.getOverlay() != BossInfo.Overlay.PROGRESS) {
-                    RenderAssist.drawTexturedModalRect(x, y, 0, 80 + (bossInfo.getOverlay().ordinal() - 1) * 5 * 2, 182, 5);
+                    this.drawTexturedModalRect(x, y, 0, 80 + (bossInfo.getOverlay().ordinal() - 1) * 5 * 2, 182, 5);
                 }
 
                 int i = (int)(bossInfo.getPercent() * 182.0F);
                 if (i > 0) {
-                    RenderAssist.drawTexturedModalRect(x, y, 0, bossInfo.getColor().ordinal() * 5 * 2 + 5, i, 5);
+                    this.drawTexturedModalRect(x, y, 0, bossInfo.getColor().ordinal() * 5 * 2 + 5, i, 5);
                     if (bossInfo.getOverlay() != BossInfo.Overlay.PROGRESS) {
-                        RenderAssist.drawTexturedModalRect(x, y, 0, 80 + (bossInfo.getOverlay().ordinal() - 1) * 5 * 2 + 5, i, 5);
+                        this.drawTexturedModalRect(x, y, 0, 80 + (bossInfo.getOverlay().ordinal() - 1) * 5 * 2 + 5, i, 5);
                     }
                 }
 
@@ -118,11 +110,6 @@ public class HudItemBossBar extends HudItem {
                 y += 10 + this.mc.fontRendererObj.FONT_HEIGHT;
             }
         }
-    }
-
-    @Override
-    public GuiScreen getConfigScreen() {
-        return new GuiScreenHudItem(this.mc.currentScreen, this);
     }
 
     @Override
