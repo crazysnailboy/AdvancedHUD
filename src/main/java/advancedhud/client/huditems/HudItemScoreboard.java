@@ -5,10 +5,7 @@ import java.util.Iterator;
 import advancedhud.api.Alignment;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
-import advancedhud.api.RenderAssist;
-import advancedhud.client.ui.GuiScreenHudItem;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
+import advancedhud.client.GuiAdvancedHUD;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
@@ -23,8 +20,8 @@ public class HudItemScoreboard extends HudItem {
     }
 
     @Override
-    public String getButtonLabel() {
-        return I18n.format("advancedhud.item.scoreboard.name");
+    public int getDefaultID() {
+        return 11;
     }
 
     @Override
@@ -40,7 +37,7 @@ public class HudItemScoreboard extends HudItem {
     @SuppressWarnings("rawtypes")
     @Override
     public int getDefaultPosY() {
-        ScoreObjective objective = this.mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
+        ScoreObjective objective = this.getScoreboardObjective();
         if (objective != null) {
             Scoreboard scoreboard = objective.getScoreboard();
             Collection collection = scoreboard.getSortedScores(objective);
@@ -63,19 +60,8 @@ public class HudItemScoreboard extends HudItem {
     }
 
     @Override
-    public int getDefaultID() {
-        return 11;
-    }
-
-    @Override
-    public GuiScreen getConfigScreen() {
-        return new GuiScreenHudItem(this.mc.currentScreen, this);
-    }
-
-    @SuppressWarnings("rawtypes")
-    @Override
     public void render(float partialTicks) {
-        ScoreObjective objective = this.mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
+        ScoreObjective objective = this.getScoreboardObjective();
         if (objective != null) {
             Scoreboard scoreboard = objective.getScoreboard();
             Collection collection = scoreboard.getSortedScores(objective);
@@ -105,18 +91,28 @@ public class HudItemScoreboard extends HudItem {
                     int l1 = i1 - k1 * this.mc.fontRendererObj.FONT_HEIGHT;
                     int i2 = HUDRegistry.screenWidth - b0 + 2;
                     this.posX = j1;
-                    RenderAssist.drawRect(j1 - 2, l1, i2, l1 + this.mc.fontRendererObj.FONT_HEIGHT, 0x50000000);
+                    this.drawRect(j1 - 2, l1, i2, l1 + this.mc.fontRendererObj.FONT_HEIGHT, 0x50000000);
                     this.mc.fontRendererObj.drawString(s1, j1, l1, 0x20FFFFFF);
                     this.mc.fontRendererObj.drawString(s2, i2 - this.mc.fontRendererObj.getStringWidth(s2), l1, 0x20FFFFFF);
 
                     if (k1 == collection.size()) {
                         String s3 = objective.getDisplayName();
-                        RenderAssist.drawRect(j1 - 2, l1 - this.mc.fontRendererObj.FONT_HEIGHT - 1, i2, l1 - 1, 0x60000000);
-                        RenderAssist.drawRect(j1 - 2, l1 - 1, i2, l1, 0x50000000);
+                        this.drawRect(j1 - 2, l1 - this.mc.fontRendererObj.FONT_HEIGHT - 1, i2, l1 - 1, 0x60000000);
+                        this.drawRect(j1 - 2, l1 - 1, i2, l1, 0x50000000);
                         this.mc.fontRendererObj.drawString(s3, j1 + k / 2 - this.mc.fontRendererObj.getStringWidth(s3) / 2, l1 - this.mc.fontRendererObj.FONT_HEIGHT, 0x20FFFFFF);
                     }
                 }
             }
+        }
+    }
+
+    private ScoreObjective getScoreboardObjective() {
+        if (this.mc.ingameGUI instanceof GuiAdvancedHUD) {
+            GuiAdvancedHUD ingameGUI = (GuiAdvancedHUD)this.mc.ingameGUI;
+            ScoreObjective objective = ingameGUI.getScoreboardObjective();
+            return objective;
+        } else {
+            return null;
         }
     }
 

@@ -5,19 +5,14 @@ import advancedhud.AdvancedHUD;
 import advancedhud.api.Alignment;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
-import advancedhud.api.RenderAssist;
-import advancedhud.client.ui.GuiScreenHudItem;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
 public class HudItemCrosshairs extends HudItem {
 
     private static final ResourceLocation CROSSHAIR_ICONS = new ResourceLocation(AdvancedHUD.MODID, "textures/gui/crosshairs.png");
-
     private int selectedIconX = -1;
     private int selectedIconY = -1;
 
@@ -27,8 +22,8 @@ public class HudItemCrosshairs extends HudItem {
     }
 
     @Override
-    public String getButtonLabel() {
-        return I18n.format("advancedhud.item.crosshair.name");
+    public int getDefaultID() {
+        return 11;
     }
 
     @Override
@@ -57,20 +52,15 @@ public class HudItemCrosshairs extends HudItem {
     }
 
     @Override
-    public int getDefaultID() {
-        return 11;
-    }
-
-    @Override
     public void render(float partialTicks) {
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         OpenGlHelper.glBlendFunc(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR, 1, 0);
         if (this.selectedIconX >= 0 && this.selectedIconY >= 0) {
             this.mc.renderEngine.bindTexture(CROSSHAIR_ICONS);
-            RenderAssist.drawTexturedModalRect(this.posX, this.posY, this.selectedIconX, this.selectedIconY, 16, 16);
+            this.drawTexturedModalRect(this.posX, this.posY, this.selectedIconX, this.selectedIconY, 16, 16);
         } else {
             this.mc.renderEngine.bindTexture(Gui.icons);
-            RenderAssist.drawTexturedModalRect(this.posX, this.posY, 0, 0, 16, 16);
+            this.drawTexturedModalRect(this.posX, this.posY, 0, 0, 16, 16);
         }
         OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
     }
@@ -94,16 +84,8 @@ public class HudItemCrosshairs extends HudItem {
     @Override
     public void loadFromNBT(NBTTagCompound compound) {
         super.loadFromNBT(compound);
-        if (compound.hasKey("selectedIconX")) {
-            this.selectedIconX = compound.getInteger("selectedIconX");
-        } else {
-            this.selectedIconX = -1;
-        }
-        if (compound.hasKey("selectedIconY")) {
-            this.selectedIconY = compound.getInteger("selectedIconY");
-        } else {
-            this.selectedIconX = -1;
-        }
+        this.selectedIconX = (compound.hasKey("selectedIconX") ? compound.getInteger("selectedIconX") : -1);
+        this.selectedIconY = (compound.hasKey("selectedIconY") ? compound.getInteger("selectedIconY") : -1);
     }
 
     @Override
@@ -119,17 +101,13 @@ public class HudItemCrosshairs extends HudItem {
     }
 
     @Override
+    public boolean canRotate() {
+        return false;
+    }
+
+    @Override
     public boolean shouldDrawOnMount() {
         return true;
     }
 
-    @Override
-    public GuiScreen getConfigScreen() {
-        return new GuiScreenHudItem(this.mc.currentScreen, this);
-    }
-
-    @Override
-    public boolean canRotate() {
-        return false;
-    }
 }

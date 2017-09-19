@@ -1,11 +1,11 @@
-AdvancedHUD
-===========
+# Advanced HUD
 
-A continuation of AdvancedHUD by TurboSlow.
+### A mod for Minecraft 1.7.10
 
-Since TurboSlow has given up development on AdvancedHUD, I figured "well shit, I do HUD mods too, so why not pick that up?" So I am in the process of picking it up. I have most elements working as they were in previous versions and I am hoping to use some of the features in this to finally get movable HUD elements into TukMC.
+A mod that allows you to customize the placement of the HUD elements on your screen.
 
-In case anyone is wondering where TurboSlow had announced it:
-http://www.minecraftforum.net/topic/690142-147-advanced-hud-481/
-and if that link is down, here's a screenshot:
-http://goo.gl/w27fw
+A continuation of an original mod by [TurboSlow](http://www.minecraftforum.net/members/TurboSlow), subsequently maintained by [maxpowa](http://www.minecraftforum.net/members/maxpowa).
+
+**Minecraft Forum:**<br />
+TurboSlow's version: http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1277550<br />
+maxpowa's version: http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/wip-mods/1444314
