@@ -1,9 +1,11 @@
 package advancedhud.api;
 
-import aurelienribon.tweenengine.TweenAccessor;
-import aurelienribon.tweenengine.TweenManager;
+import advancedhud.client.ui.GuiAdvancedHUDConfiguration;
+import advancedhud.client.ui.GuiScreenHudItem;
+import advancedhud.client.ui.GuiScreenReposition;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
@@ -16,18 +18,14 @@ public abstract class HudItem {
     public int posX;
     public int posY;
     private int id;
-    private float opacity = 1.0f;
     public boolean rotated = false;
-    protected TweenManager manager = null;
-    protected Minecraft mc;
+    protected static final Minecraft mc = Minecraft.getMinecraft();
 
     public HudItem() {
         this.alignment = this.getDefaultAlignment();
         this.posX = this.getDefaultPosX();
         this.posY = this.getDefaultPosY();
         this.id = this.getDefaultID();
-        this.manager = new TweenManager();
-        this.mc = Minecraft.getMinecraft();
     }
 
     /**
@@ -40,7 +38,14 @@ public abstract class HudItem {
      * Display name for the HudItem in config screen
      * @return String value for display name of the {@link HudItem}
      */
-    public abstract String getButtonLabel();
+    public String getButtonLabel() {
+        return I18n.format(String.format("advancedhud.item.%s.name", this.getName()));
+    }
+
+    /**
+     * Button ID for configuration screen, 0-25 are reserved for Vanilla use.
+     */
+    public abstract int getDefaultID();
 
     /**
      * Default {@link Alignment} of the HudItem instance.<br>For resolution-based movement, alignment values allow shifting along the alignment axis.
@@ -57,14 +62,11 @@ public abstract class HudItem {
     public abstract int getHeight();
 
     /**
-     * Button ID for configuration screen, 0-25 are reserved for Vanilla use.
-     */
-    public abstract int getDefaultID();
-
-    /**
      * Define custom GuiScreen instances for your own configuration screen.
      */
-    public abstract GuiScreen getConfigScreen();
+    public GuiScreen getConfigScreen() {
+        return new GuiScreenHudItem(this.mc.currentScreen, this);
+    }
 
     public abstract void render(float partialTicks);
 
@@ -79,17 +81,6 @@ public abstract class HudItem {
      * Called upon .updateTick(). If you use this, make sure you set {@link HudItem#needsTick()} to true.
      */
     public void tick() {
-    }
-
-    /**
-     * @param delta Delta time (in seconds) since this method was last called
-     */
-    public void update(float delta) {
-        this.manager.update(delta); // Tween manager expects delta to be in seconds.
-    }
-
-    public boolean needsTween() {
-        return false;
     }
 
     /**
@@ -147,14 +138,16 @@ public abstract class HudItem {
         return true;
     }
 
-    public void setOpacity(float opacity) {
-        this.opacity = opacity;
+    public boolean configMode() {
+        return (mc.currentScreen instanceof GuiAdvancedHUDConfiguration || mc.currentScreen instanceof GuiScreenReposition || mc.currentScreen instanceof GuiScreenHudItem);
     }
 
-    public float getOpacity() {
-        return this.opacity;
+    public void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height) {
+        RenderAssist.drawTexturedModalRect(x, y, textureX, textureY, width, height);
     }
 
-    public interface TweenEngine<T extends HudItem> extends TweenAccessor<T> {
+    public void drawRect(int left, int top, int right, int bottom, int color) {
+        RenderAssist.drawRect(left, top, right, bottom, color);
     }
+
 }
