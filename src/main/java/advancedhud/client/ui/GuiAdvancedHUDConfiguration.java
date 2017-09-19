@@ -26,11 +26,10 @@ public class GuiAdvancedHUDConfiguration extends GuiScreen {
     private void addButtons() {
         this.buttonList.clear();
         this.buttonList.add(new GuiButton(-1, HUDRegistry.screenWidth - 30, 10, 20, 20, "X"));
+
         for (HudItem huditem : HUDRegistry.getHudItemList()) {
-            if (asMount && huditem.shouldDrawOnMount()) {
-                this.buttonList.add(new GuiHudItemButton(huditem.getDefaultID(), huditem.posX, huditem.posY, huditem.getWidth(), huditem.getHeight(), huditem.getButtonLabel()));
-            } else if (!asMount && huditem.shouldDrawAsPlayer()) {
-                this.buttonList.add(new GuiHudItemButton(huditem.getDefaultID(), huditem.posX, huditem.posY, huditem.getWidth(), huditem.getHeight(), huditem.getButtonLabel()));
+            if (asMount ? huditem.shouldDrawOnMount() : huditem.shouldDrawAsPlayer()) {
+                this.buttonList.add(new GuiHudItemButton(huditem));
             }
         }
     }

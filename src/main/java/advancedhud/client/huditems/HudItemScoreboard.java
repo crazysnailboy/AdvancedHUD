@@ -1,14 +1,15 @@
 package advancedhud.client.huditems;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import advancedhud.api.Alignment;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
-import advancedhud.api.RenderAssist;
-import advancedhud.client.ui.GuiScreenHudItem;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
+import advancedhud.client.GuiAdvancedHUD;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
@@ -23,8 +24,8 @@ public class HudItemScoreboard extends HudItem {
     }
 
     @Override
-    public String getButtonLabel() {
-        return I18n.format("advancedhud.item.scoreboard.name");
+    public int getDefaultID() {
+        return 11;
     }
 
     @Override
@@ -37,10 +38,9 @@ public class HudItemScoreboard extends HudItem {
         return HUDRegistry.screenWidth - 40;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public int getDefaultPosY() {
-        ScoreObjective objective = this.mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
+        ScoreObjective objective = this.getScoreboardObjective();
         if (objective != null) {
             Scoreboard scoreboard = objective.getScoreboard();
             Collection collection = scoreboard.getSortedScores(objective);
@@ -63,60 +63,79 @@ public class HudItemScoreboard extends HudItem {
     }
 
     @Override
-    public int getDefaultID() {
-        return 11;
-    }
-
-    @Override
-    public GuiScreen getConfigScreen() {
-        return new GuiScreenHudItem(this.mc.currentScreen, this);
-    }
-
-    @SuppressWarnings("rawtypes")
-    @Override
     public void render(float partialTicks) {
-        ScoreObjective objective = this.mc.theWorld.getScoreboard().getObjectiveInDisplaySlot(1);
+        ScoreObjective objective = this.getScoreboardObjective();
         if (objective != null) {
             Scoreboard scoreboard = objective.getScoreboard();
             Collection collection = scoreboard.getSortedScores(objective);
 
-            if (collection.size() <= 15) {
-                int k = this.mc.fontRendererObj.getStringWidth(objective.getDisplayName());
-                String s;
-
-                for (Iterator iterator = collection.iterator(); iterator.hasNext(); k = Math.max(k, this.mc.fontRendererObj.getStringWidth(s))) {
-                    Score score = (Score)iterator.next();
-                    ScorePlayerTeam scoreplayerteam = scoreboard.getPlayersTeam(score.getPlayerName());
-                    s = ScorePlayerTeam.formatPlayerName(scoreplayerteam, score.getPlayerName()) + ": " + EnumChatFormatting.RED + score.getScorePoints();
+            ArrayList arraylist = Lists.newArrayList(Iterables.filter(collection, new Predicate() {
+                public boolean apply(Score score) {
+                    return score.getPlayerName() != null && !score.getPlayerName().startsWith("#");
                 }
 
-                int i1 = this.posY;
-                byte b0 = 3;
-                int j1 = HUDRegistry.screenWidth - k - b0;
-                int k1 = 0;
-                Iterator iterator1 = collection.iterator();
-
-                while (iterator1.hasNext()) {
-                    Score score1 = (Score)iterator1.next();
-                    ++k1;
-                    ScorePlayerTeam scoreplayerteam1 = scoreboard.getPlayersTeam(score1.getPlayerName());
-                    String s1 = ScorePlayerTeam.formatPlayerName(scoreplayerteam1, score1.getPlayerName());
-                    String s2 = EnumChatFormatting.RED + "" + score1.getScorePoints();
-                    int l1 = i1 - k1 * this.mc.fontRendererObj.FONT_HEIGHT;
-                    int i2 = HUDRegistry.screenWidth - b0 + 2;
-                    this.posX = j1;
-                    RenderAssist.drawRect(j1 - 2, l1, i2, l1 + this.mc.fontRendererObj.FONT_HEIGHT, 0x50000000);
-                    this.mc.fontRendererObj.drawString(s1, j1, l1, 0x20FFFFFF);
-                    this.mc.fontRendererObj.drawString(s2, i2 - this.mc.fontRendererObj.getStringWidth(s2), l1, 0x20FFFFFF);
-
-                    if (k1 == collection.size()) {
-                        String s3 = objective.getDisplayName();
-                        RenderAssist.drawRect(j1 - 2, l1 - this.mc.fontRendererObj.FONT_HEIGHT - 1, i2, l1 - 1, 0x60000000);
-                        RenderAssist.drawRect(j1 - 2, l1 - 1, i2, l1, 0x50000000);
-                        this.mc.fontRendererObj.drawString(s3, j1 + k / 2 - this.mc.fontRendererObj.getStringWidth(s3) / 2, l1 - this.mc.fontRendererObj.FONT_HEIGHT, 0x20FFFFFF);
-                    }
+                @Override
+                public boolean apply(Object apply) {
+                    return this.apply((Score)apply);
                 }
+            }));
+            ArrayList arraylist1;
+
+            if (arraylist.size() > 15) {
+                arraylist1 = Lists.newArrayList(Iterables.skip(arraylist, collection.size() - 15));
+            } else {
+                arraylist1 = arraylist;
             }
+
+            int i = this.mc.fontRendererObj.getStringWidth(objective.getDisplayName());
+            String s;
+
+            for (Iterator iterator = collection.iterator(); iterator.hasNext(); i = Math.max(i, this.mc.fontRendererObj.getStringWidth(s))) {
+                Score score = (Score)iterator.next();
+                ScorePlayerTeam scoreplayerteam = scoreboard.getPlayersTeam(score.getPlayerName());
+                s = ScorePlayerTeam.formatPlayerName(scoreplayerteam, score.getPlayerName()) + ": " + EnumChatFormatting.RED + score.getScorePoints();
+            }
+
+            int i1 = arraylist1.size() * this.mc.fontRendererObj.FONT_HEIGHT;
+            int j1 = this.posY;
+            byte b0 = 3;
+            int k1 = HUDRegistry.screenWidth - i - b0;
+            int j = 0;
+            Iterator iterator1 = arraylist1.iterator();
+
+            while (iterator1.hasNext()) {
+
+                Score score1 = (Score)iterator1.next();
+                ++j;
+                ScorePlayerTeam scoreplayerteam1 = scoreboard.getPlayersTeam(score1.getPlayerName());
+                String s1 = ScorePlayerTeam.formatPlayerName(scoreplayerteam1, score1.getPlayerName());
+                String s2 = EnumChatFormatting.RED + "" + score1.getScorePoints();
+                int k = j1 - j * this.mc.fontRendererObj.FONT_HEIGHT;
+                int l = HUDRegistry.screenWidth - b0 + 2;
+                this.posX = k1;
+
+                this.drawRect(k1 - 2, k, l, k + this.mc.fontRendererObj.FONT_HEIGHT, 0x50000000);
+                this.mc.fontRendererObj.drawString(s1, k1, k, 0x20FFFFFF);
+                this.mc.fontRendererObj.drawString(s2, l - this.mc.fontRendererObj.getStringWidth(s2), k, 0x20FFFFFF);
+
+                if (j == collection.size()) {
+                    String s3 = objective.getDisplayName();
+                    this.drawRect(k1 - 2, k - this.mc.fontRendererObj.FONT_HEIGHT - 1, l, k - 1, 0x60000000);
+                    this.drawRect(k1 - 2, k - 1, l, k, 0x50000000);
+                    this.mc.fontRendererObj.drawString(s3, k1 + k / 2 - this.mc.fontRendererObj.getStringWidth(s3) / 2, k - this.mc.fontRendererObj.FONT_HEIGHT, 0x20FFFFFF);
+                }
+
+            }
+        }
+    }
+
+    private ScoreObjective getScoreboardObjective() {
+        if (this.mc.ingameGUI instanceof GuiAdvancedHUD) {
+            GuiAdvancedHUD ingameGUI = (GuiAdvancedHUD)this.mc.ingameGUI;
+            ScoreObjective objective = ingameGUI.getScoreboardObjective();
+            return objective;
+        } else {
+            return null;
         }
     }
 
