@@ -1,7 +1,8 @@
 package advancedhud.api;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import net.minecraft.client.Minecraft;
@@ -14,9 +15,9 @@ import net.minecraft.nbt.NBTTagCompound;
  *
  */
 public class HUDRegistry {
-    protected static List<HudItem> hudItemList = new ArrayList<HudItem>();
-    protected static boolean initialLoadComplete = false;
-    protected static List<HudItem> hudItemListActive = new ArrayList<HudItem>();
+    private static Map<String,HudItem> hudItemList = new HashMap<String,HudItem>();
+    private static boolean initialLoadComplete = false;
+    private static Map<String,HudItem> hudItemListActive = new HashMap<String,HudItem>();
 
     private static Logger log = LogManager.getLogger("AdvancedHUD-API");
     public static int screenWidth;
@@ -27,21 +28,21 @@ public class HUDRegistry {
         if (hudItem.getDefaultID() <= 25 && initialLoadComplete) {
             log.info("Rejecting " + hudItem.getName() + " due to invalid ID.");
         }
-        if (!hudItemList.contains(hudItem)) {
-            hudItemList.add(hudItem);
+        if (!hudItemList.containsValue(hudItem)) {
+            hudItemList.put(hudItem.getName(), hudItem);
             if (hudItem.isEnabledByDefault()) {
                 enableHudItem(hudItem);
             }
         }
     }
 
-    public static List<HudItem> getHudItemList() {
-        return hudItemList;
+    public static Collection<HudItem> getHudItemList() {
+        return hudItemList.values();
     }
 
     public static void enableHudItem(HudItem hudItem) {
-        if (hudItemList.contains(hudItem) && !hudItemListActive.contains(hudItem)) {
-            hudItemListActive.add(hudItem);
+        if (hudItemList.containsValue(hudItem) && !hudItemListActive.containsValue(hudItem)) {
+            hudItemListActive.put(hudItem.getName(), hudItem);
         }
     }
 
@@ -49,8 +50,8 @@ public class HUDRegistry {
         hudItemListActive.remove(hudItem);
     }
 
-    public static List<HudItem> getActiveHudItemList() {
-        return hudItemListActive;
+    public static Collection<HudItem> getActiveHudItemList() {
+        return hudItemListActive.values();
     }
 
     public static boolean isActiveHudItem(HudItem hudItem) {
@@ -65,6 +66,10 @@ public class HUDRegistry {
         return null;
     }
 
+    public static HudItem getHudItemByName(String name) {
+        return hudItemList.get(name);
+    }
+
     public static void resetAllDefaults() {
         for (HudItem huditem : HUDRegistry.getHudItemList()) {
             //huditem.rotated = false;
@@ -76,8 +81,10 @@ public class HUDRegistry {
 
     public static boolean checkForResize() {
         Minecraft mc = Minecraft.getMinecraft();
+        return checkForResize(mc, new ScaledResolution(mc));
+    }
 
-        ScaledResolution scaledresolution = new ScaledResolution(mc);
+    public static boolean checkForResize(Minecraft mc, ScaledResolution scaledresolution) {
         if (scaledresolution.getScaledWidth() != screenWidth || scaledresolution.getScaledHeight() != screenHeight) {
             if (screenWidth != 0) {
                 fixHudItemOffsets(scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), screenWidth, screenHeight);
@@ -90,7 +97,7 @@ public class HUDRegistry {
     }
 
     private static void fixHudItemOffsets(int newScreenWidth, int newScreenHeight, int oldScreenWidth, int oldScreenHeight) {
-        for (HudItem hudItem : hudItemList) {
+        for (HudItem hudItem : hudItemList.values()) {
             if (Alignment.isHorizontalCenter(hudItem.alignment)) {
                 int offsetX = hudItem.posX - oldScreenWidth / 2;
                 hudItem.posX = newScreenWidth / 2 + offsetX;
@@ -113,8 +120,8 @@ public class HUDRegistry {
         screenWidth = compound.getInteger("screenWidth");
         screenHeight = compound.getInteger("screenHeight");
 
-        hudItemListActive = new ArrayList<HudItem>(hudItemList);
-        for (HudItem hudItem : hudItemList) {
+        hudItemListActive = new HashMap<String,HudItem>(hudItemList);
+        for (HudItem hudItem : hudItemList.values()) {
             if (!compound.hasKey(hudItem.getName())) {
                 disableHudItem(hudItem);
             }
@@ -125,11 +132,9 @@ public class HUDRegistry {
         compound.setInteger("screenWidth", screenWidth);
         compound.setInteger("screenHeight", screenHeight);
 
-        for (Object hudItem_ : hudItemListActive) {
-            HudItem hudItem = (HudItem)hudItem_;
+        for (HudItem hudItem : hudItemListActive.values()) {
             compound.setBoolean(hudItem.getName(), true);
         }
-
     }
 
     public static void setInitialLoadComplete(boolean value) {

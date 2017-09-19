@@ -1,20 +1,16 @@
 package advancedhud.client.huditems;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 import advancedhud.AdvancedHUD;
 import advancedhud.api.Alignment;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
 import advancedhud.api.RenderAssist;
-import advancedhud.client.ui.GuiScreenHudItem;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
 
@@ -29,148 +25,156 @@ public class HudItemHotbar extends HudItem {
     }
 
     @Override
-    public String getButtonLabel() {
-        return I18n.format("advancedhud.item.hotbar.name");
+    public int getDefaultID() {
+        return 1;
     }
 
     @Override
     public Alignment getDefaultAlignment() {
-        if (this.rotated)
-            return Alignment.CENTERRIGHT;
-        return Alignment.BOTTOMCENTER;
+        return (!this.rotated ? Alignment.BOTTOMCENTER : Alignment.CENTERRIGHT);
     }
 
     @Override
     public int getDefaultPosX() {
-        if (this.rotated)
-            return HUDRegistry.screenWidth - this.getWidth();
-        return ((HUDRegistry.screenWidth - this.getWidth()) / 2);
+        return (!this.rotated ? (HUDRegistry.screenWidth - this.getWidth()) / 2 : HUDRegistry.screenWidth - this.getWidth());
     }
 
     @Override
     public int getDefaultPosY() {
-        if (this.rotated)
-            return (HUDRegistry.screenHeight - this.getHeight()) / 2;
-        return HUDRegistry.screenHeight - this.getHeight();
+        return (!this.rotated ? HUDRegistry.screenHeight - this.getHeight() : (HUDRegistry.screenHeight - this.getHeight()) / 2);
     }
 
     @Override
     public int getWidth() {
-        if (this.rotated)
-            return 22;
-        return 182;
+        return (!this.rotated ? 182 : 22);
     }
 
     @Override
     public int getHeight() {
-        if (this.rotated)
-            return 182;
-        return 22;
+        return (!this.rotated ? 22 : 182);
     }
 
     @Override
     public void render(float partialTicks) {
-        GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-        GL11.glPushMatrix();
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        InventoryPlayer inv = this.mc.player.inventory;
-        EntityPlayer entityplayer = (EntityPlayer)this.mc.getRenderViewEntity();
-        ItemStack itemstack = entityplayer.getHeldItemOffhand();
-        EnumHandSide enumhandside = entityplayer.getPrimaryHand().opposite();
-
-        if (!this.rotated) {
+        if (this.mc.getRenderViewEntity() instanceof EntityPlayer) {
+            GlStateManager.enableBlend();
+            GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             this.mc.renderEngine.bindTexture(WIDGETS);
 
-            RenderAssist.drawTexturedModalRect(this.posX, this.posY, 0, 0, 182, 22);
-            RenderAssist.drawTexturedModalRect(this.posX - 1 + inv.currentItem * 20, this.posY - 1, 0, 22, 24, 22);
+            EntityPlayer entityplayer = (EntityPlayer)this.mc.getRenderViewEntity();
+            ItemStack itemstack = entityplayer.getHeldItemOffhand();
+            EnumHandSide enumhandside = entityplayer.getPrimaryHand().opposite();
 
-            if (itemstack != null) {
-                if (enumhandside == EnumHandSide.LEFT) {
-                    RenderAssist.drawTexturedModalRect(this.posX - 29, this.posY - 1, 24, 22, 29, 24);
-                } else {
-                    RenderAssist.drawTexturedModalRect(this.posX + 182, this.posY - 1, 53, 22, 29, 24);
+            float zLevel = RenderAssist.zLevel;
+            if (!this.configMode()) RenderAssist.zLevel = -90.0F;
+            if (!this.rotated) {
+
+                this.drawTexturedModalRect(this.posX, this.posY, 0, 0, 182, 22);
+                this.drawTexturedModalRect(this.posX - 1 + entityplayer.inventory.currentItem * 20, this.posY - 1, 0, 22, 24, 22);
+
+                if (itemstack != null) {
+                    if (enumhandside == EnumHandSide.LEFT) {
+                        this.drawTexturedModalRect(this.posX - 29, this.posY - 1, 24, 22, 29, 24);
+                    } else {
+                        this.drawTexturedModalRect(this.posX + 182, this.posY - 1, 53, 22, 29, 24);
+                    }
                 }
+
+            } else {
+
+                GlStateManager.pushMatrix();
+                GlStateManager.translate((float)this.posX + this.getWidth(), this.posY, 0.0F);
+                GlStateManager.rotate(90F, 0.0F, 0.0F, 1.0F);
+
+                this.drawTexturedModalRect(0, 0, 0, 0, 182, 22);
+
+                if (itemstack != null) {
+                    if (enumhandside == EnumHandSide.LEFT) {
+                        this.drawTexturedModalRect(-29, -1, 24, 22, 29, 24);
+                    } else {
+                        this.drawTexturedModalRect(182, -1, 53, 22, 29, 24);
+                    }
+                }
+
+                this.mc.renderEngine.bindTexture(ROTATE_WIDGETS);
+                this.drawTexturedModalRect(entityplayer.inventory.currentItem * 20 - 1, -1, 0, 0, 24, 24);
+
+                GlStateManager.popMatrix();
+
             }
+            if (!this.configMode()) RenderAssist.zLevel = zLevel;
 
-            GL11.glDisable(GL11.GL_BLEND);
-            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-            GL11.glPopMatrix();
-            GL11.glPopAttrib();
-
-            GL11.glDisable(GL11.GL_BLEND);
-            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            GlStateManager.enableRescaleNormal();
+            GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
             RenderHelper.enableGUIStandardItemLighting();
 
             for (int i = 0; i < 9; ++i) {
-                int x = this.posX - 90 + i * 20 + 2;
-                int z = this.posY - 6 - 3;
-                RenderAssist.renderInventorySlot(i, x, z, partialTicks, this.mc);
+                int x = 91 + (!this.rotated ? this.posX - 90 + (i * 20) + 2 : this.posX - 88);
+                int y = 12 + (!this.rotated ? this.posY - 6 - 3 : this.posY - 11 + (i * 20) + 2);
+                this.renderHotbarItem(x, y, partialTicks, entityplayer, entityplayer.inventory.mainInventory[i]);
             }
 
             if (itemstack != null) {
-                if (enumhandside == EnumHandSide.LEFT) {
-                    RenderAssist.renderInventorySlot(itemstack, this.posX - 26, this.posY + 3, partialTicks, this.mc);
+                if (!this.rotated) {
+                    if (enumhandside == EnumHandSide.LEFT) {
+                        this.renderHotbarItem(this.posX - 26, this.posY + 3, partialTicks, entityplayer, itemstack);
+                    } else {
+                        this.renderHotbarItem(this.posX + 182 + 10, this.posY + 3, partialTicks, entityplayer, itemstack);
+                    }
                 } else {
-                    RenderAssist.renderInventorySlot(itemstack, this.posX + 182 + 10, this.posY + 3, partialTicks, this.mc);
+                    if (enumhandside == EnumHandSide.LEFT) {
+                        this.renderHotbarItem(this.posX + 3, this.posY - 26, partialTicks, entityplayer, itemstack);
+                    } else {
+                        this.renderHotbarItem(this.posX + 3, this.posY + 182 + 10, partialTicks, entityplayer, itemstack);
+                    }
+                }
+            }
+
+            if (this.mc.gameSettings.attackIndicator == 2) {
+                float f1 = this.mc.player.getCooledAttackStrength(0.0F);
+                if (f1 < 1.0F) {
+
+                    int x; int y;
+                    if (!this.rotated) {
+                        x = this.posX + (enumhandside == EnumHandSide.RIGHT ? -22 : this.getWidth() + 6);
+                        y = this.posY + 3;
+                    } else {
+                        x = this.posX + 3;
+                        y = this.posY + (enumhandside == EnumHandSide.RIGHT ? -22 : this.getHeight() + 6);
+                    }
+
+                    this.mc.getTextureManager().bindTexture(Gui.ICONS);
+                    int k1 = (int)(f1 * 19.0F);
+                    GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+                    this.drawTexturedModalRect(x, y, 0, 94, 18, 18);
+                    this.drawTexturedModalRect(x, y + 18 - k1, 18, 112 - k1, 18, k1);
                 }
             }
 
             RenderHelper.disableStandardItemLighting();
-            GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-        } else {
-            GL11.glTranslatef((float)this.posX + this.getWidth(), this.posY, 0.0F);
-            GL11.glRotatef(90F, 0.0F, 0.0F, 1.0F);
-            this.mc.renderEngine.bindTexture(WIDGETS);
-            RenderAssist.drawTexturedModalRect(0, 0, 0, 0, 182, 22);
-
-            if (itemstack != null) {
-                if (enumhandside == EnumHandSide.LEFT) {
-                    RenderAssist.drawTexturedModalRect(-29, -1, 24, 22, 29, 24);
-                } else {
-                    RenderAssist.drawTexturedModalRect(182, -1, 53, 22, 29, 24);
-                }
-            }
-
-            this.mc.renderEngine.bindTexture(ROTATE_WIDGETS);
-            RenderAssist.drawTexturedModalRect(inv.currentItem * 20 - 1, -1, 0, 0, 24, 24);
-
-
-            GL11.glDisable(GL11.GL_BLEND);
-            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-            GL11.glPopMatrix();
-            GL11.glPopAttrib();
-
-            GL11.glDisable(GL11.GL_BLEND);
-            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderHelper.enableGUIStandardItemLighting();
-
-            for (int i = 0; i < 9; ++i) {
-                int x = this.posX - 88;
-                int z = this.posY - 11 + i * 20 + 2;
-                RenderAssist.renderInventorySlot(i, x, z, partialTicks, this.mc);
-            }
-
-            if (itemstack != null) {
-                if (enumhandside == EnumHandSide.LEFT) {
-                    RenderAssist.renderInventorySlot(itemstack, this.posX + 3, this.posY - 26, partialTicks, this.mc);
-                } else {
-                    RenderAssist.renderInventorySlot(itemstack, 182 + 10, 3, partialTicks, this.mc);
-                }
-            }
-
-            RenderHelper.disableStandardItemLighting();
-            GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+            GlStateManager.disableRescaleNormal();
+            GlStateManager.disableBlend();
         }
     }
 
-    @Override
-    public int getDefaultID() {
-        return 1;
+    private void renderHotbarItem(int posX, int posY, float partialTicks, EntityPlayer player, ItemStack stack) {
+        if (stack != null) {
+            float f = (float)stack.animationsToGo - partialTicks;
+            if (f > 0.0F) {
+                GlStateManager.pushMatrix();
+                float f1 = 1.0F + f / 5.0F;
+                GlStateManager.translate((float)(posX + 8), (float)(posY + 12), 0.0F);
+                GlStateManager.scale(1.0F / f1, (f1 + 1.0F) / 2.0F, 1.0F);
+                GlStateManager.translate((float)(-(posX + 8)), (float)(-(posY + 12)), 0.0F);
+            }
+            this.mc.getRenderItem().renderItemAndEffectIntoGUI(player, stack, posX, posY);
+            if (f > 0.0F) {
+                GlStateManager.popMatrix();
+            }
+            this.mc.getRenderItem().renderItemOverlays(this.mc.fontRendererObj, stack, posX, posY);
+        }
     }
 
     @Override
@@ -181,28 +185,6 @@ public class HudItemHotbar extends HudItem {
     @Override
     public boolean shouldDrawAsPlayer() {
         return true;
-    }
-
-    @Override
-    public GuiScreen getConfigScreen() {
-        return new GuiScreenHudItem(this.mc.currentScreen, this);
-    }
-
-    @Override
-    public void loadFromNBT(NBTTagCompound compound) {
-        super.loadFromNBT(compound);
-    }
-
-    @Override
-    public void saveToNBT(NBTTagCompound compound) {
-        super.saveToNBT(compound);
-    }
-
-    @Override
-    public void rotate() {
-        super.rotate();
-        // posX = getDefaultPosX();
-        // posY = getDefaultPosY();
     }
 
 }

@@ -1,19 +1,15 @@
 package advancedhud.client.huditems;
 
+import org.lwjgl.opengl.GL11;
 import advancedhud.api.Alignment;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
-import advancedhud.api.RenderAssist;
-import advancedhud.client.ui.GuiAdvancedHUDConfiguration;
-import advancedhud.client.ui.GuiScreenHudItem;
-import advancedhud.client.ui.GuiScreenReposition;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.passive.EntityHorse;
+import net.minecraft.entity.player.EntityPlayer;
 
 public class HudItemHealthMount extends HudItem {
 
@@ -23,8 +19,8 @@ public class HudItemHealthMount extends HudItem {
     }
 
     @Override
-    public String getButtonLabel() {
-        return I18n.format("advancedhud.item.healthmount.name");
+    public int getDefaultID() {
+        return 7;
     }
 
     @Override
@@ -53,32 +49,26 @@ public class HudItemHealthMount extends HudItem {
     }
 
     @Override
-    public int getDefaultID() {
-        return 7;
-    }
-
-    @Override
     public void render(float partialTicks) {
-        Entity ridingEntity = this.mc.player.getRidingEntity();
-        int right_height = 1;
-        if (ridingEntity == null && (this.mc.currentScreen instanceof GuiAdvancedHUDConfiguration || this.mc.currentScreen instanceof GuiScreenReposition)) {
-            ridingEntity = new EntityHorse(this.mc.world);
-        }
-        if (!(ridingEntity instanceof EntityLivingBase))
-            return;
+        EntityPlayer player = (EntityPlayer)this.mc.getRenderViewEntity();
+        Entity ridingEntity = player.getRidingEntity(); if (ridingEntity == null && this.configMode()) ridingEntity = new EntityHorse(this.mc.world);
+        if (!(ridingEntity instanceof EntityLivingBase)) return;
+
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 
         this.mc.renderEngine.bindTexture(Gui.ICONS);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
+        int right_height = 1; // 39?
         int left_align = this.posX + 81;
 
         EntityLivingBase mount = (EntityLivingBase)ridingEntity;
         int health = (int)Math.ceil(mount.getHealth());
-        double healthMax = mount.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getAttributeValue();
-        int hearts = (int)Math.ceil(((float)healthMax + 0.5F) / 2F);
+        float healthMax = mount.getMaxHealth();
+        int hearts = (int)(healthMax + 0.5F) / 2;
 
-        if (hearts > 30) {
-            hearts = 30;
-        }
+        if (hearts > 30) hearts = 30;
 
         final int MARGIN = 52;
         final int BACKGROUND = MARGIN;
@@ -86,6 +76,7 @@ public class HudItemHealthMount extends HudItem {
         final int FULL = MARGIN + 36;
 
         for (int heart = 0; hearts > 0; heart += 20) {
+
             int top = this.posY + 1 - right_height;
 
             int rowCount = Math.min(hearts, 10);
@@ -93,17 +84,19 @@ public class HudItemHealthMount extends HudItem {
 
             for (int i = 0; i < rowCount; ++i) {
                 int x = left_align - i * 8 - 9;
-                RenderAssist.drawTexturedModalRect(x, top, BACKGROUND, 9, 9, 9);
+                this.drawTexturedModalRect(x, top, BACKGROUND, 9, 9, 9);
 
                 if (i * 2 + 1 + heart < health) {
-                    RenderAssist.drawTexturedModalRect(x, top, FULL, 9, 9, 9);
+                    this.drawTexturedModalRect(x, top, FULL, 9, 9, 9);
                 } else if (i * 2 + 1 + heart == health) {
-                    RenderAssist.drawTexturedModalRect(x, top, HALF, 9, 9, 9);
+                    this.drawTexturedModalRect(x, top, HALF, 9, 9, 9);
                 }
 
-                right_height = i + 1;
+                right_height = i + 1; //right_height += 10;
             }
         }
+
+        GlStateManager.disableBlend();
     }
 
     @Override
@@ -119,11 +112,6 @@ public class HudItemHealthMount extends HudItem {
     @Override
     public boolean isRenderedInCreative() {
         return true;
-    }
-
-    @Override
-    public GuiScreen getConfigScreen() {
-        return new GuiScreenHudItem(this.mc.currentScreen, this);
     }
 
 }
