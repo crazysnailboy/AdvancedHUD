@@ -4,13 +4,8 @@ import org.lwjgl.opengl.GL11;
 import advancedhud.api.Alignment;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
-import advancedhud.api.RenderAssist;
-import advancedhud.client.ui.GuiAdvancedHUDConfiguration;
-import advancedhud.client.ui.GuiScreenHudItem;
-import advancedhud.client.ui.GuiScreenReposition;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.renderer.GlStateManager;
 
 public class HudItemJumpBar extends HudItem {
 
@@ -20,8 +15,8 @@ public class HudItemJumpBar extends HudItem {
     }
 
     @Override
-    public String getButtonLabel() {
-        return I18n.format("advancedhud.item.jumpbar.name");
+    public int getDefaultID() {
+        return 9;
     }
 
     @Override
@@ -50,31 +45,26 @@ public class HudItemJumpBar extends HudItem {
     }
 
     @Override
-    public int getDefaultID() {
-        return 9;
-    }
-
-    @Override
     public void render(float partialTicks) {
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+
         this.mc.renderEngine.bindTexture(Gui.ICONS);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
         float charge = this.mc.player.getHorseJumpPower();
         final int barWidth = 182;
         int x = this.posX;
-        int filled = (int)(charge * (barWidth + 1));
+        int filled = (int)(charge * (barWidth + 1)); if (this.configMode() && filled == 0) filled = 182;
         int top = this.posY;
 
-        RenderAssist.drawTexturedModalRect(x, top, 0, 84, barWidth, 5);
-
-        if ((this.mc.currentScreen instanceof GuiAdvancedHUDConfiguration || this.mc.currentScreen instanceof GuiScreenReposition) && filled == 0) {
-            filled = 182;
-        }
+        this.drawTexturedModalRect(x, top, 0, 84, barWidth, 5);
 
         if (filled > 0) {
-            RenderAssist.drawTexturedModalRect(x, top, 0, 89, filled, 5);
+            this.drawTexturedModalRect(x, top, 0, 89, filled, 5);
         }
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+        GlStateManager.disableBlend();
     }
 
     @Override
@@ -85,11 +75,6 @@ public class HudItemJumpBar extends HudItem {
     @Override
     public boolean shouldDrawAsPlayer() {
         return false;
-    }
-
-    @Override
-    public GuiScreen getConfigScreen() {
-        return new GuiScreenHudItem(this.mc.currentScreen, this);
     }
 
 }
