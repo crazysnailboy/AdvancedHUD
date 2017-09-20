@@ -7,11 +7,12 @@ import advancedhud.api.RenderAssist;
 import advancedhud.client.huditems.HudItemCrosshairs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiButtonIconGrid extends GuiButton {
 
-    private ResourceLocation resourceLocation = new ResourceLocation(AdvancedHUD.MODID, "textures/gui/crosshairs.png");
+    private static final ResourceLocation crosshairIcons = new ResourceLocation(AdvancedHUD.MODID, "textures/gui/crosshairs.png");
 
     private final HudItemCrosshairs crosshairs;
 
@@ -20,35 +21,28 @@ public class GuiButtonIconGrid extends GuiButton {
         this.crosshairs = crosshairs;
     }
 
-    public GuiButtonIconGrid(int id, int xPosition, int yPosition, HudItemCrosshairs crosshairs, String buttonText, ResourceLocation buttonTexture) {
-        super(id, xPosition, yPosition, 256, 64, buttonText);
-        this.resourceLocation = buttonTexture;
-        this.crosshairs = crosshairs;
-    }
-
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY) {
         RenderAssist.drawRect(this.xPosition - 0.5F, this.yPosition - 0.5F, this.xPosition + 256.5F, this.yPosition + 64.5F, 0x80000000);
         RenderAssist.drawUnfilledRect(this.xPosition - 0.5F, this.yPosition - 0.5F, this.xPosition + 256.5F, this.yPosition + 64.5F, 0xFFFFFFFF);
-        GL11.glPushMatrix();
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR);
-        GL11.glColor4f(1F, 1F, 1F, 1F);
-        //GL11.glScalef(0.5F, 0.5F, 1F);
-        mc.getTextureManager().bindTexture(this.resourceLocation);
+        GlStateManager.pushMatrix();
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        //GlStateManager.scale(0.5F, 0.5F, 1.0F);
+        mc.getTextureManager().bindTexture(this.crosshairIcons);
         RenderAssist.drawTexturedModalRect(this.xPosition, this.yPosition, 0, 0, 256, 64);
         if (mouseX > this.xPosition && mouseY > this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height) {
             float posX = ((mouseX - this.xPosition) - (mouseX - this.xPosition) % 16) + this.xPosition;
             float posY = ((mouseY - this.yPosition) - (mouseY - this.yPosition) % 16) + this.yPosition;
-            int color = 0xFF1F95FF;
-            if (Mouse.isButtonDown(0))
-                color = 0xFF1059F7;
+            int color = (Mouse.isButtonDown(0) ? 0xFF1059F7 : 0xFF1F95FF);
             RenderAssist.drawUnfilledRect(posX - 0.125F, posY - 0.125F, posX + 16.125F, posY + 16.125F, color);
         }
-        if (this.crosshairs.getSelectedIconX() >= 0 && this.crosshairs.getSelectedIconY() >= 0)
+        if (this.crosshairs.getSelectedIconX() >= 0 && this.crosshairs.getSelectedIconY() >= 0) {
             RenderAssist.drawUnfilledRect(this.xPosition + this.crosshairs.getSelectedIconX() - 0.375F, this.yPosition + this.crosshairs.getSelectedIconY() - 0.5F, this.xPosition + this.crosshairs.getSelectedIconX() + 16, this.yPosition + this.crosshairs.getSelectedIconY() + 16F, 0xFFFFFFFF);
-        GL11.glDisable(GL11.GL_BLEND);
-        GL11.glPopMatrix();
+        }
+        GlStateManager.disableBlend();
+        GlStateManager.popMatrix();
     }
 
     @Override
@@ -57,7 +51,6 @@ public class GuiButtonIconGrid extends GuiButton {
             this.crosshairs.setSelectedIconX((mouseX - this.xPosition) - (mouseX - this.xPosition) % 16);
             this.crosshairs.setSelectedIconY((mouseY - this.yPosition) - (mouseY - this.yPosition) % 16);
         }
-        //AdvancedHUD.log.info("Selected Icon: "+selectedIconX+","+selectedIconY);
         return super.mousePressed(mc, mouseX, mouseY);
     }
 

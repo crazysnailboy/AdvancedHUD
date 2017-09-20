@@ -6,7 +6,6 @@ import org.lwjgl.input.Mouse;
 import advancedhud.SaveController;
 import advancedhud.api.Alignment;
 import advancedhud.api.HudItem;
-import advancedhud.client.GuiAdvancedHUD;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
@@ -57,7 +56,7 @@ public class GuiScreenReposition extends GuiScreen {
         }
 
         drawRect(this.hudItem.posX, this.hudItem.posY, this.hudItem.posX + this.hudItem.getWidth(), this.hudItem.posY + this.hudItem.getHeight(), 0x22FFFFFF);
-        this.hudItem.render(GuiAdvancedHUD.partialTicks);
+        this.hudItem.render(partialTicks);
 
         if (this.axisAlign) {
             int x = this.oldPosX + this.hudItem.getWidth() / 2;
@@ -87,12 +86,12 @@ public class GuiScreenReposition extends GuiScreen {
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
-        if (keyCode == 1) {
+        if (keyCode == Keyboard.KEY_ESCAPE) {
             this.hudItem.posX = this.oldPosX;
             this.hudItem.posY = this.oldPosY;
             this.mc.displayGuiScreen(this.parentScreen);
             SaveController.saveConfig("config");
-        } else if (keyCode == 19) {
+        } else if (keyCode == Keyboard.KEY_R) {
             //hudItem.rotated = false;
             this.hudItem.posX = this.hudItem.getDefaultPosX();
             this.hudItem.posY = this.hudItem.getDefaultPosY();

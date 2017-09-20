@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class HudItemCrosshairs extends HudItem {
 
-    private static final ResourceLocation CROSSHAIR_ICONS = new ResourceLocation(AdvancedHUD.MODID, "textures/gui/crosshairs.png");
+    private static final ResourceLocation crosshairIcons = new ResourceLocation(AdvancedHUD.MODID, "textures/gui/crosshairs.png");
     private int selectedIconX = -1;
     private int selectedIconY = -1;
 
@@ -58,7 +58,7 @@ public class HudItemCrosshairs extends HudItem {
         GlStateManager.enableAlpha();
 
         if (this.selectedIconX >= 0 && this.selectedIconY >= 0) {
-            this.mc.renderEngine.bindTexture(CROSSHAIR_ICONS);
+            this.mc.renderEngine.bindTexture(crosshairIcons);
             this.drawTexturedModalRect(this.posX, this.posY, this.selectedIconX, this.selectedIconY, 16, 16);
         } else {
             this.mc.renderEngine.bindTexture(Gui.icons);
