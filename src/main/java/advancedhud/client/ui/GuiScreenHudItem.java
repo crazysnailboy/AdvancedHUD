@@ -1,7 +1,7 @@
 package advancedhud.client.ui;
 
 import java.io.IOException;
-import advancedhud.AdvancedHUD;
+import org.lwjgl.input.Keyboard;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
 import advancedhud.client.huditems.HudItemCrosshairs;
@@ -47,7 +47,7 @@ public class GuiScreenHudItem extends GuiScreen {
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
-        if (keyCode == 1) {
+        if (keyCode == Keyboard.KEY_ESCAPE) {
             this.mc.displayGuiScreen(this.parentScreen);
         }
     }
@@ -59,7 +59,6 @@ public class GuiScreenHudItem extends GuiScreen {
         } else if (button.id == 100) {
             this.hudItem.rotate();
         }
-        AdvancedHUD.log.info("Clicked button " + button.id);
         super.actionPerformed(button);
     }
 

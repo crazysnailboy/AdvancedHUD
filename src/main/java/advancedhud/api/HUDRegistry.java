@@ -1,10 +1,11 @@
 package advancedhud.api;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import advancedhud.AdvancedHUD;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,29 +16,41 @@ import net.minecraft.nbt.NBTTagCompound;
  *
  */
 public class HUDRegistry {
-    private static Map<String,HudItem> hudItemList = new HashMap<String,HudItem>();
-    private static boolean initialLoadComplete = false;
-    private static Map<String,HudItem> hudItemListActive = new HashMap<String,HudItem>();
 
-    private static Logger log = LogManager.getLogger("AdvancedHUD-API");
+    private static Map<String,HudItem> hudItemList = new HashMap<String,HudItem>();
+    private static Map<String,HudItem> hudItemListActive = new HashMap<String,HudItem>();
+    private static List<HudItem> hudItemListTickable = new ArrayList<HudItem>();
+
+    private static boolean initialLoadComplete = false;
+
     public static int screenWidth;
     public static int screenHeight;
-    public static int updateCounter;
 
     public static void registerHudItem(HudItem hudItem) {
         if (hudItem.getDefaultID() <= 25 && initialLoadComplete) {
-            log.info("Rejecting " + hudItem.getName() + " due to invalid ID.");
+            AdvancedHUD.log.info("Rejecting " + hudItem.getName() + " due to invalid ID.");
         }
         if (!hudItemList.containsValue(hudItem)) {
             hudItemList.put(hudItem.getName(), hudItem);
             if (hudItem.isEnabledByDefault()) {
                 enableHudItem(hudItem);
             }
+            if (hudItem.needsTick()) {
+                hudItemListTickable.add(hudItem);
+            }
         }
     }
 
     public static Collection<HudItem> getHudItemList() {
         return hudItemList.values();
+    }
+
+    public static Collection<HudItem> getActiveHudItemList() {
+        return hudItemListActive.values();
+    }
+
+    public static List<HudItem> getTickableItems() {
+        return hudItemListTickable;
     }
 
     public static void enableHudItem(HudItem hudItem) {
@@ -48,10 +61,6 @@ public class HUDRegistry {
 
     public static void disableHudItem(HudItem hudItem) {
         hudItemListActive.remove(hudItem);
-    }
-
-    public static Collection<HudItem> getActiveHudItemList() {
-        return hudItemListActive.values();
     }
 
     public static boolean isActiveHudItem(HudItem hudItem) {
@@ -80,14 +89,17 @@ public class HUDRegistry {
     }
 
     public static boolean checkForResize() {
-        Minecraft mc = Minecraft.getMinecraft();
-        return checkForResize(mc, new ScaledResolution(mc));
+        final Minecraft mc = Minecraft.getMinecraft();
+        return checkForResize(new ScaledResolution(mc));
     }
 
-    public static boolean checkForResize(Minecraft mc, ScaledResolution scaledresolution) {
+    public static boolean checkForResize(ScaledResolution scaledresolution) {
         if (scaledresolution.getScaledWidth() != screenWidth || scaledresolution.getScaledHeight() != screenHeight) {
-            if (screenWidth != 0) {
-                fixHudItemOffsets(scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), screenWidth, screenHeight);
+            for (HudItem hudItem : hudItemList.values()) {
+                if (screenWidth != 0) {
+                    fixHudItemOffset(hudItem, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), screenWidth, screenHeight);
+                }
+                hudItem.fixBounds(scaledresolution);
             }
             screenWidth = scaledresolution.getScaledWidth();
             screenHeight = scaledresolution.getScaledHeight();
@@ -96,23 +108,20 @@ public class HUDRegistry {
         return false;
     }
 
-    private static void fixHudItemOffsets(int newScreenWidth, int newScreenHeight, int oldScreenWidth, int oldScreenHeight) {
-        for (HudItem hudItem : hudItemList.values()) {
-            if (Alignment.isHorizontalCenter(hudItem.alignment)) {
-                int offsetX = hudItem.posX - oldScreenWidth / 2;
-                hudItem.posX = newScreenWidth / 2 + offsetX;
-            } else if (Alignment.isRight(hudItem.alignment)) {
-                int offsetX = hudItem.posX - oldScreenWidth;
-                hudItem.posX = newScreenWidth + offsetX;
-            }
-
-            if (Alignment.isVerticalCenter(hudItem.alignment)) {
-                int offsetY = hudItem.posY - oldScreenHeight / 2;
-                hudItem.posY = newScreenHeight / 2 + offsetY;
-            } else if (Alignment.isBottom(hudItem.alignment)) {
-                int offsetY = hudItem.posY - oldScreenHeight;
-                hudItem.posY = newScreenHeight + offsetY;
-            }
+    private static void fixHudItemOffset(HudItem hudItem, int newScreenWidth, int newScreenHeight, int oldScreenWidth, int oldScreenHeight) {
+        if (Alignment.isHorizontalCenter(hudItem.alignment)) {
+            int offsetX = hudItem.posX - oldScreenWidth / 2;
+            hudItem.posX = newScreenWidth / 2 + offsetX;
+        } else if (Alignment.isRight(hudItem.alignment)) {
+            int offsetX = hudItem.posX - oldScreenWidth;
+            hudItem.posX = newScreenWidth + offsetX;
+        }
+        if (Alignment.isVerticalCenter(hudItem.alignment)) {
+            int offsetY = hudItem.posY - oldScreenHeight / 2;
+            hudItem.posY = newScreenHeight / 2 + offsetY;
+        } else if (Alignment.isBottom(hudItem.alignment)) {
+            int offsetY = hudItem.posY - oldScreenHeight;
+            hudItem.posY = newScreenHeight + offsetY;
         }
     }
 
