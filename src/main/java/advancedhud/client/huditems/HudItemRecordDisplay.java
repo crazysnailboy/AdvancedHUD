@@ -5,14 +5,13 @@ import org.lwjgl.opengl.GL11;
 import advancedhud.api.Alignment;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
-import advancedhud.client.GuiAdvancedHUD;
 import net.minecraft.client.renderer.GlStateManager;
 
 public class HudItemRecordDisplay extends HudItem {
 
-    private int recordPlayingUpFor;
-    private boolean recordIsPlaying;
-    private String recordPlaying;
+    private int overlayMessageTime;
+    private boolean animateOverlayMessageColor;
+    private String overlayMessage;
 
     @Override
     public String getName() {
@@ -51,8 +50,8 @@ public class HudItemRecordDisplay extends HudItem {
 
     @Override
     public void render(float partialTicks) {
-        if (this.recordPlayingUpFor > 0) {
-            float hue = this.recordPlayingUpFor - partialTicks;
+        if (this.overlayMessageTime > 0) {
+            float hue = this.overlayMessageTime - partialTicks;
             int opacity = (int)(hue * 256.0F / 20.0F);
             if (opacity > 255) opacity = 255;
 
@@ -61,8 +60,8 @@ public class HudItemRecordDisplay extends HudItem {
                 GlStateManager.translate(this.posX + this.getWidth() / 2, this.posY + this.getHeight() / 2, 0.0F);
                 GlStateManager.enableBlend();
                 GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-                int color = this.recordIsPlaying ? Color.HSBtoRGB(hue / 50.0F, 0.7F, 0.6F) & 0xFFFFFF : 0xFFFFFF;
-                this.mc.fontRenderer.drawString(this.recordPlaying, -this.mc.fontRenderer.getStringWidth(this.recordPlaying) / 2, -4, color | opacity << 24);
+                int color = this.animateOverlayMessageColor ? Color.HSBtoRGB(hue / 50.0F, 0.7F, 0.6F) & 0xFFFFFF : 0xFFFFFF;
+                this.mc.fontRenderer.drawString(this.overlayMessage, -this.mc.fontRenderer.getStringWidth(this.overlayMessage) / 2, -4, color | opacity << 24);
                 GlStateManager.disableBlend();
                 GlStateManager.popMatrix();
             }
@@ -76,23 +75,20 @@ public class HudItemRecordDisplay extends HudItem {
 
     @Override
     public void tick() {
-        if (this.mc.ingameGUI instanceof GuiAdvancedHUD) {
-            GuiAdvancedHUD ingame = (GuiAdvancedHUD)this.mc.ingameGUI;
-            if (ingame.overlayMessage != null && !ingame.overlayMessage.equals(this.recordPlaying)) {
-                this.recordPlaying = ingame.overlayMessage;
-                this.recordIsPlaying = ingame.animateOverlayMessageColor;
-                this.recordPlayingUpFor = ingame.overlayMessageTime * 2;
-            }
-        }
-
-        if (this.recordPlayingUpFor > 0) {
-            --this.recordPlayingUpFor;
+        if (this.overlayMessageTime > 0) {
+            --this.overlayMessageTime;
         }
     }
 
     @Override
     public boolean canRotate() {
         return false;
+    }
+
+    public void setOverlayMessage(String message, boolean animateColor) {
+        this.overlayMessage = message;
+        this.overlayMessageTime = 60;
+        this.animateOverlayMessageColor = animateColor;
     }
 
 }

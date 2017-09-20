@@ -6,6 +6,7 @@ import advancedhud.client.ui.GuiScreenReposition;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -62,17 +63,20 @@ public abstract class HudItem {
 
     public abstract int getHeight();
 
+    public abstract void render(float partialTicks);
+
+    /**
+     * This override is currently only used by HudItemBossbar.
+     */
+    public void render(float partialTicks, Gui gui) {
+        this.render(partialTicks);
+    }
+
     /**
      * Define custom GuiScreen instances for your own configuration screen.
      */
     public GuiScreen getConfigScreen() {
         return new GuiScreenHudItem(this.mc.currentScreen, this);
-    }
-
-    public abstract void render(float partialTicks);
-
-    public void render(float partialTicks, Gui gui) {
-        this.render(partialTicks);
     }
 
     /**
@@ -110,6 +114,11 @@ public abstract class HudItem {
     /**
      * Ensures that the HudItem will never be off the screen
      */
+    public void fixBounds(ScaledResolution res) {
+        this.posX = Math.max(0, Math.min(res.getScaledWidth() - this.getWidth(), this.posX));
+        this.posY = Math.max(0, Math.min(res.getScaledHeight() - this.getHeight(), this.posY));
+    }
+
     public void fixBounds() {
         this.posX = Math.max(0, Math.min(HUDRegistry.screenWidth - this.getWidth(), this.posX));
         this.posY = Math.max(0, Math.min(HUDRegistry.screenHeight - this.getHeight(), this.posY));
