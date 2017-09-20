@@ -4,18 +4,21 @@ import advancedhud.api.HUDRegistry;
 import advancedhud.client.GuiAdvancedHUD;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Type;
 
 public class TickHandler {
+
+    private static final Minecraft mc = Minecraft.getMinecraft();
 
     private boolean ticked = false;
     private boolean firstload = true;
 
+
     @SubscribeEvent
     public void RenderTickEvent(RenderTickEvent event) {
-        if ((event.type == TickEvent.Type.RENDER || event.type == TickEvent.Type.CLIENT) && event.phase == TickEvent.Phase.END) { // if ((event.type == Type.RENDER || event.type == Type.CLIENT) && event.phase == Phase.END) {
-            Minecraft mc = Minecraft.getMinecraft();
+        if ((event.type == Type.RENDER || event.type == Type.CLIENT) && event.phase == Phase.END) {
             if (!this.ticked && mc.ingameGUI != null) {
                 mc.ingameGUI = new GuiAdvancedHUD(mc);
                 this.ticked = true;

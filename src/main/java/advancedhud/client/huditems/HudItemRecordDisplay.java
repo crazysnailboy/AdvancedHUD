@@ -5,7 +5,6 @@ import org.lwjgl.opengl.GL11;
 import advancedhud.api.Alignment;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
-import advancedhud.client.GuiAdvancedHUD;
 import net.minecraft.client.renderer.GlStateManager;
 
 public class HudItemRecordDisplay extends HudItem {
@@ -76,15 +75,6 @@ public class HudItemRecordDisplay extends HudItem {
 
     @Override
     public void tick() {
-        if (this.mc.ingameGUI instanceof GuiAdvancedHUD) {
-            GuiAdvancedHUD ingame = (GuiAdvancedHUD)this.mc.ingameGUI;
-            if (ingame.recordPlaying != null && !ingame.recordPlaying.equals(this.recordPlaying)) {
-                this.recordPlaying = ingame.recordPlaying;
-                this.recordIsPlaying = ingame.recordIsPlaying;
-                this.recordPlayingUpFor = ingame.recordPlayingUpFor * 2;
-            }
-        }
-
         if (this.recordPlayingUpFor > 0) {
             --this.recordPlayingUpFor;
         }
@@ -93,6 +83,12 @@ public class HudItemRecordDisplay extends HudItem {
     @Override
     public boolean canRotate() {
         return false;
+    }
+
+    public void setRecordPlaying(String recordName, boolean isPlaying) {
+        this.recordPlaying = recordName;
+        this.recordPlayingUpFor = 60;
+        this.recordIsPlaying = isPlaying;
     }
 
 }

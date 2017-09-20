@@ -1,5 +1,6 @@
 package advancedhud;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import advancedhud.api.HUDRegistry;
 import advancedhud.client.huditems.HudItemAir;
@@ -27,19 +28,17 @@ public class AdvancedHUD {
     public final static String VERSION = "${version}";
     public final static String NAME = "AdvancedHUD";
 
-    public static Logger log;
+    public static final Logger log = LogManager.getLogger(MODID);
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        log = event.getModLog();
+        this.registerHUDItems();
     }
 
     @EventHandler
     public void onInit(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(new TickHandler());
         MinecraftForge.EVENT_BUS.register(new KeyRegister());
-
-        this.registerHUDItems();
     }
 
     private void registerHUDItems() {
