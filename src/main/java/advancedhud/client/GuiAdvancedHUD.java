@@ -25,6 +25,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
 
     private static final Field eventParentField = ReflectionHelper.getDeclaredField(GuiIngameForge.class, "eventParent");
     private static final Field fontRendererField = ReflectionHelper.getDeclaredField(GuiIngameForge.class, "fontrenderer");
+    private static final Field resField = ReflectionHelper.getDeclaredField(GuiIngameForge.class, "res");
     private static final Method renderHelmetMethod = ReflectionHelper.getDeclaredMethod(GuiIngameForge.class, "renderHelmet", ScaledResolution.class, float.class);
 
     public static float partialTicks;
@@ -45,7 +46,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
 //        this.mc.mcProfiler.startSection("Advanced Hud");
         this.partialTicks = partialTicks;
 
-        this.res = new ScaledResolution(this.mc);
+        this.res = new ScaledResolution(this.mc); ReflectionHelper.setFieldValue(resField, this, this.res);
         HUDRegistry.checkForResize();
         ReflectionHelper.setFieldValue(eventParentField, this, new RenderGameOverlayEvent(partialTicks, this.res));
         int width = res.getScaledWidth();
@@ -314,7 +315,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
 
     @Override
     protected void renderSubtitles(ScaledResolution resolution) { // TODO movable subtitles
-        super.renderSubtitles(res);
+        super.renderSubtitles(resolution);
     }
 
     @Override
