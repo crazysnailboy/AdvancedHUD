@@ -10,13 +10,15 @@ import net.minecraft.client.Minecraft;
 
 public class TickHandler {
 
+    private static final Minecraft mc = Minecraft.getMinecraft();
+
     private boolean ticked = false;
     private boolean firstload = true;
+
 
     @SubscribeEvent
     public void RenderTickEvent(RenderTickEvent event) {
         if ((event.type == Type.RENDER || event.type == Type.CLIENT) && event.phase == Phase.END) {
-            Minecraft mc = Minecraft.getMinecraft();
             if (!this.ticked && mc.ingameGUI != null) {
                 mc.ingameGUI = new GuiAdvancedHUD(mc);
                 this.ticked = true;

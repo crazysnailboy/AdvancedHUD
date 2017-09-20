@@ -4,9 +4,26 @@ import static net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import org.lwjgl.opengl.GL11;
+import advancedhud.AdvancedHUD;
 import advancedhud.ReflectionHelper;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
+import advancedhud.client.huditems.HudItemAir;
+import advancedhud.client.huditems.HudItemArmor;
+import advancedhud.client.huditems.HudItemBossBar;
+import advancedhud.client.huditems.HudItemCrosshairs;
+import advancedhud.client.huditems.HudItemExperienceBar;
+import advancedhud.client.huditems.HudItemFood;
+import advancedhud.client.huditems.HudItemHealth;
+import advancedhud.client.huditems.HudItemHealthMount;
+import advancedhud.client.huditems.HudItemHotbar;
+import advancedhud.client.huditems.HudItemJumpBar;
+import advancedhud.client.huditems.HudItemRecordDisplay;
+import advancedhud.client.huditems.HudItemScoreboard;
+import advancedhud.client.huditems.HudItemTooltips;
+import advancedhud.client.ui.GuiAdvancedHUDConfiguration;
+import advancedhud.client.ui.GuiScreenHudItem;
+import advancedhud.client.ui.GuiScreenReposition;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
@@ -25,14 +42,23 @@ public class GuiAdvancedHUD extends GuiIngameForge {
     private static final Field fontRendererField = ReflectionHelper.getDeclaredField(GuiIngameForge.class, "fontrenderer");
     private static final Method renderHelmetMethod = ReflectionHelper.getDeclaredMethod(GuiIngameForge.class, "renderHelmet", ScaledResolution.class, float.class, boolean.class, int.class, int.class);
 
+    private HudItemAir air = (HudItemAir)HUDRegistry.getHudItemByName("air");
+    private HudItemArmor armor = (HudItemArmor)HUDRegistry.getHudItemByName("armor");
+    private HudItemBossBar bossbar = (HudItemBossBar)HUDRegistry.getHudItemByName("bossbar");
+    private HudItemCrosshairs crosshairs = (HudItemCrosshairs)HUDRegistry.getHudItemByName("crosshair");
+    private HudItemExperienceBar experiencebar = (HudItemExperienceBar)HUDRegistry.getHudItemByName("experiencebar");
+    private HudItemFood food = (HudItemFood)HUDRegistry.getHudItemByName("food");
+    private HudItemHealth health = (HudItemHealth)HUDRegistry.getHudItemByName("health");
+    private HudItemHealthMount healthmount = (HudItemHealthMount)HUDRegistry.getHudItemByName("healthmount");
+    private HudItemHotbar hotbar = (HudItemHotbar)HUDRegistry.getHudItemByName("hotbar");
+    private HudItemJumpBar jumpbar = (HudItemJumpBar)HUDRegistry.getHudItemByName("jumpbar");
+    private HudItemRecordDisplay record = (HudItemRecordDisplay)HUDRegistry.getHudItemByName("record");
+    private HudItemScoreboard scoreboard = (HudItemScoreboard)HUDRegistry.getHudItemByName("scoreboard");
+    private HudItemTooltips itemtooltip = (HudItemTooltips)HUDRegistry.getHudItemByName("itemtooltip");
+
     public static float partialTicks;
     private long lastTick = System.currentTimeMillis();
-
     private ScaledResolution res = null;
-
-    public String recordPlaying;
-    public boolean recordIsPlaying;
-    public int recordPlayingUpFor = 0;
 
     public GuiAdvancedHUD(Minecraft mc) {
         super(mc);
@@ -41,11 +67,11 @@ public class GuiAdvancedHUD extends GuiIngameForge {
     @Override
     public void renderGameOverlay(float partialTicks, boolean hasScreen, int mouseX, int mouseY) {
 
-        //        this.mc.mcProfiler.startSection("Advanced Hud");
-        GuiAdvancedHUD.partialTicks = partialTicks;
+        this.mc.mcProfiler.startSection(AdvancedHUD.NAME);
+        this.partialTicks = partialTicks;
 
         this.res = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);
-        HUDRegistry.checkForResize(this.mc, this.res);
+        HUDRegistry.checkForResize(this.res);
         ReflectionHelper.setFieldValue(eventParentField, this, new RenderGameOverlayEvent(partialTicks, this.res, mouseX, mouseY));
         int width = this.res.getScaledWidth();
         int height = this.res.getScaledHeight();
@@ -53,7 +79,10 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         renderFood = this.mc.thePlayer.ridingEntity == null;
         renderJumpBar = this.mc.thePlayer.isRidingHorse();
 
-        if (this.pre(ALL)) return;
+        if (this.pre(ALL)) {
+            this.mc.mcProfiler.endSection();
+            return;
+        }
 
         ReflectionHelper.setFieldValue(fontRendererField, this, this.mc.fontRendererObj);
         this.mc.entityRenderer.setupOverlayRendering();
@@ -76,7 +105,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
             if (renderCrosshairs) this.renderCrosshairs(width, height);
             if (renderBossHealth) this.renderBossHealth();
 
-            if (this.mc.playerController.shouldDrawHUD()) {
+            if (this.shouldDrawHUD()) {
                 if (renderHealth) this.renderHealth(width, height);
                 if (renderArmor) this.renderArmor(width, height);
                 if (renderFood) this.renderFood(width, height);
@@ -113,8 +142,14 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glEnable(GL11.GL_ALPHA_TEST);
 
+        this.mc.mcProfiler.endSection();
         this.post(ALL);
-        //        this.mc.mcProfiler.endSection();
+    }
+
+    private boolean shouldDrawHUD() {
+        return
+            this.mc.playerController.shouldDrawHUD() ||
+            mc.currentScreen instanceof GuiAdvancedHUDConfiguration || mc.currentScreen instanceof GuiScreenReposition || mc.currentScreen instanceof GuiScreenHudItem;
     }
 
     public ScoreObjective getScoreboardObjective() {
@@ -136,9 +171,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         if (this.pre(CROSSHAIRS)) return;
         this.mc.mcProfiler.startSection("crosshairs");
 
-        HudItem crosshairs = HUDRegistry.getHudItemByName("crosshair");
-        crosshairs.fixBounds();
-        crosshairs.render(GuiAdvancedHUD.partialTicks);
+        crosshairs.render(this.partialTicks);
 
         this.mc.mcProfiler.endSection();
         this.post(CROSSHAIRS);
@@ -149,9 +182,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         if (this.pre(BOSSHEALTH)) return;
         this.mc.mcProfiler.startSection("bossHealth");
 
-        HudItem bosshealth = HUDRegistry.getHudItemByName("bossbar");
-        bosshealth.fixBounds();
-        bosshealth.render(GuiAdvancedHUD.partialTicks);
+        bossbar.render(this.partialTicks);
 
         this.mc.mcProfiler.endSection();
         this.post(BOSSHEALTH);
@@ -162,9 +193,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         if (this.pre(HEALTH)) return;
         this.mc.mcProfiler.startSection("health");
 
-        HudItem health = HUDRegistry.getHudItemByName("health");
-        health.fixBounds();
-        health.render(GuiAdvancedHUD.partialTicks);
+        health.render(this.partialTicks);
 
         this.mc.mcProfiler.endSection();
         this.post(HEALTH);
@@ -175,9 +204,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         if (this.pre(ARMOR)) return;
         this.mc.mcProfiler.startSection("armor");
 
-        HudItem armor = HUDRegistry.getHudItemByName("armor");
-        armor.fixBounds();
-        armor.render(GuiAdvancedHUD.partialTicks);
+        armor.render(this.partialTicks);
 
         this.mc.mcProfiler.endSection();
         this.post(ARMOR);
@@ -188,9 +215,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         if (this.pre(FOOD)) return;
         this.mc.mcProfiler.startSection("food");
 
-        HudItem food = HUDRegistry.getHudItemByName("food");
-        food.fixBounds();
-        food.render(GuiAdvancedHUD.partialTicks);
+        food.render(this.partialTicks);
 
         this.mc.mcProfiler.endSection();
         this.post(FOOD);
@@ -201,9 +226,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         if (this.pre(HEALTHMOUNT)) return;
         this.mc.mcProfiler.endStartSection("mountHealth");
 
-        HudItem healthmount = HUDRegistry.getHudItemByName("healthmount");
-        healthmount.fixBounds();
-        healthmount.render(GuiAdvancedHUD.partialTicks);
+        healthmount.render(this.partialTicks);
 
         this.mc.mcProfiler.endSection();
         this.post(HEALTHMOUNT);
@@ -214,9 +237,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         if (this.pre(AIR)) return;
         this.mc.mcProfiler.startSection("air");
 
-        HudItem air = HUDRegistry.getHudItemByName("air");
-        air.fixBounds();
-        air.render(GuiAdvancedHUD.partialTicks);
+        air.render(this.partialTicks);
 
         this.mc.mcProfiler.endSection();
         this.post(AIR);
@@ -227,9 +248,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         if (this.pre(HOTBAR)) return;
         this.mc.mcProfiler.startSection("actionBar");
 
-        HudItem hotbar = HUDRegistry.getHudItemByName("hotbar");
-        hotbar.fixBounds();
-        hotbar.render(GuiAdvancedHUD.partialTicks);
+        hotbar.render(this.partialTicks);
 
         this.mc.mcProfiler.endSection();
         this.post(HOTBAR);
@@ -240,9 +259,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         if (this.pre(JUMPBAR)) return;
         this.mc.mcProfiler.startSection("jumpBar");
 
-        HudItem jumpbar = HUDRegistry.getHudItemByName("jumpbar");
-        jumpbar.fixBounds();
-        jumpbar.render(partialTicks);
+        jumpbar.render(this.partialTicks);
 
         this.mc.mcProfiler.endSection();
         this.post(JUMPBAR);
@@ -253,9 +270,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         if (this.pre(EXPERIENCE)) return;
         this.mc.mcProfiler.startSection("experiencebar");
 
-        HudItem experienceBar = HUDRegistry.getHudItemByName("experiencebar");
-        experienceBar.fixBounds();
-        experienceBar.render(partialTicks);
+        experiencebar.render(this.partialTicks);
 
         this.mc.mcProfiler.endSection();
         this.post(EXPERIENCE);
@@ -266,9 +281,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         if (this.mc.gameSettings.heldItemTooltips) {
             this.mc.mcProfiler.startSection("toolHighlight");
 
-            HudItem toolhighlight = HUDRegistry.getHudItemByName("itemtooltip");
-            toolhighlight.fixBounds();
-            toolhighlight.render(GuiAdvancedHUD.partialTicks);
+            itemtooltip.render(this.partialTicks);
 
             this.mc.mcProfiler.endSection();
         }
@@ -278,9 +291,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
     protected void renderRecordOverlay(int width, int height, float partialTicks) {
         this.mc.mcProfiler.startSection("overlayMessage");
 
-        HudItem recordoverlay = HUDRegistry.getHudItemByName("record");
-        recordoverlay.fixBounds();
-        recordoverlay.render(GuiAdvancedHUD.partialTicks);
+        record.render(this.partialTicks);
 
         this.mc.mcProfiler.endSection();
     }
@@ -288,9 +299,9 @@ public class GuiAdvancedHUD extends GuiIngameForge {
     @Override
     protected void renderScoreboard(ScoreObjective objective, int width, int height, FontRenderer fontrenderer) {
         if (objective != null) {
-            HudItem scoreboard = HUDRegistry.getHudItemByName("scoreboard");
-            scoreboard.fixBounds();
-            scoreboard.render(GuiAdvancedHUD.partialTicks);
+
+            scoreboard.render(this.partialTicks);
+
         }
     }
 
@@ -303,31 +314,19 @@ public class GuiAdvancedHUD extends GuiIngameForge {
     public void updateTick() {
         this.mc.mcProfiler.startSection("Advanced HUD - UpdateTick");
 
-        if (this.mc.theWorld != null) {
-            for (HudItem huditem : HUDRegistry.getHudItemList()) {
-                this.mc.mcProfiler.startSection(huditem.getName());
-                if (this.mc.playerController.isInCreativeMode() && !huditem.isRenderedInCreative()) {
-                    this.mc.mcProfiler.endSection();
-                    continue;
-                }
-                if (huditem.needsTick()) {
-                    huditem.tick();
-                }
-                this.mc.mcProfiler.endSection();
-            }
+        for (HudItem huditem : HUDRegistry.getTickableItems()) {
+            this.mc.mcProfiler.startSection(huditem.getName());
+            huditem.tick();
+            this.mc.mcProfiler.endSection();
         }
-
         this.updateCounter++;
-        HUDRegistry.updateCounter = this.updateCounter;
 
         this.mc.mcProfiler.endSection();
     }
 
     @Override
     public void setRecordPlaying(String recordName, boolean isPlaying) {
-        this.recordPlaying = recordName;
-        this.recordPlayingUpFor = 60;
-        this.recordIsPlaying = isPlaying;
+        record.setRecordPlaying(recordName, isPlaying);
     }
 
     private boolean pre(ElementType type) {

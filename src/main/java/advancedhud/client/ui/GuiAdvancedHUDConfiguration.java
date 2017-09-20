@@ -1,6 +1,8 @@
 package advancedhud.client.ui;
 
 import org.lwjgl.input.Keyboard;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import advancedhud.SaveController;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
@@ -44,7 +46,7 @@ public class GuiAdvancedHUDConfiguration extends GuiScreen {
         if (help) {
             this.drawCenteredString(this.mc.fontRendererObj, I18n.format("advancedhud.configuration.help.1"), this.width / 2, 17, 0xFFFFFF);
             this.drawCenteredString(this.mc.fontRendererObj, I18n.format("advancedhud.configuration.help.2"), this.width / 2, 27, 0xFFFFFF);
-            this.drawCenteredString(this.mc.fontRendererObj, I18n.format("advancedhud.configuration.help.3", I18n.format("advancedhud.configuration.", (asMount ? "player" : "mount"))), this.width / 2, 37, 0xFFFFFF);
+            this.drawCenteredString(this.mc.fontRendererObj, I18n.format("advancedhud.configuration.help.3", I18n.format(String.format("advancedhud.configuration.%1$s", (asMount ? "player" : "mount")))), this.width / 2, 37, 0xFFFFFF);
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
@@ -52,7 +54,7 @@ public class GuiAdvancedHUDConfiguration extends GuiScreen {
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
-        if (keyCode == 19) {
+        if (keyCode == Keyboard.KEY_R) {
             HUDRegistry.resetAllDefaults();
             this.initGui();
         } else if (keyCode == Keyboard.KEY_M) {
@@ -83,12 +85,10 @@ public class GuiAdvancedHUDConfiguration extends GuiScreen {
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         if (mouseButton == 1) {
-            for (Object button : this.buttonList) {
-                GuiButton guibutton = (GuiButton)button;
-
-                if (guibutton.mousePressed(this.mc, mouseX, mouseY)) {
+            for (GuiButton button : Lists.newArrayList(Iterables.filter(this.buttonList, GuiButton.class))) {
+                if (button.mousePressed(this.mc, mouseX, mouseY)) {
                     this.mc.getSoundHandler().playSound(PositionedSoundRecord.createPositionedSoundRecord(new ResourceLocation("gui.button.press"), 1.0F));
-                    HudItem hudItem = HUDRegistry.getHudItemByID(guibutton.id);
+                    HudItem hudItem = HUDRegistry.getHudItemByID(button.id);
                     if (hudItem != null) {
                         this.mc.displayGuiScreen(hudItem.getConfigScreen());
                     }

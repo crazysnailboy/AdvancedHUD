@@ -5,6 +5,7 @@ import advancedhud.client.ui.GuiScreenHudItem;
 import advancedhud.client.ui.GuiScreenReposition;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -105,6 +106,11 @@ public abstract class HudItem {
     /**
      * Ensures that the HudItem will never be off the screen
      */
+    public void fixBounds(ScaledResolution res) {
+        this.posX = Math.max(0, Math.min(res.getScaledWidth() - this.getWidth(), this.posX));
+        this.posY = Math.max(0, Math.min(res.getScaledHeight() - this.getHeight(), this.posY));
+    }
+
     public void fixBounds() {
         this.posX = Math.max(0, Math.min(HUDRegistry.screenWidth - this.getWidth(), this.posX));
         this.posY = Math.max(0, Math.min(HUDRegistry.screenHeight - this.getHeight(), this.posY));
