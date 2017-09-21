@@ -1,5 +1,6 @@
 package advancedhud.client.ui;
 
+import java.util.List;
 import org.lwjgl.opengl.GL11;
 import advancedhud.api.HudItem;
 import advancedhud.client.GuiAdvancedHUD;
@@ -11,18 +12,8 @@ public class GuiHudItemButton extends GuiButton {
     private final HudItem huditem;
 
     public GuiHudItemButton(HudItem huditem) {
-        this(huditem, huditem.getDefaultID(), huditem.posX, huditem.posY, huditem.getWidth(), huditem.getHeight(), huditem.getButtonLabel());
-    }
-
-    private GuiHudItemButton(HudItem huditem, int id, int xPosition, int yPosition, int width, int height, String buttonText) {
-        super(id, xPosition, yPosition, width, height, buttonText);
+        super(huditem.getDefaultID(), huditem.posX, huditem.posY, huditem.getWidth(), huditem.getHeight(), huditem.getDisplayName());
         this.huditem = huditem;
-        this.id = id;
-        this.xPosition = xPosition;
-        this.yPosition = yPosition;
-        this.width = width;
-        this.height = height;
-        this.displayString = buttonText;
     }
 
     @Override
@@ -32,8 +23,8 @@ public class GuiHudItemButton extends GuiButton {
             drawRect(this.huditem.posX, this.huditem.posY, this.huditem.posX + this.huditem.getWidth(), this.huditem.posY + this.huditem.getHeight(), 0x22FFFFFF);
             this.huditem.render(GuiAdvancedHUD.partialTicks);
 
-            boolean hoverState = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
-            if (hoverState) {
+            this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+            if (this.hovered) {
                 GL11.glPushMatrix();
                 GL11.glTranslatef(0, 0, 200F);
                 this.drawCenteredString(mc.fontRendererObj, this.displayString, this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2 + 1, 0xFFFFFF);
@@ -41,6 +32,10 @@ public class GuiHudItemButton extends GuiButton {
             }
 
         }
+    }
+
+    public List<String> getTooltip() {
+        return this.huditem.getTooltip();
     }
 
 }

@@ -61,6 +61,9 @@ public class HudItemScoreboard extends HudItem {
 
     @Override
     public void render(float partialTicks) {
+
+        if (!(enabled || configMode())) return;
+
         ScoreObjective objective = this.getScoreboardObjective();
         if (objective != null) {
             Scoreboard scoreboard = objective.getScoreboard();

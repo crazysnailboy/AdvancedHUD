@@ -44,12 +44,18 @@ public class GuiAdvancedHUDConfiguration extends GuiScreen {
         }
 
         if (help) {
-            this.drawCenteredString(this.mc.fontRendererObj, I18n.format("advancedhud.configuration.help.1"), this.width / 2, 17, 0xFFFFFF);
-            this.drawCenteredString(this.mc.fontRendererObj, I18n.format("advancedhud.configuration.help.2"), this.width / 2, 27, 0xFFFFFF);
-            this.drawCenteredString(this.mc.fontRendererObj, I18n.format("advancedhud.configuration.help.3", I18n.format(String.format("advancedhud.configuration.%1$s", (asMount ? "player" : "mount")))), this.width / 2, 37, 0xFFFFFF);
+            this.drawCenteredString(this.mc.fontRendererObj, I18n.format("advancedhud.configuration.help.1"), this.width / 2, 40, 0xFFFFFF);
+            this.drawCenteredString(this.mc.fontRendererObj, I18n.format("advancedhud.configuration.help.2"), this.width / 2, 50, 0xFFFFFF);
+            this.drawCenteredString(this.mc.fontRendererObj, I18n.format("advancedhud.configuration.help.3", I18n.format(String.format("advancedhud.configuration.%1$s", (asMount ? "player" : "mount")))), this.width / 2, 60, 0xFFFFFF);
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
+
+        for (GuiHudItemButton button : Lists.newArrayList(Iterables.filter(this.buttonList, GuiHudItemButton.class))) {
+            if (button.getHoverState(button.isMouseOver()) == 2) {
+                this.drawHoveringText(button.getTooltip(), mouseX, mouseY);
+            }
+        }
     }
 
     @Override
