@@ -60,6 +60,8 @@ public class HudItemCrosshairs extends HudItem {
     @Override
     public void render(float partialTicks) {
 
+        if (!(enabled || configMode())) return;
+
         GameSettings gamesettings = this.mc.gameSettings;
         if (gamesettings.thirdPersonView == 0) {
             if (this.mc.playerController.isSpectator() && this.mc.pointedEntity == null) {
