@@ -351,9 +351,11 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         this.mc.mcProfiler.startSection("Advanced HUD - UpdateTick");
 
         for (HudItem huditem : HUDRegistry.getTickableItems()) {
-            this.mc.mcProfiler.startSection(huditem.getName());
-            huditem.tick();
-            this.mc.mcProfiler.endSection();
+            if (huditem.enabled) {
+                this.mc.mcProfiler.startSection(huditem.getName());
+                huditem.tick();
+                this.mc.mcProfiler.endSection();
+            }
         }
         this.updateCounter++;
 

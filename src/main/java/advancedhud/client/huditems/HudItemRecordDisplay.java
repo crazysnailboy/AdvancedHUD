@@ -50,6 +50,9 @@ public class HudItemRecordDisplay extends HudItem {
 
     @Override
     public void render(float partialTicks) {
+
+        if (!(enabled || configMode())) return;
+
         if (this.recordPlayingUpFor > 0) {
             float hue = this.recordPlayingUpFor - partialTicks;
             int opacity = (int)(hue * 256.0F / 20.0F);

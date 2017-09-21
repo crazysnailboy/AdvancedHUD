@@ -1,5 +1,7 @@
 package advancedhud.api;
 
+import java.util.ArrayList;
+import java.util.List;
 import advancedhud.client.ui.GuiAdvancedHUDConfiguration;
 import advancedhud.client.ui.GuiScreenHudItem;
 import advancedhud.client.ui.GuiScreenReposition;
@@ -8,6 +10,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
 
 /**
  * Extend this to create your own elements which render on the GUI.<br>Don't worry about saves, they are all done by the non-api part of the mod.
@@ -15,12 +18,16 @@ import net.minecraft.nbt.NBTTagCompound;
  *
  */
 public abstract class HudItem {
+
+    protected static final Minecraft mc = Minecraft.getMinecraft();
+
     public Alignment alignment;
     public int posX;
     public int posY;
     private int id;
     public boolean rotated = false;
-    protected static final Minecraft mc = Minecraft.getMinecraft();
+    public boolean enabled = true;
+
 
     public HudItem() {
         this.alignment = this.getDefaultAlignment();
@@ -28,6 +35,7 @@ public abstract class HudItem {
         this.posY = this.getDefaultPosY();
         this.id = this.getDefaultID();
     }
+
 
     /**
      * Unique name for the HudItem, only used for NBT saving/loading
@@ -39,7 +47,7 @@ public abstract class HudItem {
      * Display name for the HudItem in config screen
      * @return String value for display name of the {@link HudItem}
      */
-    public String getButtonLabel() {
+    public String getDisplayName() {
         return I18n.format(String.format("advancedhud.item.%s.name", this.getName()));
     }
 
@@ -69,13 +77,6 @@ public abstract class HudItem {
      */
     public GuiScreen getConfigScreen() {
         return new GuiScreenHudItem(this.mc.currentScreen, this);
-    }
-
-    /**
-     * If you don't want any rotation, you can simply make this method return.
-     */
-    public void rotate() {
-        this.rotated = !this.rotated;
     }
 
     /**
@@ -122,6 +123,7 @@ public abstract class HudItem {
         this.alignment = (compound.hasKey("alignment") ? Alignment.fromString(compound.getString("alignment")) : this.getDefaultAlignment());
         this.id = (compound.hasKey("id") ? compound.getInteger("id") : this.getDefaultID());
         this.rotated = (compound.hasKey("rotated") ? compound.getBoolean("rotated") : false);
+        this.enabled = (compound.hasKey("enabled") ? compound.getBoolean("enabled") : true);
     }
 
     public void saveToNBT(NBTTagCompound compound) {
@@ -130,6 +132,7 @@ public abstract class HudItem {
         compound.setString("alignment", this.alignment.toString());
         compound.setInteger("id", this.id);
         compound.setBoolean("rotated", this.rotated);
+        compound.setBoolean("enabled", this.enabled);
     }
 
     public boolean shouldDrawOnMount() {
@@ -154,6 +157,14 @@ public abstract class HudItem {
 
     public void drawRect(int left, int top, int right, int bottom, int color) {
         RenderAssist.drawRect(left, top, right, bottom, color);
+    }
+
+    public List<String> getTooltip() {
+        List<String> tooltip = new ArrayList<String>();
+        tooltip.add(EnumChatFormatting.YELLOW + this.getDisplayName());
+        tooltip.add(EnumChatFormatting.GRAY + I18n.format("advancedhud.huditems.rotation", EnumChatFormatting.RESET + I18n.format(!this.rotated ? "gui.horizontal" : "gui.vertical")));
+        tooltip.add(EnumChatFormatting.GRAY + I18n.format("advancedhud.huditems.enabled", EnumChatFormatting.RESET + I18n.format(this.enabled ? "gui.yes" : "gui.no")));
+        return tooltip;
     }
 
 }

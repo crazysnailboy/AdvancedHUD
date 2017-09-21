@@ -47,6 +47,8 @@ public class HudItemJumpBar extends HudItem {
     @Override
     public void render(float partialTicks) {
 
+        if (!(enabled || configMode())) return;
+
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 
