@@ -51,13 +51,15 @@ public class HudItemTooltips extends HudItem {
     @Override
     public void render(float partialTicks) {
 
+        if (!(enabled || configMode())) return;
+
         boolean renderTooltip = false;
         String tooltipText = null;
         int opacity = 255;
 
         if (configMode()) {
             renderTooltip = true;
-            tooltipText = this.getButtonLabel();
+            tooltipText = this.getDisplayName();
         } else if (this.mc.gameSettings.heldItemTooltips) {
             if (this.remainingHighlightTicks > 0 && this.highlightingItemStack != null) {
                 renderTooltip = true;

@@ -1,5 +1,6 @@
 package advancedhud.client.ui;
 
+import java.util.List;
 import advancedhud.api.HudItem;
 import advancedhud.client.GuiAdvancedHUD;
 import net.minecraft.client.Minecraft;
@@ -11,18 +12,8 @@ public class GuiHudItemButton extends GuiButton {
     private final HudItem huditem;
 
     public GuiHudItemButton(HudItem huditem) {
-        this(huditem, huditem.getDefaultID(), huditem.posX, huditem.posY, huditem.getWidth(), huditem.getHeight(), huditem.getButtonLabel());
-    }
-
-    private GuiHudItemButton(HudItem huditem, int id, int xPosition, int yPosition, int width, int height, String buttonText) {
-        super(id, xPosition, yPosition, width, height, buttonText);
+        super(huditem.getDefaultID(), huditem.posX, huditem.posY, huditem.getWidth(), huditem.getHeight(), huditem.getDisplayName());
         this.huditem = huditem;
-        this.id = id;
-        this.xPosition = xPosition;
-        this.yPosition = yPosition;
-        this.width = width;
-        this.height = height;
-        this.displayString = buttonText;
     }
 
     @Override
@@ -41,6 +32,15 @@ public class GuiHudItemButton extends GuiButton {
             }
 
         }
+    }
+
+    public List<String> getTooltip() {
+        return this.huditem.getTooltip();
+    }
+
+    @Override
+    public int getHoverState(boolean mouseOver) {
+        return super.getHoverState(mouseOver);
     }
 
 }

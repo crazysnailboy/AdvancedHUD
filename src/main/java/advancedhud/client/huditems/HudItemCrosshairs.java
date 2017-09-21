@@ -53,7 +53,10 @@ public class HudItemCrosshairs extends HudItem {
 
     @Override
     public void render(float partialTicks) {
-        GlStateManager.enableBlend();
+
+        if (!(enabled || configMode())) return;
+
+       GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR, 1, 0);
         GlStateManager.enableAlpha();
 
