@@ -1,16 +1,16 @@
-advancedhud.item.air.name=AIR
-advancedhud.item.armor.name=ARMOR
-advancedhud.item.bossbar.name=BOSSBAR
-advancedhud.item.crosshair.name=CROSSHAIRS
-advancedhud.item.experiencebar.name=EXPERIENCEBAR
-advancedhud.item.food.name=FOOD
-advancedhud.item.health.name=HEALTH
-advancedhud.item.healthmount.name=HEATH (MOUNT)
-advancedhud.item.hotbar.name=HOTBAR
-advancedhud.item.jumpbar.name=JUMPBAR
-advancedhud.item.record.name=RECORDDISPLAY
-advancedhud.item.scoreboard.name=SCOREBOARD
-advancedhud.item.itemtooltip.name=TOOLTIP
+advancedhud.item.air.name=Breath Bar
+advancedhud.item.armor.name=Armor Bar
+advancedhud.item.bossbar.name=Boss Health
+advancedhud.item.crosshair.name=Crosshair
+advancedhud.item.experiencebar.name=Experience Bar
+advancedhud.item.food.name=Hunger Bar
+advancedhud.item.health.name=Heath Bar
+advancedhud.item.healthmount.name=Mount Heath Bar
+advancedhud.item.hotbar.name=Hotbar
+advancedhud.item.jumpbar.name=Jump Bar
+advancedhud.item.record.name=Music Overlay
+advancedhud.item.scoreboard.name=Scoreboard
+advancedhud.item.itemtooltip.name=Item Tooltip
 
 advancedhud.configuration.title=AdvancedHUD Config
 advancedhud.configuration.help.1=LEFT CLICK to reposition, RIGHT CLICK to change settings
@@ -23,6 +23,11 @@ advancedhud.reposition.controls=CLICK to confirm, ESCAPE to cancel, R to reset, 
 advancedhud.reposition.alignment=Alignment: %1$s
 
 advancedhud.huditems.crosshairselector=Crosshair Selector
-advancedhud.huditems.rotate=Rotate?
+
+advancedhud.huditems.rotation=Rotation: %1$s
+advancedhud.huditems.enabled=Enabled: %1$s
 
 advancedhud.key.config=§aAdvancedHUD Config
+
+gui.horizontal=Horizontal
+gui.vertical=Vertical
