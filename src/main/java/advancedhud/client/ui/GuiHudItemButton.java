@@ -1,7 +1,7 @@
 package advancedhud.client.ui;
 
+import java.util.List;
 import advancedhud.api.HudItem;
-import advancedhud.client.GuiAdvancedHUD;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
@@ -11,18 +11,8 @@ public class GuiHudItemButton extends GuiButton {
     private final HudItem huditem;
 
     public GuiHudItemButton(HudItem huditem) {
-        this(huditem, huditem.getDefaultID(), huditem.posX, huditem.posY, huditem.getWidth(), huditem.getHeight(), huditem.getButtonLabel());
-    }
-
-    private GuiHudItemButton(HudItem huditem, int id, int x, int y, int width, int height, String buttonText) {
-        super(id, x, y, width, height, buttonText);
+        super(huditem.getDefaultID(), huditem.posX, huditem.posY, huditem.getWidth(), huditem.getHeight(), huditem.getDisplayName());
         this.huditem = huditem;
-        this.id = id;
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        this.displayString = buttonText;
     }
 
     @Override
@@ -30,7 +20,7 @@ public class GuiHudItemButton extends GuiButton {
         if (this.visible) {
 
             drawRect(huditem.posX, huditem.posY, huditem.posX + huditem.getWidth(), huditem.posY + huditem.getHeight(), 0x22FFFFFF);
-            huditem.render(GuiAdvancedHUD.partialTicks);
+            huditem.render(partialTicks);
 
             boolean hoverState = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
             if (hoverState) {
@@ -41,6 +31,15 @@ public class GuiHudItemButton extends GuiButton {
             }
 
         }
+    }
+
+    public List<String> getTooltip() {
+        return this.huditem.getTooltip();
+    }
+
+    @Override
+    public int getHoverState(boolean mouseOver) {
+        return super.getHoverState(mouseOver);
     }
 
 }
