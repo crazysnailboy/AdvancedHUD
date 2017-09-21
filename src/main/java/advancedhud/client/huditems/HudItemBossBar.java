@@ -59,6 +59,9 @@ public class HudItemBossBar extends HudItem {
 
     @Override
     public void render(float partialTicks) {
+
+        if (!(enabled || configMode())) return;
+
         this.mc.renderEngine.bindTexture(Gui.ICONS);
 
         int x = this.posX;
@@ -73,6 +76,8 @@ public class HudItemBossBar extends HudItem {
 
     @Override
     public void render(float partialTicks, Gui gui) {
+
+        if (!(enabled || configMode())) return;
 
         Map<UUID, BossInfoLerping> bossInfos = ReflectionHelper.getFieldValue(mapBossInfosField, ((GuiIngameForge)gui).getBossOverlay());
 
