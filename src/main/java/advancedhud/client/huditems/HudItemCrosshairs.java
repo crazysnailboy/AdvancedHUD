@@ -52,11 +52,26 @@ public class HudItemCrosshairs extends HudItem {
     }
 
     @Override
+    public boolean isMoveable() {
+        return false;
+    }
+
+    @Override
+    public boolean canRotate() {
+        return false;
+    }
+
+    @Override
+    public boolean shouldDrawOnMount() {
+        return true;
+    }
+
+    @Override
     public void render(float partialTicks) {
 
         if (!(enabled || configMode())) return;
 
-       GlStateManager.enableBlend();
+        GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR, 1, 0);
         GlStateManager.enableAlpha();
 
@@ -100,21 +115,6 @@ public class HudItemCrosshairs extends HudItem {
         compound.setInteger("selectedIconX", this.selectedIconX);
         compound.setInteger("selectedIconY", this.selectedIconY);
         super.saveToNBT(compound);
-    }
-
-    @Override
-    public boolean isMoveable() {
-        return false;
-    }
-
-    @Override
-    public boolean canRotate() {
-        return false;
-    }
-
-    @Override
-    public boolean shouldDrawOnMount() {
-        return true;
     }
 
 }

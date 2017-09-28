@@ -49,26 +49,8 @@ public class HudItemRecordDisplay extends HudItem {
     }
 
     @Override
-    public void render(float partialTicks) {
-
-        if (!(enabled || configMode())) return;
-
-       if (this.recordPlayingUpFor > 0) {
-            float hue = this.recordPlayingUpFor - partialTicks;
-            int opacity = (int)(hue * 256.0F / 20.0F);
-            if (opacity > 255) opacity = 255;
-
-            if (opacity > 0) {
-                GlStateManager.pushMatrix();
-                GlStateManager.translate(this.posX + this.getWidth() / 2, this.posY + this.getHeight() / 2, 0.0F);
-                GlStateManager.enableBlend();
-                GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-                int color = this.recordIsPlaying ? Color.HSBtoRGB(hue / 50.0F, 0.7F, 0.6F) & 0xFFFFFF : 0xFFFFFF;
-                this.mc.fontRendererObj.drawString(this.recordPlaying, -this.mc.fontRendererObj.getStringWidth(this.recordPlaying) / 2, -4, color | opacity << 24);
-                GlStateManager.disableBlend();
-                GlStateManager.popMatrix();
-            }
-        }
+    public boolean canRotate() {
+        return false;
     }
 
     @Override
@@ -84,8 +66,26 @@ public class HudItemRecordDisplay extends HudItem {
     }
 
     @Override
-    public boolean canRotate() {
-        return false;
+    public void render(float partialTicks) {
+
+        if (!(enabled || configMode())) return;
+
+        if (this.recordPlayingUpFor > 0) {
+            float hue = this.recordPlayingUpFor - partialTicks;
+            int opacity = (int)(hue * 256.0F / 20.0F);
+            if (opacity > 255) opacity = 255;
+
+            if (opacity > 0) {
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(this.posX + this.getWidth() / 2, this.posY + this.getHeight() / 2, 0.0F);
+                GlStateManager.enableBlend();
+                GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+                int color = this.recordIsPlaying ? Color.HSBtoRGB(hue / 50.0F, 0.7F, 0.6F) & 0xFFFFFF : 0xFFFFFF;
+                this.mc.fontRendererObj.drawString(this.recordPlaying, -this.mc.fontRendererObj.getStringWidth(this.recordPlaying) / 2, -4, color | opacity << 24);
+                GlStateManager.disableBlend();
+                GlStateManager.popMatrix();
+            }
+        }
     }
 
     public void setRecordPlaying(String recordName, boolean isPlaying) {

@@ -22,12 +22,15 @@ advancedhud.configuration.mount=mount
 advancedhud.reposition.controls=CLICK to confirm, ESCAPE to cancel, R to reset, CTRL to align
 advancedhud.reposition.alignment=Alignment: %1$s
 
-advancedhud.huditems.crosshairselector=Crosshair Selector
-
 advancedhud.huditems.rotation=Rotation: %1$s
 advancedhud.huditems.enabled=Enabled: %1$s
+advancedhud.huditems.style=Style: %1$s
+advancedhud.huditems.crosshairselector=Crosshair Selector
 
 advancedhud.key.config=§aAdvancedHUD Config
 
 gui.horizontal=Horizontal
 gui.vertical=Vertical
+
+advancedhud.huditemstyle.glyph=Glyphs
+advancedhud.huditemstyle.solidbar=Solid Bar

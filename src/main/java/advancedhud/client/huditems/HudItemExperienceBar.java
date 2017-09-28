@@ -45,17 +45,22 @@ public class HudItemExperienceBar extends HudItem {
     }
 
     @Override
+    public boolean isRenderedInCreative() {
+        return false;
+    }
+
+    @Override
     public void render(float partialTicks) {
 
         if (!(enabled || configMode())) return;
 
-       GlStateManager.enableBlend();
+        GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 
         this.mc.renderEngine.bindTexture(Gui.icons);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-        if (this.mc.playerController.gameIsSurvivalOrAdventure() || this.configMode()){
+        if (this.mc.playerController.gameIsSurvivalOrAdventure() || this.configMode()) {
 
             int left = this.posX;
             int top = this.posY;
@@ -63,7 +68,8 @@ public class HudItemExperienceBar extends HudItem {
             int cap = this.mc.thePlayer.xpBarCap();
             if (cap > 0) {
                 short barWidth = 182;
-                int filled = (int)(this.mc.thePlayer.experience * (float)(barWidth + 1)); if (this.configMode() && filled == 0) filled = 91;
+                int filled = (int)(this.mc.thePlayer.experience * (float)(barWidth + 1));
+                if (this.configMode() && filled == 0) filled = 91;
 
                 GlStateManager.pushMatrix();
                 if (this.rotated) {
@@ -93,11 +99,6 @@ public class HudItemExperienceBar extends HudItem {
         }
 
         GlStateManager.disableBlend();
-    }
-
-    @Override
-    public boolean isRenderedInCreative() {
-        return false;
     }
 
 }
