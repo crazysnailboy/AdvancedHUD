@@ -49,12 +49,28 @@ public class HudItemHealthMount extends HudItem {
     }
 
     @Override
+    public boolean shouldDrawOnMount() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldDrawAsPlayer() {
+        return false;
+    }
+
+    @Override
+    public boolean isRenderedInCreative() {
+        return true;
+    }
+
+    @Override
     public void render(float partialTicks) {
 
         if (!(enabled || configMode())) return;
 
         EntityPlayer player = (EntityPlayer)this.mc.getRenderViewEntity();
-        Entity ridingEntity = player.ridingEntity; if (ridingEntity == null && this.configMode()) ridingEntity = new EntityHorse(this.mc.theWorld);
+        Entity ridingEntity = player.ridingEntity;
+        if (ridingEntity == null && this.configMode()) ridingEntity = new EntityHorse(this.mc.theWorld);
         if (!(ridingEntity instanceof EntityLivingBase)) return;
 
         EntityLivingBase mount = (EntityLivingBase)ridingEntity;
@@ -90,21 +106,6 @@ public class HudItemHealthMount extends HudItem {
         }
 
         GlStateManager.disableBlend();
-    }
-
-    @Override
-    public boolean shouldDrawOnMount() {
-        return true;
-    }
-
-    @Override
-    public boolean shouldDrawAsPlayer() {
-        return false;
-    }
-
-    @Override
-    public boolean isRenderedInCreative() {
-        return true;
     }
 
 }

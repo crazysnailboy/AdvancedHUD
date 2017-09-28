@@ -24,7 +24,6 @@ public class GuiAdvancedHUDConfiguration extends GuiScreen {
         this.addButtons();
     }
 
-    @SuppressWarnings("unchecked")
     private void addButtons() {
         this.buttonList.clear();
         this.buttonList.add(new GuiButton(-1, HUDRegistry.screenWidth - 30, 10, 20, 20, "X"));
