@@ -55,6 +55,11 @@ public class HudItemHotbar extends HudItem {
     }
 
     @Override
+    public boolean shouldDrawOnMount() {
+        return true;
+    }
+
+    @Override
     public void render(float partialTicks) {
 
         if (!(enabled || configMode())) return;
@@ -138,7 +143,8 @@ public class HudItemHotbar extends HudItem {
                 float f1 = this.mc.player.getCooledAttackStrength(0.0F);
                 if (f1 < 1.0F) {
 
-                    int x; int y;
+                    int x;
+                    int y;
                     if (!this.rotated) {
                         x = this.posX + (enumhandside == EnumHandSide.RIGHT ? -22 : this.getWidth() + 6);
                         y = this.posY + 3;
@@ -177,16 +183,6 @@ public class HudItemHotbar extends HudItem {
             }
             this.mc.getRenderItem().renderItemOverlays(this.mc.fontRenderer, stack, posX, posY);
         }
-    }
-
-    @Override
-    public boolean shouldDrawOnMount() {
-        return true;
-    }
-
-    @Override
-    public boolean shouldDrawAsPlayer() {
-        return true;
     }
 
 }

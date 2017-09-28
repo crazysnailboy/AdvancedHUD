@@ -50,6 +50,38 @@ public class HudItemTooltips extends HudItem {
     }
 
     @Override
+    public boolean canRotate() {
+        return false;
+    }
+
+    @Override
+    public boolean shouldDrawOnMount() {
+        return true;
+    }
+
+    @Override
+    public boolean needsTick() {
+        return true;
+    }
+
+    @Override
+    public void tick() {
+        if (this.mc.player != null) {
+            ItemStack itemstack = this.mc.player.inventory.getCurrentItem();
+            if (itemstack == null) {
+                this.remainingHighlightTicks = 0;
+            } else if (this.highlightingItemStack != null && itemstack.getItem() == this.highlightingItemStack.getItem() && ItemStack.areItemStackTagsEqual(itemstack, this.highlightingItemStack) && (itemstack.isItemStackDamageable() || itemstack.getMetadata() == this.highlightingItemStack.getMetadata())) {
+                if (this.remainingHighlightTicks > 0) {
+                    --this.remainingHighlightTicks;
+                }
+            } else {
+                this.remainingHighlightTicks = 40;
+            }
+            this.highlightingItemStack = itemstack;
+        }
+    }
+
+    @Override
     public void render(float partialTicks) {
 
         if (!(enabled || configMode())) return;
@@ -91,38 +123,6 @@ public class HudItemTooltips extends HudItem {
             GlStateManager.disableBlend();
             GlStateManager.popMatrix();
         }
-    }
-
-    @Override
-    public void tick() {
-        if (this.mc.player != null) {
-            ItemStack itemstack = this.mc.player.inventory.getCurrentItem();
-            if (itemstack == null) {
-                this.remainingHighlightTicks = 0;
-            } else if (this.highlightingItemStack != null && itemstack.getItem() == this.highlightingItemStack.getItem() && ItemStack.areItemStackTagsEqual(itemstack, this.highlightingItemStack) && (itemstack.isItemStackDamageable() || itemstack.getMetadata() == this.highlightingItemStack.getMetadata())) {
-                if (this.remainingHighlightTicks > 0) {
-                    --this.remainingHighlightTicks;
-                }
-            } else {
-                this.remainingHighlightTicks = 40;
-            }
-            this.highlightingItemStack = itemstack;
-        }
-    }
-
-    @Override
-    public boolean needsTick() {
-        return true;
-    }
-
-    @Override
-    public boolean shouldDrawOnMount() {
-        return true;
-    }
-
-    @Override
-    public boolean canRotate() {
-        return false;
     }
 
 }

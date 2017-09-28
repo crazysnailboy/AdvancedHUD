@@ -58,6 +58,11 @@ public class HudItemBossBar extends HudItem {
     }
 
     @Override
+    public boolean canRotate() {
+        return false;
+    }
+
+    @Override
     public void render(float partialTicks) {
 
         if (!(enabled || configMode())) return;
@@ -115,11 +120,6 @@ public class HudItemBossBar extends HudItem {
                 y += 10 + this.mc.fontRenderer.FONT_HEIGHT;
             }
         }
-    }
-
-    @Override
-    public boolean canRotate() {
-        return false;
     }
 
 }

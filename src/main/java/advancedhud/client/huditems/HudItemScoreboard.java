@@ -71,11 +71,9 @@ public class HudItemScoreboard extends HudItem {
         if (objective != null) {
             Scoreboard scoreboard = objective.getScoreboard();
             Collection<Score> collection = scoreboard.getSortedScores(objective);
-            List<Score> list = Lists.newArrayList(Iterables.filter(collection, new Predicate<Score>()
-            {
+            List<Score> list = Lists.newArrayList(Iterables.filter(collection, new Predicate<Score>() {
                 @Override
-                public boolean apply(@Nullable Score p_apply_1_)
-                {
+                public boolean apply(@Nullable Score p_apply_1_) {
                     return p_apply_1_.getPlayerName() != null && !p_apply_1_.getPlayerName().startsWith("#");
                 }
             }));
@@ -87,8 +85,7 @@ public class HudItemScoreboard extends HudItem {
             }
 
             int i = this.mc.fontRenderer.getStringWidth(objective.getDisplayName());
-            for (Score score : collection)
-            {
+            for (Score score : collection) {
                 ScorePlayerTeam scoreplayerteam = scoreboard.getPlayersTeam(score.getPlayerName());
                 String s = ScorePlayerTeam.formatPlayerName(scoreplayerteam, score.getPlayerName()) + ": " + TextFormatting.RED + score.getScorePoints();
                 i = Math.max(i, this.mc.fontRenderer.getStringWidth(s));
