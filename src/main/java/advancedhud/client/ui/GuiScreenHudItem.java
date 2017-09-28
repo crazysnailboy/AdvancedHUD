@@ -14,6 +14,7 @@ public class GuiScreenHudItem extends GuiScreen {
 
     private GuiButton rotateButton;
     private GuiButton enableButton;
+    private GuiButton styleButton;
 
     public GuiScreenHudItem(GuiScreen parentScreen, HudItem hudItem) {
         this.hudItem = hudItem;
@@ -28,10 +29,14 @@ public class GuiScreenHudItem extends GuiScreen {
         int xPosition = (this.width / 2) - 100;
         int yPosition = (this.height / 4) + -16;
 
-        this.buttonList.add(rotateButton = new GuiButton(100, xPosition, yPosition + 24, 200, 20, getRotationButtonText()));
+        this.buttonList.add(rotateButton = new GuiButton(100, xPosition, yPosition + (1 * 24), 200, 20, getRotationButtonText()));
         if (!this.hudItem.canRotate()) rotateButton.enabled = false;
 
-        this.buttonList.add(enableButton = new GuiButton(101, xPosition, yPosition + 48, 200, 20, getEnabledButtonText()));
+        this.buttonList.add(enableButton = new GuiButton(101, xPosition, yPosition + (2 * 24), 200, 20, getEnabledButtonText()));
+
+        if (hudItem.canChangeStyle()) {
+            this.buttonList.add(styleButton = new GuiButton(102, xPosition, yPosition + (3 * 24), 200, 20, getStyleButtonText()));
+        }
 
         if (this.hudItem instanceof HudItemCrosshairs) {
             HudItemCrosshairs cross = (HudItemCrosshairs)this.hudItem;
@@ -63,6 +68,9 @@ public class GuiScreenHudItem extends GuiScreen {
         } else if (button.id == 101) {
             this.hudItem.enabled = !this.hudItem.enabled;
             this.enableButton.displayString = getEnabledButtonText();
+        } else if (button.id == 102) {
+            this.hudItem.style = this.hudItem.style.getNext();
+            this.styleButton.displayString = getStyleButtonText();
         }
         super.actionPerformed(button);
     }
@@ -74,6 +82,10 @@ public class GuiScreenHudItem extends GuiScreen {
 
     private String getEnabledButtonText() {
         return I18n.format("advancedhud.huditems.enabled", I18n.format(this.hudItem.enabled ? "gui.yes" : "gui.no"));
+    }
+
+    private String getStyleButtonText() {
+        return I18n.format("advancedhud.huditems.style", I18n.format(this.hudItem.style.getUnlocalizedName()));
     }
 
 }

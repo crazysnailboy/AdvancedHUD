@@ -48,6 +48,21 @@ public class HudItemHealthMount extends HudItem {
     }
 
     @Override
+    public boolean shouldDrawOnMount() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldDrawAsPlayer() {
+        return false;
+    }
+
+    @Override
+    public boolean isRenderedInCreative() {
+        return true;
+    }
+
+    @Override
     public void render(float partialTicks) {
 
         if (!(enabled || configMode())) return;
@@ -89,21 +104,6 @@ public class HudItemHealthMount extends HudItem {
         }
 
         GL11.glDisable(GL11.GL_BLEND);
-    }
-
-    @Override
-    public boolean shouldDrawOnMount() {
-        return true;
-    }
-
-    @Override
-    public boolean shouldDrawAsPlayer() {
-        return false;
-    }
-
-    @Override
-    public boolean isRenderedInCreative() {
-        return true;
     }
 
 }

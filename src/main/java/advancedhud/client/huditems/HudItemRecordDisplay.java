@@ -49,6 +49,23 @@ public class HudItemRecordDisplay extends HudItem {
     }
 
     @Override
+    public boolean canRotate() {
+        return false;
+    }
+
+    @Override
+    public boolean needsTick() {
+        return true;
+    }
+
+    @Override
+    public void tick() {
+        if (this.recordPlayingUpFor > 0) {
+            --this.recordPlayingUpFor;
+        }
+    }
+
+    @Override
     public void render(float partialTicks) {
 
         if (!(enabled || configMode())) return;
@@ -69,23 +86,6 @@ public class HudItemRecordDisplay extends HudItem {
                 GL11.glPopMatrix();
             }
         }
-    }
-
-    @Override
-    public boolean needsTick() {
-        return true;
-    }
-
-    @Override
-    public void tick() {
-        if (this.recordPlayingUpFor > 0) {
-            --this.recordPlayingUpFor;
-        }
-    }
-
-    @Override
-    public boolean canRotate() {
-        return false;
     }
 
     public void setRecordPlaying(String recordName, boolean isPlaying) {

@@ -1,8 +1,11 @@
 package advancedhud.api;
 
 import org.lwjgl.opengl.GL11;
+import advancedhud.AdvancedHUD;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Some methods which are usually in GuiIngame, but since we don't have direct access when rendering in HudItem, you may need to use these.
@@ -10,6 +13,9 @@ import net.minecraft.client.renderer.Tessellator;
  *
  */
 public class RenderAssist {
+
+    private static final ResourceLocation ICONS = new ResourceLocation(AdvancedHUD.MODID, "textures/gui/ahud_icons.png");
+    private static final Minecraft mc = Minecraft.getMinecraft();
 
     /**
      * Controls render "level" for layering textures overtop one another.
@@ -131,10 +137,10 @@ public class RenderAssist {
         float f = 0.00390625F;
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(x + 0, y + height, RenderAssist.zLevel, (textureX + 0) * f, (textureY + height) * f);
-        tessellator.addVertexWithUV(x + width, y + height, RenderAssist.zLevel, (textureX + width) * f, (textureY + height) * f);
-        tessellator.addVertexWithUV(x + width, y + 0, RenderAssist.zLevel, (textureX + width) * f, (textureY + 0) * f);
-        tessellator.addVertexWithUV(x + 0, y + 0, RenderAssist.zLevel, (textureX + 0) * f, (textureY + 0) * f);
+        tessellator.addVertexWithUV(x + 0, y + height, zLevel, (textureX + 0) * f, (textureY + height) * f);
+        tessellator.addVertexWithUV(x + width, y + height, zLevel, (textureX + width) * f, (textureY + height) * f);
+        tessellator.addVertexWithUV(x + width, y + 0, zLevel, (textureX + width) * f, (textureY + 0) * f);
+        tessellator.addVertexWithUV(x + 0, y + 0, zLevel, (textureX + 0) * f, (textureY + 0) * f);
         tessellator.draw();
     }
 
@@ -204,5 +210,94 @@ public class RenderAssist {
 //            itemRenderer.renderItemOverlayIntoGUI(mc.fontRendererObj, mc.getTextureManager(), itemstack, x, y);
 //        }
 //    }
+
+
+    public static void renderSolidBar(int x, int y, int width, int height, float fill, int color, boolean highlight) {
+
+        mc.renderEngine.bindTexture(ICONS);
+
+        if (fill < 1.0F) {
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            renderSolidBar(x, y, 8, 48, width, height, 1.0F);
+        }
+        if (fill > 0.0F) {
+            float r = (color >> 16 & 255) / 255.0F;
+            float g = (color >> 8 & 255) / 255.0F;
+            float b = (color & 255) / 255.0F;
+            GL11.glColor4f(r, g, b, 1.0F);
+            renderSolidBar(x, y, 0, 48, width, height, fill);
+        }
+    }
+
+    private static void renderSolidBar(int x, int y, int textureX, int textureY, int width, int height, float fill)
+    {
+        int fillWidth = (int)(width * fill);
+
+        int widthLeft = Math.min(fillWidth, 4);
+        int widthRight = 4 + fillWidth - width;
+
+        int heightTop = Math.min(height - 2, 4);
+        int heightBottom = Math.min(height - 2, 4);
+
+        int widthCenter = Math.min(width - 8, fillWidth - 4);
+        int heightCenter = height - heightTop - heightBottom;
+
+        float u0 = textureX / 256.0F;
+        float u1 = (textureX + widthLeft) / 256.0F;
+        float u2 = (textureX + 4) / 256.0F;
+        float u3 = (textureX + 4 + widthRight) / 256.0F;
+
+        float v0 = textureY / 256.0F;
+        float v1 = (textureY + heightTop) / 256.0F;
+        float v2 = (textureY + 8 - heightBottom) / 256.0F;
+        float v3 = (textureY + 8) / 256.0F;
+        if (widthLeft > 0)
+        {
+            if (heightTop > 0) {
+                drawSpriteUV(x, y, widthLeft, heightTop, u0, v0, u1, v1);
+            }
+            if (heightCenter > 0) {
+                drawSpriteUV(x, y + heightTop, widthLeft, heightCenter, u0, v1, u1, v2);
+            }
+            if (heightBottom > 0) {
+                drawSpriteUV(x, y + height - heightBottom, widthLeft, heightTop, u0, v2, u1, v3);
+            }
+        }
+        if (widthCenter > 0)
+        {
+            if (heightTop > 0) {
+                drawSpriteUV(x + widthLeft, y, widthCenter, heightTop, u1, v0, u2, v1);
+            }
+            if (heightCenter > 0) {
+                drawSpriteUV(x + widthLeft, y + heightTop, widthCenter, heightCenter, u1, v1, u2, v2);
+            }
+            if (heightBottom > 0) {
+                drawSpriteUV(x + widthLeft, y + height - heightBottom, widthCenter, heightBottom, u1, v2, u2, v3);
+            }
+        }
+        if (widthRight > 0)
+        {
+            if (heightTop > 0) {
+                drawSpriteUV(x + width - 4, y, widthRight, heightTop, u2, v0, u3, v1);
+            }
+            if (heightCenter > 0) {
+                drawSpriteUV(x + width - 4, y + heightTop, widthRight, heightCenter, u2, v1, u3, v2);
+            }
+            if (heightBottom > 0) {
+                drawSpriteUV(x + width - 4, y + height - heightBottom, widthRight, heightBottom, u2, v2, u3, v3);
+            }
+        }
+    }
+
+    private static void drawSpriteUV(int x, int y, int width, int height, float u1, float v1, float u2, float v2)
+    {
+        Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawingQuads();
+        tessellator.addVertexWithUV(x, y + height, zLevel, u1, v2);
+        tessellator.addVertexWithUV(x + width, y + height, zLevel, u2, v2);
+        tessellator.addVertexWithUV(x + width, y, zLevel, u2, v1);
+        tessellator.addVertexWithUV(x, y, zLevel, u1, v1);
+        tessellator.draw();
+    }
 
 }

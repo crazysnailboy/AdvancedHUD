@@ -53,6 +53,11 @@ public class HudItemHotbar extends HudItem {
     }
 
     @Override
+    public boolean shouldDrawOnMount() {
+        return true;
+    }
+
+    @Override
     public void render(float partialTicks) {
 
         if (!(enabled || configMode())) return;
@@ -108,11 +113,6 @@ public class HudItemHotbar extends HudItem {
             }
             itemRenderer.renderItemOverlayIntoGUI(this.mc.fontRendererObj, this.mc.getTextureManager(), itemstack, xPos + 91, yPos + 12);
         }
-    }
-
-    @Override
-    public boolean shouldDrawOnMount() {
-        return true;
     }
 
 }

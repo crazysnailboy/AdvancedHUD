@@ -27,6 +27,7 @@ public abstract class HudItem {
     private int id;
     public boolean rotated = false;
     public boolean enabled = true;
+    public RenderStyle style = RenderStyle.GLYPH;
 
 
     public HudItem() {
@@ -96,11 +97,27 @@ public abstract class HudItem {
         return true;
     }
 
+    public boolean canRotate() {
+        return true;
+    }
+
+    public boolean canChangeStyle() {
+        return false;
+    }
+
     public boolean isEnabledByDefault() {
         return true;
     }
 
     public boolean isRenderedInCreative() {
+        return true;
+    }
+
+    public boolean shouldDrawOnMount() {
+        return false;
+    }
+
+    public boolean shouldDrawAsPlayer() {
         return true;
     }
 
@@ -124,6 +141,7 @@ public abstract class HudItem {
         this.id = (compound.hasKey("id") ? compound.getInteger("id") : this.getDefaultID());
         this.rotated = (compound.hasKey("rotated") ? compound.getBoolean("rotated") : false);
         this.enabled = (compound.hasKey("enabled") ? compound.getBoolean("enabled") : true);
+        this.style = (compound.hasKey("style") ? RenderStyle.values()[compound.getInteger("style")] : RenderStyle.GLYPH);
     }
 
     public void saveToNBT(NBTTagCompound compound) {
@@ -133,18 +151,7 @@ public abstract class HudItem {
         compound.setInteger("id", this.id);
         compound.setBoolean("rotated", this.rotated);
         compound.setBoolean("enabled", this.enabled);
-    }
-
-    public boolean shouldDrawOnMount() {
-        return false;
-    }
-
-    public boolean shouldDrawAsPlayer() {
-        return true;
-    }
-
-    public boolean canRotate() {
-        return true;
+        compound.setInteger("style", this.style.ordinal());
     }
 
     public boolean configMode() {

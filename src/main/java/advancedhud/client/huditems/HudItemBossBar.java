@@ -46,6 +46,11 @@ public class HudItemBossBar extends HudItem {
     }
 
     @Override
+    public boolean canRotate() {
+        return false;
+    }
+
+    @Override
     public void render(float partialTicks) {
 
         if (!(enabled || configMode())) return;
@@ -62,7 +67,8 @@ public class HudItemBossBar extends HudItem {
 
             short short1 = 182;
             int j = this.posX;
-            int k = (int)(BossStatus.healthScale * (short1 + 1)); if (BossStatus.bossName == null) k = 182;
+            int k = (int)(BossStatus.healthScale * (short1 + 1));
+            if (BossStatus.bossName == null) k = 182;
             int b0 = this.posY + 11;
             this.drawTexturedModalRect(j, b0, 0, 74, short1, 5);
             this.drawTexturedModalRect(j, b0, 0, 74, short1, 5);
@@ -76,11 +82,6 @@ public class HudItemBossBar extends HudItem {
         }
 
         GL11.glDisable(GL11.GL_BLEND);
-    }
-
-    @Override
-    public boolean canRotate() {
-        return false;
     }
 
 }

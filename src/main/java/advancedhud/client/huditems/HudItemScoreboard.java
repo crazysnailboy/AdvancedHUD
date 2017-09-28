@@ -34,7 +34,6 @@ public class HudItemScoreboard extends HudItem {
         return HUDRegistry.screenWidth - 40;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public int getDefaultPosY() {
         ScoreObjective objective = this.getScoreboardObjective();

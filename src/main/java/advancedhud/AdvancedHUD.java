@@ -25,8 +25,8 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 public class AdvancedHUD {
 
     public final static String MODID = "advancedhud";
-    public final static String VERSION = "${version}";
     public final static String NAME = "AdvancedHUD";
+    public final static String VERSION = "${version}";
 
     public static final Logger log = LogManager.getLogger(MODID);
 
@@ -37,7 +37,7 @@ public class AdvancedHUD {
 
     @EventHandler
     public void onInit(FMLInitializationEvent event) {
-        FMLCommonHandler.instance().bus().register(new TickHandler());
+        TickHandler.register();
         FMLCommonHandler.instance().bus().register(new KeyRegister());
     }
 
