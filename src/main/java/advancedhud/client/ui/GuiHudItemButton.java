@@ -23,8 +23,8 @@ public class GuiHudItemButton extends GuiButton {
             drawRect(huditem.posX, huditem.posY, huditem.posX + huditem.getWidth(), huditem.posY + huditem.getHeight(), 0x22FFFFFF);
             huditem.render(GuiAdvancedHUD.partialTicks);
 
-            boolean hoverState = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
-            if (hoverState) {
+            this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
+            if (this.hovered) {
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(0, 0, 200F);
                 this.drawCenteredString(mc.fontRendererObj, this.displayString, this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2 + 1, 0xFFFFFF);

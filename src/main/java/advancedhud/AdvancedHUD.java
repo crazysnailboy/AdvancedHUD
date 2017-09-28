@@ -3,7 +3,18 @@ package advancedhud;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import advancedhud.api.HUDRegistry;
-import advancedhud.client.huditems.*;
+import advancedhud.client.huditems.HudItemAir;
+import advancedhud.client.huditems.HudItemArmor;
+import advancedhud.client.huditems.HudItemBossBar;
+import advancedhud.client.huditems.HudItemCrosshairs;
+import advancedhud.client.huditems.HudItemExperienceBar;
+import advancedhud.client.huditems.HudItemFood;
+import advancedhud.client.huditems.HudItemHealth;
+import advancedhud.client.huditems.HudItemHealthMount;
+import advancedhud.client.huditems.HudItemHotbar;
+import advancedhud.client.huditems.HudItemJumpBar;
+import advancedhud.client.huditems.HudItemRecordDisplay;
+import advancedhud.client.huditems.HudItemTooltips;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -14,8 +25,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 public class AdvancedHUD {
 
     public final static String MODID = "advancedhud";
-    public final static String VERSION = "${version}";
     public final static String NAME = "AdvancedHUD";
+    public final static String VERSION = "${version}";
 
     public static final Logger log = LogManager.getLogger(MODID);
 
@@ -26,7 +37,7 @@ public class AdvancedHUD {
 
     @EventHandler
     public void onInit(FMLInitializationEvent event) {
-        MinecraftForge.EVENT_BUS.register(new TickHandler());
+        TickHandler.register();
         MinecraftForge.EVENT_BUS.register(new KeyRegister());
     }
 

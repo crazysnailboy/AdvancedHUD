@@ -49,6 +49,23 @@ public class HudItemRecordDisplay extends HudItem {
     }
 
     @Override
+    public boolean canRotate() {
+        return false;
+    }
+
+    @Override
+    public boolean needsTick() {
+        return true;
+    }
+
+    @Override
+    public void tick() {
+        if (this.overlayMessageTime > 0) {
+            --this.overlayMessageTime;
+        }
+    }
+
+    @Override
     public void render(float partialTicks) {
 
         if (!(enabled || configMode())) return;
@@ -69,23 +86,6 @@ public class HudItemRecordDisplay extends HudItem {
                 GlStateManager.popMatrix();
             }
         }
-    }
-
-    @Override
-    public boolean needsTick() {
-        return true;
-    }
-
-    @Override
-    public void tick() {
-        if (this.overlayMessageTime > 0) {
-            --this.overlayMessageTime;
-        }
-    }
-
-    @Override
-    public boolean canRotate() {
-        return false;
     }
 
     public void setOverlayMessage(String message, boolean animateColor) {
