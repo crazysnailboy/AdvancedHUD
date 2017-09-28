@@ -45,6 +45,16 @@ public class HudItemJumpBar extends HudItem {
     }
 
     @Override
+    public boolean shouldDrawOnMount() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldDrawAsPlayer() {
+        return false;
+    }
+
+    @Override
     public void render(float partialTicks) {
 
         if (!(enabled || configMode())) return;
@@ -58,7 +68,8 @@ public class HudItemJumpBar extends HudItem {
         float charge = this.mc.thePlayer.getHorseJumpPower();
         final int barWidth = 182;
         int x = this.posX;
-        int filled = (int)(charge * (barWidth + 1)); if (this.configMode() && filled == 0) filled = 182;
+        int filled = (int)(charge * (barWidth + 1));
+        if (this.configMode() && filled == 0) filled = 182;
         int top = this.posY;
 
         this.drawTexturedModalRect(x, top, 0, 84, barWidth, 5);
@@ -68,16 +79,6 @@ public class HudItemJumpBar extends HudItem {
         }
 
         GlStateManager.disableBlend();
-    }
-
-    @Override
-    public boolean shouldDrawOnMount() {
-        return true;
-    }
-
-    @Override
-    public boolean shouldDrawAsPlayer() {
-        return false;
     }
 
 }

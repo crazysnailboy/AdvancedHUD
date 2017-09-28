@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import org.lwjgl.opengl.GL11;
 import advancedhud.AdvancedHUD;
 import advancedhud.ReflectionHelper;
+import advancedhud.SaveController;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
 import advancedhud.client.huditems.HudItemAir;
@@ -65,6 +66,11 @@ public class GuiAdvancedHUD extends GuiIngameForge {
 
     public GuiAdvancedHUD(Minecraft mc) {
         super(mc);
+        if (!SaveController.loadConfig("config")) {
+            HUDRegistry.checkForResize();
+            HUDRegistry.resetAllDefaults();
+            SaveController.saveConfig("config");
+        }
     }
 
     @Override
@@ -81,6 +87,9 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         renderHealthMount = mc.thePlayer.getRidingEntity() instanceof EntityLivingBase;
         renderFood = mc.thePlayer.getRidingEntity() == null;
         renderJumpBar = mc.thePlayer.isRidingHorse();
+
+        right_height = 39;
+        left_height = 39;
 
         if (this.pre(ALL)) {
             this.mc.mcProfiler.endSection();
@@ -219,6 +228,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         mc.mcProfiler.startSection("health");
 
         health.render(this.partialTicks);
+        left_height += 10;
 
         mc.mcProfiler.endSection();
         post(HEALTH);
@@ -230,6 +240,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         this.mc.mcProfiler.startSection("armor");
 
         armor.render(this.partialTicks);
+        left_height += 10;
 
         this.mc.mcProfiler.endSection();
         this.post(ARMOR);
@@ -241,6 +252,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         this.mc.mcProfiler.startSection("food");
 
         food.render(this.partialTicks);
+        right_height += 10;
 
         this.mc.mcProfiler.endSection();
         this.post(FOOD);
@@ -252,6 +264,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         this.mc.mcProfiler.endStartSection("mountHealth");
 
         healthmount.render(this.partialTicks);
+        right_height += 10;
 
         this.mc.mcProfiler.endSection();
         this.post(HEALTHMOUNT);
@@ -263,6 +276,7 @@ public class GuiAdvancedHUD extends GuiIngameForge {
         this.mc.mcProfiler.startSection("air");
 
         air.render(this.partialTicks);
+        right_height += 10;
 
         this.mc.mcProfiler.endSection();
         this.post(AIR);

@@ -4,6 +4,8 @@ import org.lwjgl.opengl.GL11;
 import advancedhud.api.Alignment;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
+import advancedhud.api.RenderAssist;
+import advancedhud.api.RenderStyle;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.common.ForgeHooks;
@@ -46,19 +48,42 @@ public class HudItemArmor extends HudItem {
     }
 
     @Override
+    public boolean canChangeStyle() {
+        return true;
+    }
+
+    @Override
+    public boolean isRenderedInCreative() {
+        return false;
+    }
+
+    @Override
     public void render(float partialTicks) {
 
         if (!(enabled || configMode())) return;
 
+        int level = ForgeHooks.getTotalArmorValue(this.mc.thePlayer);
+        if (this.configMode() && level == 0) level = 10;
+
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+
+        if (this.style == RenderStyle.GLYPH) {
+            renderIconStrip(level);
+        } else if (this.style == RenderStyle.SOLID) {
+            renderSolidBar(level);
+        }
+
+        GlStateManager.disableBlend();
+    }
+
+    private void renderIconStrip(int level) {
 
         this.mc.renderEngine.bindTexture(Gui.ICONS);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
         int left = this.posX;
         int top = this.posY;
-        int level = ForgeHooks.getTotalArmorValue(this.mc.thePlayer); if (this.configMode() && level == 0) level = 10;
 
         for (int i = 1; level > 0 && i < 20; i += 2) {
             if (i < level) {
@@ -74,13 +99,23 @@ public class HudItemArmor extends HudItem {
                 top += 8;
             }
         }
-
-        GlStateManager.disableBlend();
     }
 
-    @Override
-    public boolean isRenderedInCreative() {
-        return false;
+    private void renderSolidBar(int level) {
+
+        float fill = (level / 20.0F);
+        int color = 0xE6E6FF;
+
+        if (!this.rotated) {
+            RenderAssist.renderSolidBar(this.posX, this.posY, this.getWidth(), this.getHeight(), fill, color, false);
+        } else {
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(this.posX, this.posY, 0.0F);
+            GlStateManager.rotate(-90.0F, 0.0F, 0.0F, 1.0F);
+            GlStateManager.translate(-this.posX - this.getHeight(), -this.posY, 0.0F);
+            RenderAssist.renderSolidBar(this.posX, this.posY, this.getHeight(), this.getWidth(), fill, color, false);
+            GlStateManager.popMatrix();
+        }
     }
 
 }
