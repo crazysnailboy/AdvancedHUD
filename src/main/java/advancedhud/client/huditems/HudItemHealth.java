@@ -167,17 +167,25 @@ public class HudItemHealth extends HudItem {
 
     private void renderSolidBar(int health, int healthLast, float healthMax, float absorb, boolean highlight, EntityPlayer player) {
 
-        float fill = (health / healthMax);
-        int color = (player.isPotionActive(Potion.poison) ? 0xCEC049 : (player.isPotionActive(Potion.wither) ? 0x404040 : 0xFF0000));
+        float[] fills = new float[] {
+            (health / (healthMax + absorb)),
+            ((healthMax - health) / (healthMax + absorb)),
+            (absorb / (healthMax + absorb))
+        };
+        int[] colors = new int[] {
+            (player.isPotionActive(Potion.poison) ? 0xCEC049 : (player.isPotionActive(Potion.wither) ? 0x404040 : 0xFF0000)),
+            0x000000,
+            0xFFFF00
+        };
 
         if (!this.rotated) {
-            RenderAssist.renderSolidBar(this.posX, this.posY, this.getWidth(), this.getHeight(), fill, color, highlight);
+            RenderAssist.renderSolidBar(this.posX, this.posY, this.getWidth(), this.getHeight(), fills, colors, highlight);
         } else {
             GlStateManager.pushMatrix();
             GlStateManager.translate(this.posX, this.posY, 0.0F);
             GlStateManager.rotate(-90.0F, 0.0F, 0.0F, 1.0F);
             GlStateManager.translate(-this.posX - this.getHeight(), -this.posY, 0.0F);
-            RenderAssist.renderSolidBar(this.posX, this.posY, this.getHeight(), this.getWidth(), fill, color, false);
+            RenderAssist.renderSolidBar(this.posX, this.posY, this.getHeight(), this.getWidth(), fills, colors, highlight);
             GlStateManager.popMatrix();
         }
     }

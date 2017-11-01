@@ -223,28 +223,27 @@ public class RenderAssist {
 
         if (fill < 1.0F) {
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-            renderSolidBar(x, y, 8, 48, width, height, 1.0F);
+            renderSolidBarPart(x, y, 8, 48, width, height, 1.0F);
         }
         if (fill > 0.0F) {
             float r = (color >> 16 & 255) / 255.0F;
             float g = (color >> 8 & 255) / 255.0F;
             float b = (color & 255) / 255.0F;
             GlStateManager.color(r, g, b, 1.0F);
-            renderSolidBar(x, y, 0, 48, width, height, fill);
+            renderSolidBarPart(x, y, 0, 48, width, height, fill);
         }
     }
 
-    private static void renderSolidBar(int x, int y, int textureX, int textureY, int width, int height, float fill)
-    {
+    private static void renderSolidBarPart(int x, int y, int textureX, int textureY, int width, int height, float fill) {
+
         int fillWidth = (int)(width * fill);
 
         int widthLeft = Math.min(fillWidth, 4);
         int widthRight = 4 + fillWidth - width;
+        int widthCenter = Math.min(width - 8, fillWidth - 4);
 
         int heightTop = Math.min(height - 2, 4);
         int heightBottom = Math.min(height - 2, 4);
-
-        int widthCenter = Math.min(width - 8, fillWidth - 4);
         int heightCenter = height - heightTop - heightBottom;
 
         float u0 = textureX / 256.0F;
@@ -256,8 +255,8 @@ public class RenderAssist {
         float v1 = (textureY + heightTop) / 256.0F;
         float v2 = (textureY + 8 - heightBottom) / 256.0F;
         float v3 = (textureY + 8) / 256.0F;
-        if (widthLeft > 0)
-        {
+
+        if (widthLeft > 0) {
             if (heightTop > 0) {
                 drawSpriteUV(x, y, widthLeft, heightTop, u0, v0, u1, v1);
             }
@@ -268,8 +267,7 @@ public class RenderAssist {
                 drawSpriteUV(x, y + height - heightBottom, widthLeft, heightTop, u0, v2, u1, v3);
             }
         }
-        if (widthCenter > 0)
-        {
+        if (widthCenter > 0) {
             if (heightTop > 0) {
                 drawSpriteUV(x + widthLeft, y, widthCenter, heightTop, u1, v0, u2, v1);
             }
@@ -280,8 +278,7 @@ public class RenderAssist {
                 drawSpriteUV(x + widthLeft, y + height - heightBottom, widthCenter, heightBottom, u1, v2, u2, v3);
             }
         }
-        if (widthRight > 0)
-        {
+        if (widthRight > 0) {
             if (heightTop > 0) {
                 drawSpriteUV(x + width - 4, y, widthRight, heightTop, u2, v0, u3, v1);
             }
@@ -294,8 +291,118 @@ public class RenderAssist {
         }
     }
 
-    private static void drawSpriteUV(int x, int y, int width, int height, float u1, float v1, float u2, float v2)
-    {
+    public static void renderSolidBar(int x, int y, int width, int height, float[] fills, int[] colors, boolean highlight) {
+
+        mc.renderEngine.bindTexture(ICONS);
+
+        float fillTotal = 0.0F;
+        for (float value : fills) {
+            fillTotal += value;
+        }
+
+        if (fillTotal < 1.0F) {
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+            renderSolidBarPart(x, y, 8, 48, width, height, 1.0F);
+        }
+        if (fillTotal > 0.0F) {
+            int offsetX = 0;
+            int[] fillWidths = getFillWidths(width, fills);
+
+            for (int i = 0; i < fills.length; i++) {
+                int color = colors[i];
+                float r = (color >> 16 & 255) / 255.0F;
+                float g = (color >> 8 & 255) / 255.0F;
+                float b = (color & 255) / 255.0F;
+                GlStateManager.color(r, g, b, 1.0F);
+
+                if (i > 0) offsetX += fillWidths[i - 1];
+                renderSolidBarPart(x, y, 0, 48, width, height, offsetX, fillWidths[i]);
+            }
+        }
+    }
+
+    private static int[] getFillWidths(int width, float[] fills) {
+
+        int[] result = new int[fills.length];
+        int total = 0;
+        float fillTotal = 0.0F;
+
+        for ( int i = 0 ; i < result.length ; i++ ) {
+
+            float fill = (fills[i] * width);
+            result[i] = Math.round(fill);
+
+            total += result[i];
+            fillTotal += fill;
+
+        }
+
+        int diff = Math.round(fillTotal) - total;
+        if (diff != 0) {
+            result[0] += diff;
+        }
+
+        return result;
+    }
+
+    private static void renderSolidBarPart(int x, int y, int textureX, int textureY, int width, int height, int offsetX, int fillWidth) {
+
+        if (fillWidth == 0) return;
+
+        int widthLeft = (offsetX == 0 ? Math.min(fillWidth, 4) : 0);
+        int widthRight = 4 + (fillWidth + offsetX) - width;
+        int widthCenter = Math.min(width - 8, fillWidth - (offsetX == 0 ? 4 : 0)); if (widthCenter + offsetX == width && widthRight > 0) widthCenter -= widthRight;
+
+        int heightTop = Math.min(height - 2, 4);
+        int heightBottom = Math.min(height - 2, 4);
+        int heightCenter = height - heightTop - heightBottom;
+
+        float u0 = textureX / 256.0F;
+        float u1 = (textureX + (widthLeft > 0 ? widthLeft : 4)) / 256.0F;
+        float u2 = (textureX + 4) / 256.0F;
+        float u3 = (textureX + 4 + widthRight) / 256.0F;
+
+        float v0 = textureY / 256.0F;
+        float v1 = (textureY + heightTop) / 256.0F;
+        float v2 = (textureY + 8 - heightBottom) / 256.0F;
+        float v3 = (textureY + 8) / 256.0F;
+
+        if (widthLeft > 0) {
+            if (heightTop > 0) {
+                drawSpriteUV(x, y, widthLeft, heightTop, u0, v0, u1, v1);
+            }
+            if (heightCenter > 0) {
+                drawSpriteUV(x, y + heightTop, widthLeft, heightCenter, u0, v1, u1, v2);
+            }
+            if (heightBottom > 0) {
+                drawSpriteUV(x, y + height - heightBottom, widthLeft, heightTop, u0, v2, u1, v3);
+            }
+        }
+        if (widthCenter > 0) {
+            if (heightTop > 0) {
+                drawSpriteUV(x + offsetX + widthLeft, y, widthCenter, heightTop, u1, v0, u2, v1);
+            }
+            if (heightCenter > 0) {
+                drawSpriteUV(x + offsetX + widthLeft, y + heightTop, widthCenter, heightCenter, u1, v1, u2, v2);
+            }
+            if (heightBottom > 0) {
+                drawSpriteUV(x + offsetX + widthLeft, y + height - heightBottom, widthCenter, heightBottom, u1, v2, u2, v3);
+            }
+        }
+        if (widthRight > 0) {
+            if (heightTop > 0) {
+                drawSpriteUV(x + width - 4, y, widthRight, heightTop, u2, v0, u3, v1);
+            }
+            if (heightCenter > 0) {
+                drawSpriteUV(x + width - 4, y + heightTop, widthRight, heightCenter, u2, v1, u3, v2);
+            }
+            if (heightBottom > 0) {
+                drawSpriteUV(x + width - 4, y + height - heightBottom, widthRight, heightBottom, u2, v2, u3, v3);
+            }
+        }
+    }
+
+    private static void drawSpriteUV(int x, int y, int width, int height, float u1, float v1, float u2, float v2) {
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldRenderer = tessellator.getWorldRenderer();
         worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
