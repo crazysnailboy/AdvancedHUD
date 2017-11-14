@@ -100,6 +100,8 @@ public class HudItemHotbar extends HudItem {
 
     private void renderHotbarItem(int index, int xPos, int yPos, float partialTicks, EntityPlayer player) {
         ItemStack itemstack = player.inventory.mainInventory[index];
+        xPos += 91;
+        yPos += 12;
         if (itemstack != null) {
             float f1 = (float)itemstack.animationsToGo - partialTicks;
             if (f1 > 0.0F) {
@@ -109,11 +111,11 @@ public class HudItemHotbar extends HudItem {
                 GlStateManager.scale(1.0F / f2, (f2 + 1.0F) / 2.0F, 1.0F);
                 GlStateManager.translate((float)(-(xPos + 8)), (float)(-(yPos + 12)), 0.0F);
             }
-            this.mc.getRenderItem().renderItemAndEffectIntoGUI(itemstack, xPos + 91, yPos + 12);
+            this.mc.getRenderItem().renderItemAndEffectIntoGUI(itemstack, xPos, yPos);
             if (f1 > 0.0F) {
                 GlStateManager.popMatrix();
             }
-            this.mc.getRenderItem().renderItemOverlays(this.mc.fontRendererObj, itemstack, xPos + 91, yPos + 12);
+            this.mc.getRenderItem().renderItemOverlays(this.mc.fontRendererObj, itemstack, xPos, yPos);
         }
     }
 
