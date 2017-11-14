@@ -16,6 +16,7 @@ public class HudItemHotbar extends HudItem {
 
     private static final ResourceLocation WIDGETS = new ResourceLocation("textures/gui/widgets.png");
     private static final ResourceLocation ROTATE_WIDGETS = new ResourceLocation(AdvancedHUD.MODID, "textures/gui/rotateWidgets.png");
+    private static final RenderItem itemRenderer = new RenderItem();
 
     @Override
     public String getName() {
@@ -96,8 +97,9 @@ public class HudItemHotbar extends HudItem {
     }
 
     private void renderInventorySlot(int index, int xPos, int yPos, float partialTicks) {
-        RenderItem itemRenderer = new RenderItem();
         ItemStack itemstack = this.mc.thePlayer.inventory.mainInventory[index];
+        xPos += 91;
+        yPos += 12;
         if (itemstack != null) {
             float f1 = (float)itemstack.animationsToGo - partialTicks;
             if (f1 > 0.0F) {
@@ -107,11 +109,11 @@ public class HudItemHotbar extends HudItem {
                 GL11.glScalef(1.0F / f2, (f2 + 1.0F) / 2.0F, 1.0F);
                 GL11.glTranslatef((float)(-(xPos + 8)), (float)(-(yPos + 12)), 0.0F);
             }
-            itemRenderer.renderItemAndEffectIntoGUI(this.mc.fontRendererObj, this.mc.getTextureManager(), itemstack, xPos + 91, yPos + 12);
+            itemRenderer.renderItemAndEffectIntoGUI(this.mc.fontRendererObj, this.mc.getTextureManager(), itemstack, xPos, yPos);
             if (f1 > 0.0F) {
                 GL11.glPopMatrix();
             }
-            itemRenderer.renderItemOverlayIntoGUI(this.mc.fontRendererObj, this.mc.getTextureManager(), itemstack, xPos + 91, yPos + 12);
+            itemRenderer.renderItemOverlayIntoGUI(this.mc.fontRendererObj, this.mc.getTextureManager(), itemstack, xPos, yPos);
         }
     }
 
