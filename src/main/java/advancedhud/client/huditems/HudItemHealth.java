@@ -1,6 +1,5 @@
 package advancedhud.client.huditems;
 
-import java.util.Random;
 import org.lwjgl.opengl.GL11;
 import advancedhud.api.Alignment;
 import advancedhud.api.HUDRegistry;
@@ -17,12 +16,14 @@ import net.minecraft.util.MathHelper;
 
 public class HudItemHealth extends HudItem {
 
-    private static final Random rand = new Random();
-
     private long lastSystemTime = 0L;
     private long healthUpdateCounter = 0L;
     private int playerHealth = 0;
     private int lastPlayerHealth = 0;
+
+    public HudItemHealth() {
+        this.styles = new RenderStyle[] { RenderStyle.DEFAULT, RenderStyle.SOLID };
+    }
 
     @Override
     public String getName() {
@@ -105,7 +106,7 @@ public class HudItemHealth extends HudItem {
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 
-        if (this.style == RenderStyle.GLYPH) {
+        if (this.style == RenderStyle.DEFAULT) {
             renderIconStrip(health, healthLast, healthMax, absorb, highlight, player, updateCounter);
         } else if (this.style == RenderStyle.SOLID) {
             renderSolidBar(health, healthLast, healthMax, absorb, highlight, player);

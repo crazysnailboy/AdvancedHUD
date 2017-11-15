@@ -12,6 +12,10 @@ import net.minecraftforge.common.ForgeHooks;
 
 public class HudItemArmor extends HudItem {
 
+    public HudItemArmor() {
+        this.styles = new RenderStyle[] { RenderStyle.DEFAULT, RenderStyle.SOLID };
+    }
+
     @Override
     public String getName() {
         return "armor";
@@ -68,7 +72,7 @@ public class HudItemArmor extends HudItem {
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 
-        if (this.style == RenderStyle.GLYPH) {
+        if (this.style == RenderStyle.DEFAULT) {
             renderIconStrip(level);
         } else if (this.style == RenderStyle.SOLID) {
             renderSolidBar(level);
