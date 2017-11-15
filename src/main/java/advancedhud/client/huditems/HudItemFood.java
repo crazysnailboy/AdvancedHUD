@@ -1,6 +1,5 @@
 package advancedhud.client.huditems;
 
-import java.util.Random;
 import org.lwjgl.opengl.GL11;
 import advancedhud.api.Alignment;
 import advancedhud.api.HUDRegistry;
@@ -13,7 +12,9 @@ import net.minecraft.init.MobEffects;
 
 public class HudItemFood extends HudItem {
 
-    Random rand = new Random();
+    public HudItemFood() {
+        this.styles = new RenderStyle[] { RenderStyle.DEFAULT, RenderStyle.SOLID };
+    }
 
     @Override
     public String getName() {
@@ -71,7 +72,7 @@ public class HudItemFood extends HudItem {
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 
-        if (this.style == RenderStyle.GLYPH) {
+        if (this.style == RenderStyle.DEFAULT) {
             renderIconStrip(level, hunger);
         } else if (this.style == RenderStyle.SOLID) {
             renderSolidBar(level, hunger);

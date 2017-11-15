@@ -2,8 +2,9 @@ package advancedhud.api;
 
 public enum RenderStyle {
 
-    GLYPH("glyph"),
-    SOLID("solidbar");
+    DEFAULT("default"),
+    SOLID("solidbar"),
+    ICON("custom");
 
     private final String unlocalizedName;
 
@@ -15,8 +16,8 @@ public enum RenderStyle {
         return "advancedhud.huditemstyle." + this.unlocalizedName;
     }
 
-    public RenderStyle getNext() {
-        return values()[ordinal() == values().length - 1 ? 0 : ordinal() + 1];
+    public static RenderStyle fromInteger(int value) {
+        return (value >= 0 && value < values().length ? values()[value] : values()[0]);
     }
 
 }
