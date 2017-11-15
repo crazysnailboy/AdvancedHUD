@@ -1,23 +1,24 @@
 package advancedhud.client.ui;
 
 import java.io.IOException;
+import java.util.List;
 import org.lwjgl.input.Keyboard;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import advancedhud.SaveController;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.SoundEvents;
+import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
+import net.minecraftforge.common.MinecraftForge;
 
 public class GuiAdvancedHUDConfiguration extends GuiScreen {
 
     private static boolean asMount = false;
     private static boolean help = true;
+    private List<GuiHudItemButton> hudItemButtonList;
 
     @Override
     public void initGui() {
@@ -34,6 +35,8 @@ public class GuiAdvancedHUDConfiguration extends GuiScreen {
                 this.buttonList.add(new GuiHudItemButton(huditem));
             }
         }
+
+        this.hudItemButtonList = Lists.newArrayList(Iterables.filter(this.buttonList, GuiHudItemButton.class));
     }
 
     @Override
@@ -52,9 +55,10 @@ public class GuiAdvancedHUDConfiguration extends GuiScreen {
 
         super.drawScreen(mouseX, mouseY, partialTicks);
 
-        for (GuiHudItemButton button : Lists.newArrayList(Iterables.filter(this.buttonList, GuiHudItemButton.class))) {
+        for (GuiHudItemButton button : this.hudItemButtonList) {
             if (button.getHoverState(button.isMouseOver()) == 2) {
                 this.drawHoveringText(button.getTooltip(), mouseX, mouseY);
+                break;
             }
         }
     }
@@ -83,7 +87,7 @@ public class GuiAdvancedHUDConfiguration extends GuiScreen {
         if (button instanceof GuiHudItemButton) {
             HudItem hudItem = HUDRegistry.getHudItemByID(button.id);
             if (hudItem != null && hudItem.isMoveable()) {
-                Minecraft.getMinecraft().displayGuiScreen(new GuiScreenReposition(this, hudItem));
+                this.mc.displayGuiScreen(new GuiScreenReposition(this, hudItem));
             }
         }
         super.actionPerformed(button);
@@ -91,18 +95,33 @@ public class GuiAdvancedHUDConfiguration extends GuiScreen {
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        if (mouseButton == 1) {
-            for (GuiButton button : this.buttonList) {
-                if (button.mousePressed(this.mc, mouseX, mouseY)) {
-                    this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F)); // mc.getSoundHandler().playSound(PositionedSoundRecord.createPositionedSoundRecord(new ResourceLocation("gui.button.press"), 1.0F));
+        for (GuiButton button : this.buttonList) {
+            if (button.mousePressed(this.mc, mouseX, mouseY)) {
+                if (mouseButton == 0) {
+
+                    ActionPerformedEvent.Pre event = new ActionPerformedEvent.Pre(this, button, this.buttonList);
+                    if (!MinecraftForge.EVENT_BUS.post(event)) {
+                        this.selectedButton = event.getButton();
+                        event.getButton().playPressSound(this.mc.getSoundHandler());
+
+                        this.actionPerformed(event.getButton());
+
+                        if (this.equals(this.mc.currentScreen)) {
+                            MinecraftForge.EVENT_BUS.post(new ActionPerformedEvent.Post(this, event.getButton(), this.buttonList));
+                        }
+                    }
+
+                } else if (mouseButton == 1) {
+
                     HudItem hudItem = HUDRegistry.getHudItemByID(button.id);
                     if (hudItem != null) {
-                        Minecraft.getMinecraft().displayGuiScreen(hudItem.getConfigScreen());
+                        button.playPressSound(this.mc.getSoundHandler());
+                        this.mc.displayGuiScreen(hudItem.getConfigScreen());
                     }
                 }
+                break;
             }
         }
-        super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
 }
