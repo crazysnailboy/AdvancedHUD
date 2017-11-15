@@ -1,22 +1,23 @@
 package advancedhud.client.ui;
 
 import org.lwjgl.input.Keyboard;
-import advancedhud.api.HudItem;
+import advancedhud.api.RenderStyle;
+import advancedhud.client.huditems.HudItemCrosshairs;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
-public class GuiScreenHudItem extends GuiScreen {
+public class GuiScreenHudItemCrosshairs extends GuiScreen {
 
-    private HudItem hudItem;
+    private HudItemCrosshairs hudItem;
     private GuiScreen parentScreen;
 
     private GuiButton cancelButton;
-    private GuiButton rotateButton;
     private GuiButton enableButton;
     private GuiButton styleButton;
+    private GuiButtonIconGrid crosshairButton;
 
-    public GuiScreenHudItem(GuiScreen parentScreen, HudItem hudItem) {
+    public GuiScreenHudItemCrosshairs(GuiScreen parentScreen, HudItemCrosshairs hudItem) {
         this.hudItem = hudItem;
         this.parentScreen = parentScreen;
     }
@@ -31,14 +32,8 @@ public class GuiScreenHudItem extends GuiScreen {
         int yOffset = 0;
 
         this.buttonList.add(enableButton = new GuiButton(101, xPosition, yPosition + (yOffset += 24), 200, 20, getEnabledButtonText()));
-
-        if (this.hudItem.canRotate()) {
-            this.buttonList.add(rotateButton = new GuiButton(100, xPosition, yPosition + (yOffset += 24), 200, 20, getRotationButtonText()));
-        }
-
-        if (hudItem.canChangeStyle()) {
-            this.buttonList.add(styleButton = new GuiButton(102, xPosition, yPosition + (yOffset += 24), 200, 20, getStyleButtonText()));
-        }
+        this.buttonList.add(styleButton = new GuiButton(102, xPosition, yPosition + (yOffset += 24), 200, 20, getStyleButtonText()));
+        this.buttonList.add(crosshairButton = new GuiButtonIconGrid(3320, this.width / 2 - 128, yPosition + (yOffset += 24), this.hudItem));
     }
 
     @Override
@@ -59,15 +54,13 @@ public class GuiScreenHudItem extends GuiScreen {
     protected void actionPerformed(GuiButton button) {
         if (button == this.cancelButton) {
             this.mc.displayGuiScreen(this.parentScreen);
-        } else if (button == this.rotateButton) {
-            this.hudItem.rotated = !this.hudItem.rotated;
-            this.rotateButton.displayString = getRotationButtonText();
         } else if (button == this.enableButton) {
             this.hudItem.enabled = !this.hudItem.enabled;
             this.enableButton.displayString = getEnabledButtonText();
         } else if (button == this.styleButton) {
             this.hudItem.toggleStyle();
             this.styleButton.displayString = getStyleButtonText();
+            this.crosshairButton.visible = (this.hudItem.style == RenderStyle.ICON);
         }
         super.actionPerformed(button);
     }

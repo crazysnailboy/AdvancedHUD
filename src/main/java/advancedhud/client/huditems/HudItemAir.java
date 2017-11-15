@@ -12,6 +12,10 @@ import net.minecraft.util.MathHelper;
 
 public class HudItemAir extends HudItem {
 
+    public HudItemAir() {
+        this.styles = new RenderStyle[] { RenderStyle.DEFAULT, RenderStyle.SOLID };
+    }
+
     @Override
     public String getName() {
         return "air";
@@ -71,7 +75,7 @@ public class HudItemAir extends HudItem {
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-            if (this.style == RenderStyle.GLYPH) {
+            if (this.style == RenderStyle.DEFAULT) {
                 renderIconStrip(full, partial);
             } else if (this.style == RenderStyle.SOLID) {
                 renderSolidBar(full, partial);
