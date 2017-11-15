@@ -2,6 +2,8 @@ package advancedhud.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import org.apache.commons.lang3.ArrayUtils;
 import advancedhud.client.ui.GuiAdvancedHUDConfiguration;
 import advancedhud.client.ui.GuiScreenHudItem;
 import advancedhud.client.ui.GuiScreenReposition;
@@ -20,6 +22,7 @@ import net.minecraft.util.EnumChatFormatting;
 public abstract class HudItem {
 
     protected static final Minecraft mc = Minecraft.getMinecraft();
+    protected static final Random rand = new Random();
 
     public Alignment alignment;
     public int posX;
@@ -27,7 +30,8 @@ public abstract class HudItem {
     private int id;
     public boolean rotated = false;
     public boolean enabled = true;
-    public RenderStyle style = RenderStyle.GLYPH;
+    public RenderStyle style = RenderStyle.DEFAULT;
+    public RenderStyle[] styles = null;
 
 
     public HudItem() {
@@ -105,6 +109,14 @@ public abstract class HudItem {
         return false;
     }
 
+    public void toggleStyle() {
+        if (this.canChangeStyle() && this.styles != null && this.styles.length > 0) {
+            int i = ArrayUtils.indexOf(this.styles, this.style);
+            i = (i >= 0 && i < this.styles.length - 1 ? i + 1 : 0);
+            this.style = this.styles[i];
+        }
+    }
+
     public boolean isEnabledByDefault() {
         return true;
     }
@@ -139,9 +151,9 @@ public abstract class HudItem {
         this.posY = (compound.hasKey("posY") ? compound.getInteger("posY") : this.getDefaultPosY());
         this.alignment = (compound.hasKey("alignment") ? Alignment.fromString(compound.getString("alignment")) : this.getDefaultAlignment());
         this.id = (compound.hasKey("id") ? compound.getInteger("id") : this.getDefaultID());
-        this.rotated = (compound.hasKey("rotated") ? compound.getBoolean("rotated") : false);
+        if (this.canRotate()) this.rotated = (compound.hasKey("rotated") ? compound.getBoolean("rotated") : false);
         this.enabled = (compound.hasKey("enabled") ? compound.getBoolean("enabled") : true);
-        this.style = (compound.hasKey("style") ? RenderStyle.values()[compound.getInteger("style")] : RenderStyle.GLYPH);
+        if (this.canChangeStyle()) this.style = (compound.hasKey("style") ? RenderStyle.fromInteger(compound.getInteger("style")) : RenderStyle.DEFAULT);
     }
 
     public void saveToNBT(NBTTagCompound compound) {
@@ -149,9 +161,9 @@ public abstract class HudItem {
         compound.setInteger("posY", this.posY);
         compound.setString("alignment", this.alignment.toString());
         compound.setInteger("id", this.id);
-        compound.setBoolean("rotated", this.rotated);
+        if (this.canRotate()) compound.setBoolean("rotated", this.rotated);
         compound.setBoolean("enabled", this.enabled);
-        compound.setInteger("style", this.style.ordinal());
+        if (this.canChangeStyle()) compound.setInteger("style", this.style.ordinal());
     }
 
     public boolean configMode() {
