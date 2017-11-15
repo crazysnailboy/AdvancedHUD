@@ -5,7 +5,10 @@ import advancedhud.api.Alignment;
 import advancedhud.api.HUDRegistry;
 import advancedhud.api.HudItem;
 import advancedhud.api.RenderAssist;
+import advancedhud.api.RenderStyle;
+import advancedhud.client.ui.GuiScreenHudItemCrosshairs;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.settings.GameSettings;
@@ -21,6 +24,10 @@ public class HudItemCrosshairs extends HudItem {
     private static final ResourceLocation CROSSHAIR_ICONS = new ResourceLocation(AdvancedHUD.MODID, "textures/gui/crosshairs.png");
     private int selectedIconX = -1;
     private int selectedIconY = -1;
+
+    public HudItemCrosshairs() {
+        this.styles = new RenderStyle[] { RenderStyle.DEFAULT, RenderStyle.ICON };
+    }
 
     @Override
     public String getName() {
@@ -68,6 +75,11 @@ public class HudItemCrosshairs extends HudItem {
     }
 
     @Override
+    public boolean canChangeStyle() {
+        return true;
+    }
+
+    @Override
     public boolean shouldDrawOnMount() {
         return true;
     }
@@ -109,7 +121,7 @@ public class HudItemCrosshairs extends HudItem {
                 GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
                 GlStateManager.enableAlpha();
 
-                if (this.selectedIconX >= 0 && this.selectedIconY >= 0) {
+                if (this.style == RenderStyle.ICON && this.selectedIconX >= 0 && this.selectedIconY >= 0) {
                     this.mc.renderEngine.bindTexture(CROSSHAIR_ICONS);
                     this.drawTexturedModalRect(this.posX, this.posY, this.selectedIconX, this.selectedIconY, 16, 16);
                 } else {
@@ -131,6 +143,11 @@ public class HudItemCrosshairs extends HudItem {
                 GlStateManager.disableBlend();
             }
         }
+    }
+
+    @Override
+    public GuiScreen getConfigScreen() {
+        return new GuiScreenHudItemCrosshairs(this.mc.currentScreen, this);
     }
 
     public int getSelectedIconX() {

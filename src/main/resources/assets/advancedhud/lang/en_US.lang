@@ -1,3 +1,5 @@
+advancedhud.key.config=§aAdvancedHUD Config
+
 advancedhud.item.air.name=Breath Bar
 advancedhud.item.armor.name=Armor Bar
 advancedhud.item.bossbar.name=Boss Health
@@ -25,12 +27,10 @@ advancedhud.reposition.alignment=Alignment: %1$s
 advancedhud.huditems.rotation=Rotation: %1$s
 advancedhud.huditems.enabled=Enabled: %1$s
 advancedhud.huditems.style=Style: %1$s
-advancedhud.huditems.crosshairselector=Crosshair Selector
 
-advancedhud.key.config=§aAdvancedHUD Config
+advancedhud.huditemstyle.default=Default
+advancedhud.huditemstyle.solidbar=Solid Bar
+advancedhud.huditemstyle.custom=Custom
 
 gui.horizontal=Horizontal
 gui.vertical=Vertical
-
-advancedhud.huditemstyle.glyph=Glyphs
-advancedhud.huditemstyle.solidbar=Solid Bar
