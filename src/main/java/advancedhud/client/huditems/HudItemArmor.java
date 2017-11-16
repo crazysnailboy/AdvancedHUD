@@ -57,6 +57,11 @@ public class HudItemArmor extends HudItem {
     }
 
     @Override
+    public boolean canMirror() {
+        return true;
+    }
+
+    @Override
     public boolean isRenderedInCreative() {
         return false;
     }
@@ -72,10 +77,22 @@ public class HudItemArmor extends HudItem {
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 
+        if (this.mirrored) {
+            GlStateManager.pushMatrix();
+            GlStateManager.disableCull();
+            GlStateManager.scale(-1.0F, 1.0F, 1.0F);
+            GlStateManager.translate(-this.posX * 2 - this.getWidth(), 0.0F, 0.0F);
+        }
+
         if (this.style == RenderStyle.DEFAULT) {
             renderIconStrip(level);
         } else if (this.style == RenderStyle.SOLID) {
             renderSolidBar(level);
+        }
+
+        if (this.mirrored) {
+            GlStateManager.enableCull();
+            GlStateManager.popMatrix();
         }
 
         GlStateManager.disableBlend();
@@ -86,22 +103,11 @@ public class HudItemArmor extends HudItem {
         this.mc.renderEngine.bindTexture(Gui.icons);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-        int left = this.posX;
-        int top = this.posY;
-
         for (int i = 1; level > 0 && i < 20; i += 2) {
-            if (i < level) {
-                this.drawTexturedModalRect(left, top, 34, 9, 9, 9);
-            } else if (i == level) {
-                this.drawTexturedModalRect(left, top, 25, 9, 9, 9);
-            } else if (i > level) {
-                this.drawTexturedModalRect(left, top, 16, 9, 9, 9);
-            }
-            if (!this.rotated) {
-                left += 8;
-            } else {
-                top += 8;
-            }
+            int x = (!this.rotated ? this.posX + (((i - 1) / 2) * 8) : this.posX);
+            int y = (!this.rotated ? this.posY : this.posY + 81 - (((i - 1) / 2) * 8) - 9);
+            int textureX = (i < level ? 34 : (i > level ? 16 : 25));
+            this.drawTexturedModalRect(x, y, textureX, 9, 9, 9);
         }
     }
 
