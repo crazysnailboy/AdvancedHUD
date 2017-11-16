@@ -1,5 +1,6 @@
 package advancedhud.client.huditems;
 
+import java.util.Random;
 import org.lwjgl.opengl.GL11;
 import advancedhud.api.Alignment;
 import advancedhud.api.HUDRegistry;
@@ -11,6 +12,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.MobEffects;
 
 public class HudItemFood extends HudItem {
+
+    private static final Random rand = new Random();
 
     public HudItemFood() {
         this.styles = new RenderStyle[] { RenderStyle.DEFAULT, RenderStyle.SOLID };
@@ -57,6 +60,11 @@ public class HudItemFood extends HudItem {
     }
 
     @Override
+    public boolean canMirror() {
+        return true;
+    }
+
+    @Override
     public boolean isRenderedInCreative() {
         return false;
     }
@@ -72,10 +80,22 @@ public class HudItemFood extends HudItem {
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 
+        if (this.mirrored) {
+            GlStateManager.pushMatrix();
+            GlStateManager.disableCull();
+            GlStateManager.scale(-1.0F, 1.0F, 1.0F);
+            GlStateManager.translate(-this.posX * 2 - this.getWidth(), 0.0F, 0.0F);
+        }
+
         if (this.style == RenderStyle.DEFAULT) {
             renderIconStrip(level, hunger);
         } else if (this.style == RenderStyle.SOLID) {
             renderSolidBar(level, hunger);
+        }
+
+        if (this.mirrored) {
+            GlStateManager.enableCull();
+            GlStateManager.popMatrix();
         }
 
         GlStateManager.disableBlend();
@@ -86,23 +106,18 @@ public class HudItemFood extends HudItem {
         this.mc.renderEngine.bindTexture(Gui.ICONS);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-        int left = this.posX + 81;
+        int left = this.posX;
         int top = this.posY;
         float saturationLevel = this.mc.player.getFoodStats().getSaturationLevel();
         int updateCounter = this.mc.ingameGUI.getUpdateCounter();
 
+        final int icon = (hunger ? 52 : 16);
+        final byte background = (byte)(hunger ? 13 : 0);
+
         for (int i = 0; i < 10; ++i) {
 
-            int idx = i * 2 + 1;
-            int x = (!this.rotated ? left - i * 8 - 9 : left - 81);
-            int y = (!this.rotated ? top : top + 82 - i * 8 - 9);
-            int icon = 16;
-            byte background = 0;
-
-            if (hunger) {
-                icon += 36;
-                background = 13;
-            }
+            int x = (!this.rotated ? left + 81 - (i * 8) - 9 : left);
+            int y = (!this.rotated ? top : top + 82 - (i * 8) - 9);
 
             if (saturationLevel <= 0.0F && updateCounter % (level * 3 + 1) == 0) {
                 y = top + this.rand.nextInt(3) - 1;
@@ -114,6 +129,7 @@ public class HudItemFood extends HudItem {
 
             this.drawTexturedModalRect(x, y, 16 + background * 9, 27, 9, 9);
 
+            int idx = i * 2 + 1;
             if (idx < level) {
                 this.drawTexturedModalRect(x, y, icon + 36, 27, 9, 9);
             } else if (idx == level) {
