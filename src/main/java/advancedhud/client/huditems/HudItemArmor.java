@@ -51,13 +51,18 @@ public class HudItemArmor extends HudItem {
     }
 
     @Override
-    public boolean isRenderedInCreative() {
-        return false;
+    public boolean canChangeStyle() {
+        return true;
     }
 
     @Override
-    public boolean canChangeStyle() {
+    public boolean canMirror() {
         return true;
+    }
+
+    @Override
+    public boolean isRenderedInCreative() {
+        return false;
     }
 
     @Override
@@ -71,10 +76,22 @@ public class HudItemArmor extends HudItem {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
+        if (this.mirrored) {
+            GL11.glPushMatrix();
+            GL11.glDisable(GL11.GL_CULL_FACE);
+            GL11.glScalef(-1.0F, 1.0F, 1.0F);
+            GL11.glTranslatef(-this.posX * 2 - this.getWidth(), 0.0F, 0.0F);
+        }
+
         if (this.style == RenderStyle.DEFAULT) {
             renderIconStrip(level);
         } else if (this.style == RenderStyle.SOLID) {
             renderSolidBar(level);
+        }
+
+        if (this.mirrored) {
+            GL11.glEnable(GL11.GL_CULL_FACE);
+            GL11.glPopMatrix();
         }
 
         GL11.glDisable(GL11.GL_BLEND);
@@ -85,22 +102,11 @@ public class HudItemArmor extends HudItem {
         this.mc.renderEngine.bindTexture(Gui.icons);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        int left = this.posX;
-        int top = this.posY;
-
         for (int i = 1; level > 0 && i < 20; i += 2) {
-            if (i < level) {
-                this.drawTexturedModalRect(left, top, 34, 9, 9, 9);
-            } else if (i == level) {
-                this.drawTexturedModalRect(left, top, 25, 9, 9, 9);
-            } else if (i > level) {
-                this.drawTexturedModalRect(left, top, 16, 9, 9, 9);
-            }
-            if (!this.rotated) {
-                left += 8;
-            } else {
-                top += 8;
-            }
+            int x = (!this.rotated ? this.posX + (((i - 1) / 2) * 8) : this.posX);
+            int y = (!this.rotated ? this.posY : this.posY + 81 - (((i - 1) / 2) * 8) - 9);
+            int textureX = (i < level ? 34 : (i > level ? 16 : 25));
+            this.drawTexturedModalRect(x, y, textureX, 9, 9, 9);
         }
     }
 

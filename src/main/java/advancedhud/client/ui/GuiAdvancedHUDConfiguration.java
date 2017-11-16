@@ -26,6 +26,7 @@ public class GuiAdvancedHUDConfiguration extends GuiScreen {
     @Override
     public void initGui() {
         super.initGui();
+        HUDRegistry.checkForResize();
         this.addButtons();
     }
 
@@ -45,10 +46,6 @@ public class GuiAdvancedHUDConfiguration extends GuiScreen {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
-
-        if (!HUDRegistry.checkForResize()) {
-            this.initGui();
-        }
 
         if (help) {
             this.drawCenteredString(this.mc.fontRendererObj, I18n.format("advancedhud.configuration.help.1"), this.width / 2, 40, 0xFFFFFF);

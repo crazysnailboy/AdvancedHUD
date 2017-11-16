@@ -1,5 +1,6 @@
 package advancedhud.client.huditems;
 
+import java.util.Random;
 import org.lwjgl.opengl.GL11;
 import advancedhud.api.Alignment;
 import advancedhud.api.HUDRegistry;
@@ -12,6 +13,8 @@ import net.minecraft.potion.Potion;
 import net.minecraft.util.MathHelper;
 
 public class HudItemHealth extends HudItem {
+
+    private static final Random rand = new Random();
 
     public HudItemHealth() {
         this.styles = new RenderStyle[] { RenderStyle.DEFAULT, RenderStyle.SOLID };
@@ -58,6 +61,11 @@ public class HudItemHealth extends HudItem {
     }
 
     @Override
+    public boolean canMirror() {
+        return true;
+    }
+
+    @Override
     public boolean isRenderedInCreative() {
         return false;
     }
@@ -81,10 +89,22 @@ public class HudItemHealth extends HudItem {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
+        if (this.mirrored) {
+            GL11.glPushMatrix();
+            GL11.glDisable(GL11.GL_CULL_FACE);
+            GL11.glScalef(-1.0F, 1.0F, 1.0F);
+            GL11.glTranslatef(-this.posX * 2 - this.getWidth(), 0.0F, 0.0F);
+        }
+
         if (this.style == RenderStyle.DEFAULT) {
             renderIconStrip(health, healthLast, healthMax, absorb, highlight);
         } else if (this.style == RenderStyle.SOLID) {
             renderSolidBar(health, healthLast, healthMax, absorb, highlight);
+        }
+
+        if (this.mirrored) {
+            GL11.glEnable(GL11.GL_CULL_FACE);
+            GL11.glPopMatrix();
         }
 
         GL11.glDisable(GL11.GL_BLEND);
@@ -111,8 +131,8 @@ public class HudItemHealth extends HudItem {
 
         for (int i = MathHelper.ceiling_float_int((healthMax + absorb) / 2.0F) - 1; i >= 0; --i) {
             int row = MathHelper.ceiling_float_int((float)(i + 1) / 10.0F) - 1;
-            int x = (!this.rotated ? left + i % 10 * 8 : left - row * rowHeight);
-            int y = (!this.rotated ? top - row * rowHeight : top + i % 10 * 8);
+            int x = (!this.rotated ? left + i % 10 * 8 : left - row * rowHeight); // int x = (!this.rotated ? (!rightToLeft ? (left + (i % 10 * 8)) : (left + 81 - (i % 10 * 8) - 9)) : (left - row * rowHeight));
+            int y = (!this.rotated ? top - row * rowHeight : (top + 81 - (i % 10 * 8) - 9)); // int y = (!this.rotated ? top - row * rowHeight : top + i % 10 * 8);
 
             if (health <= 4) y += this.rand.nextInt(2);
             if (i == regen) y -= 2;
@@ -135,7 +155,8 @@ public class HudItemHealth extends HudItem {
             } else {
                 if (i * 2 + 1 < health)
                     this.drawTexturedModalRect(x, y, textureX + 36, textureY, 9, 9);
-                else if (i * 2 + 1 == health) this.drawTexturedModalRect(x, y, textureX + 45, textureY, 9, 9);
+                else if (i * 2 + 1 == health)
+                    this.drawTexturedModalRect(x, y, textureX + 45, textureY, 9, 9);
             }
         }
     }

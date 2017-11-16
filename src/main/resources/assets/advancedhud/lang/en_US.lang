@@ -22,11 +22,13 @@ advancedhud.configuration.player=player
 advancedhud.configuration.mount=mount
 
 advancedhud.reposition.controls=CLICK to confirm, ESCAPE to cancel, R to reset, CTRL to align
-advancedhud.reposition.alignment=Alignment: %1$s
+advancedhud.reposition.position=§7X:§r %1$s §7Y:§r %2$s
+advancedhud.reposition.alignment=§7Alignment:§r %1$s
 
 advancedhud.huditems.rotation=Rotation: %1$s
 advancedhud.huditems.enabled=Enabled: %1$s
 advancedhud.huditems.style=Style: %1$s
+advancedhud.huditems.mirrored=Mirrored: %1$s
 
 advancedhud.huditemstyle.default=Default
 advancedhud.huditemstyle.solidbar=Solid Bar
