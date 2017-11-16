@@ -16,6 +16,7 @@ public class GuiScreenHudItem extends GuiScreen {
     private GuiButton rotateButton;
     private GuiButton enableButton;
     private GuiButton styleButton;
+    private GuiButton mirrorButton;
 
     public GuiScreenHudItem(GuiScreen parentScreen, HudItem hudItem) {
         this.hudItem = hudItem;
@@ -25,20 +26,21 @@ public class GuiScreenHudItem extends GuiScreen {
     @Override
     public void initGui() {
         this.buttonList.clear();
-        this.buttonList.add(cancelButton = new GuiButton(-1, this.width - 30, 10, 20, 20, "X"));
+        this.buttonList.add(this.cancelButton = new GuiButton(-1, this.width - 30, 10, 20, 20, "X"));
 
         int xPosition = (this.width / 2) - 100;
         int yPosition = (this.height / 4) + -16;
         int yOffset = 0;
 
-        this.buttonList.add(enableButton = new GuiButton(101, xPosition, yPosition + (yOffset += 24), 200, 20, getEnabledButtonText()));
-
-        if (this.hudItem.canRotate()) {
-            this.buttonList.add(rotateButton = new GuiButton(100, xPosition, yPosition + (yOffset += 24), 200, 20, getRotationButtonText()));
-        }
-
+        this.buttonList.add(this.enableButton = new GuiButton(101, xPosition, yPosition + (yOffset += 24), 200, 20, getEnabledButtonText()));
         if (hudItem.canChangeStyle()) {
-            this.buttonList.add(styleButton = new GuiButton(102, xPosition, yPosition + (3 * 24), 200, 20, getStyleButtonText()));
+            this.buttonList.add(this.styleButton = new GuiButton(102, xPosition, yPosition + (yOffset += 24), 200, 20, getStyleButtonText()));
+        }
+        if (this.hudItem.canRotate()) {
+            this.buttonList.add(this.rotateButton = new GuiButton(100, xPosition, yPosition + (yOffset += 24), 200, 20, getRotationButtonText()));
+        }
+        if (this.hudItem.canMirror()) {
+            this.buttonList.add(this.mirrorButton = new GuiButton(103, xPosition, yPosition + (yOffset += 24), 200, 20, getMirrorButtonText()));
         }
     }
 
@@ -66,6 +68,9 @@ public class GuiScreenHudItem extends GuiScreen {
         } else if (button == this.enableButton) {
             this.hudItem.enabled = !this.hudItem.enabled;
             this.enableButton.displayString = getEnabledButtonText();
+        } else if (button == this.mirrorButton) {
+            this.hudItem.mirrored = !this.hudItem.mirrored;
+            this.mirrorButton.displayString = getMirrorButtonText();
         } else if (button == this.styleButton) {
             this.hudItem.toggleStyle();
             this.styleButton.displayString = getStyleButtonText();
@@ -83,6 +88,10 @@ public class GuiScreenHudItem extends GuiScreen {
 
     private String getStyleButtonText() {
         return I18n.format("advancedhud.huditems.style", I18n.format(this.hudItem.style.getUnlocalizedName()));
+    }
+
+    private String getMirrorButtonText() {
+        return I18n.format("advancedhud.huditems.mirrored", I18n.format(this.hudItem.mirrored ? "gui.yes" : "gui.no"));
     }
 
 }
